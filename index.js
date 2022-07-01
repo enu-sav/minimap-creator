@@ -63,18 +63,18 @@ function requestListener(req, res) {
  * @param {http.IncomingMessage} req
  * @param {http.ServerResponse} res
  */
- async function generate(req, res) {
-  const params = new URLSearchParams(req.url.replace(/^[^?]*/, ''));
+async function generate(req, res) {
+  const params = new URLSearchParams(req.url.replace(/^[^?]*/, ""));
 
-  const lat = Number(params.get('lat'));
+  const lat = Number(params.get("lat"));
 
-  const lon = Number(params.get('lon'));
+  const lon = Number(params.get("lon"));
 
-  const featureSet = new Set(params.get('features')?.split(',') ?? []);
+  const featureSet = new Set(params.get("features")?.split(",") ?? []);
 
-  const okresId = Number(params.get('okresId'));
+  const okresId = Number(params.get("okresId"));
 
-  const krajId = Number(params.get('krajId'));
+  const krajId = Number(params.get("krajId"));
 
   const map = new mapnik.Map(800, 400, "+init=epsg:3857");
 
@@ -127,15 +127,34 @@ function requestListener(req, res) {
 
       ${createGeojsonLayer("bgFill", "geodata/sr_3.geojson")}
 
-      ${isNaN(okresId) ? '' : createGeojsonLayer("okres", "geodata/okres_3.geojson", "okresFill")}
+      ${
+        isNaN(okresId)
+          ? ""
+          : createGeojsonLayer("okres", "geodata/okres_3.geojson", "okresFill")
+      }
 
-      ${isNaN(krajId) ? '' : createGeojsonLayer("kraj", "geodata/kraj_3.geojson", "krajFill")}
+      ${
+        isNaN(krajId)
+          ? ""
+          : createGeojsonLayer("kraj", "geodata/kraj_3.geojson", "krajFill")
+      }
 
-      ${featureSet.has('okresy') ? createGeojsonLayer("okres", "geodata/okres_3.geojson") : ''}
+      ${
+        featureSet.has("okresy")
+          ? createGeojsonLayer("okres", "geodata/okres_3.geojson")
+          : ""
+      }
 
-      ${featureSet.has('kraje') ? createGeojsonLayer("kraj", "geodata/kraj_3.geojson") : ''}
+      ${
+        featureSet.has("kraje")
+          ? createGeojsonLayer("kraj", "geodata/kraj_3.geojson")
+          : ""
+      }
 
-      ${isNaN(lon) || isNaN(lat) ? '' : `
+      ${
+        isNaN(lon) || isNaN(lat)
+          ? ""
+          : `
         <Layer name="point" srs="+init=epsg:4326">
           <StyleName>point</StyleName>
 
@@ -147,7 +166,8 @@ function requestListener(req, res) {
             ]]></Parameter>
           </Datasource>
         </Layer>
-      `}
+      `
+      }
     </Map>
   `);
 
