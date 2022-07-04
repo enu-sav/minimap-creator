@@ -95,7 +95,7 @@ async function generate(req, res) {
 
       <Style name="kraj">
         <Rule>
-          <LineSymbolizer stroke="#734a08" stroke-width="2" />
+          <LineSymbolizer stroke="#734a08" stroke-width="2" stroke-linejoin="round" />
         </Rule>
       </Style>
 
@@ -108,7 +108,7 @@ async function generate(req, res) {
 
       <Style name="okres">
         <Rule>
-          <LineSymbolizer stroke="#734a08" stroke-width="1" />
+          <LineSymbolizer stroke="#734a08" stroke-width="1" stroke-linejoin="round" />
         </Rule>
       </Style>
 
