@@ -1,21 +1,28 @@
+const temp = require("temp");
 const process = require("process");
 const http = require("http");
-const { promisify } = require("util");
+const util = require("util");
 const fs = require("fs");
+const fsp = require("fs/promises");
 const mapnik = require("mapnik");
 const turf = require("@turf/turf");
 const { URLSearchParams } = require("url");
+const stream = require("stream");
+
+const pipelineAsync = util.promisify(stream.pipeline);
+
+temp.track();
 
 mapnik.register_default_input_plugins();
 
 const merc = new mapnik.Projection("+init=epsg:3857");
 
 for (const [cla, methods] of [
-  [mapnik.Map, ["render", "fromString", "load"]],
+  [mapnik.Map, ["render", "fromString", "load", "renderFile"]],
   [mapnik.Image, ["save", "encode"]],
 ]) {
   for (const method of methods) {
-    cla.prototype[method + "Async"] = promisify(cla.prototype[method]);
+    cla.prototype[method + "Async"] = util.promisify(cla.prototype[method]);
   }
 }
 
@@ -65,6 +72,8 @@ function requestListener(req, res) {
  */
 async function generate(req, res) {
   const params = new URLSearchParams(req.url.replace(/^[^?]*/, ""));
+
+  const format = params.get("format") ?? "png";
 
   const lat = Number(params.get("lat"));
 
@@ -171,17 +180,42 @@ async function generate(req, res) {
     </Map>
   `);
 
-  const image = new mapnik.Image(800, 400);
-
   map.zoomToBox(merc.forward(bbox));
 
-  await map.renderAsync(image, {});
+  if (format === "pdf" || format === "svg") {
+    const tempName = temp.path({ suffix: "." + format });
 
-  const buffer = await image.encodeAsync("png");
+    const scale_denominator =
+      559082264.028 / Math.pow(2, Math.round(10 + Math.log2(1)));
 
-  res.writeHead(200, {
-    "Content-Type": "image/png",
-  });
 
-  res.end(buffer);
+    await map.renderFileAsync(tempName, {
+      format,
+      buffer_size: 256,
+      scale_denominator,
+      scale: 1,
+    });
+
+    res.writeHead(200, {
+      "Content-Type": format === "pdf" ? "application/pdf" : "image/svg+xml",
+    });
+
+    await pipelineAsync(fs.createReadStream(tempName), res);
+
+    await fsp.unlink(tempName);
+  } else if (format === "jpeg" || format === "png") {
+    const image = new mapnik.Image(800, 400);
+
+    await map.renderAsync(image, {});
+
+    const buffer = await image.encodeAsync(format);
+
+    res.writeHead(200, {
+      "Content-Type": "image/" + format,
+    });
+
+    res.end(buffer);
+  } else {
+    res.writeHead(400).end("invalid format");
+  }
 }

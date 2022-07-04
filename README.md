@@ -18,6 +18,11 @@ curl http://'localhost:8080?features=kraje,okresy&okresId=204' | display
 ```bash
 curl http://'localhost:8080?features=kraje,okresy&lat=48.5&lon=19.1' | display
 ```
+```bash
+curl http://'localhost:8080?features=kraje,okresy&lat=48.5&lon=19.1?format=svg' > map.svg
+```
+
+Supported formats: `png`, `jpeg`, `svg`, `pdf`
 
 ## Notes
 
