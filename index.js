@@ -185,15 +185,8 @@ async function generate(req, res) {
   if (format === "pdf" || format === "svg") {
     const tempName = temp.path({ suffix: "." + format });
 
-    const scale_denominator =
-      559082264.028 / Math.pow(2, Math.round(10 + Math.log2(1)));
-
-
     await map.renderFileAsync(tempName, {
       format,
-      buffer_size: 256,
-      scale_denominator,
-      scale: 1,
     });
 
     res.writeHead(200, {
