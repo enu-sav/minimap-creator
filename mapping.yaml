@@ -1,0 +1,186 @@
+---
+areas:
+  area_tags:
+    - landuse
+  linear_tags:
+    - highway
+generalized_tables:
+  waterareas_gen1:
+    source: waterareas
+    sql_filter: ST_Area(geometry)>50000.000000
+    tolerance: 50
+  waterareas_gen0:
+    source: waterareas_gen1
+    sql_filter: ST_Area(geometry)>500000.000000
+    tolerance: 200
+  roads_gen0:
+    source: roads_gen1
+    sql_filter:
+    tolerance: 200
+  roads_gen1:
+    source: roads
+    sql_filter:
+      type IN ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary',
+      'primary_link', 'secondary', 'secondary_link', 'tertiary', 'tertiary_link')
+      OR class IN('railway')
+    tolerance: 50
+  waterways_gen0:
+    source: waterways_gen1
+    sql_filter: type='river'
+    tolerance: 200
+  waterways_gen1:
+    source: waterways
+    sql_filter: type='river'
+    tolerance: 50
+  landusages_gen1:
+    source: landusages
+    sql_filter: ST_Area(geometry)>50000.000000
+    tolerance: 50
+  landusages_gen0:
+    source: landusages_gen1
+    sql_filter: ST_Area(geometry)>500000.000000
+    tolerance: 200
+
+tables:
+  places:
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - name: name
+        type: string
+        key: name
+      - name: type
+        type: mapping_value
+      - name: z_order
+        type: enumerate
+        args:
+          values:
+            - locality
+            - suburb
+            - hamlet
+            - village
+            - town
+            - city
+            - county
+            - region
+            - state
+            - country
+      - name: population
+        type: integer
+        key: population
+    type: point
+    mapping:
+      place:
+        - country
+        - state
+        - region
+        - county
+        - city
+        - town
+        - village
+        - hamlet
+        - suburb
+        - locality
+
+  admin:
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - name: name
+        type: string
+        key: name
+      - name: type
+        type: mapping_value
+      - name: admin_level
+        type: integer
+        key: admin_level
+    type: linestring
+    mapping:
+      boundary:
+        - administrative
+
+  waterways:
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+    type: linestring
+    mapping:
+      waterway:
+        - river
+        - canal
+
+  # protected_areas:
+  #   columns:
+  #     - name: osm_id
+  #       type: id
+  #     - name: geometry
+  #       type: geometry
+  #     - name: name
+  #       type: string
+  #       key: name
+  #     - name: type
+  #       type: mapping_value
+  #   type: polygon
+  #   mapping:
+  #     boundary:
+  #       - national_park
+  #       - protected_area
+  #     leisure:
+  #       - nature_reserve
+
+  roads:
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - name: type
+        type: mapping_value
+      - name: class
+        type: mapping_key
+    type: linestring
+    mappings:
+      railway:
+        mapping:
+          railway:
+            - rail
+      roads:
+        mapping:
+          highway:
+            - motorway
+            - motorway_link
+            - trunk
+            - trunk_link
+            - primary
+            - primary_link
+            - secondary
+            - secondary_link
+
+  waterareas:
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - name: name
+        type: string
+        key: name
+      - name: type
+        type: mapping_value
+      - name: area
+        type: webmerc_area
+    type: polygon
+    mapping:
+      landuse:
+        - basin
+        - reservoir
+      natural:
+        - water
+      waterway:
+        - riverbank

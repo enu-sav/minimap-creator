@@ -1,23 +1,32 @@
+## Building
+
+```bash
+npm i
+npm run build
+```
 
 ## Runing
 
 ```bash
-npm i
-PORT=8080 node .
+PORT=8080 npm start
 ```
 
 ## Map generation
 
 Exmaples:
+
 ```bash
 curl http://'localhost:8080?features=kraje&krajId=4' | display
 ```
+
 ```bash
 curl http://'localhost:8080?features=kraje,okresy&okresId=204' | display
 ```
+
 ```bash
 curl http://'localhost:8080?features=kraje,okresy&lat=48.5&lon=19.1' | display
 ```
+
 ```bash
 curl http://'localhost:8080?features=kraje,okresy&lat=48.5&lon=19.1?format=svg' > map.svg
 ```
