@@ -80,6 +80,8 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const regionId = toNumber(params.get("regionId"));
 
+  const placeId = toNumber(params.get("placeId"));
+
   const map = new mapnik.Map(800, 400, "+init=epsg:3857");
 
   const pin = lat == undefined || lon == undefined ? undefined : { lat, lon };
@@ -90,6 +92,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
       featureSet={featureSet}
       regionId={regionId}
       districtId={districtId}
+      placeId={placeId}
     />
   );
 

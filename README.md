@@ -13,13 +13,14 @@ PORT=8080 npm start
 
 ## Map generation
 
-Query parameters:
+Query parameters, all are optional:
 
 - `lat` - pin latitude
 - `lon` - pin longitude
 - `features` - comma separated features: `regions`, `districts`, `roads`, `cities`
 - `regionId` - ID of the region to highlight
 - `districtId` - ID of the district to highlight
+- `placeId` - ID of the place (obec) for the pin
 - `format` - output format, one of `png` (default), `jpeg`, `svg`, `pdf`
 
 Exmaples:
@@ -34,6 +35,10 @@ curl 'http://localhost:8080?features=regions,districts&districtId=204' | display
 
 ```bash
 curl 'http://localhost:8080?features=regions,cities,roads&lat=48.5&lon=19.1' | display
+```
+
+```bash
+curl 'http://localhost:8080?features=regions,cities,roads&placeId=522422' | display
 ```
 
 ```bash

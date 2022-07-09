@@ -1,4 +1,6 @@
 import * as turf from "@turf/turf";
+import { FeatureCollection } from "@turf/turf";
+import { readFileSync } from "fs";
 import { GeoJsonLayer } from "./GeoJsonLayer";
 
 const Map = "Map";
@@ -19,11 +21,29 @@ const PolygonSymbolizer = "PolygonSymbolizer";
 type Props = {
   regionId?: number;
   districtId?: number;
+  placeId?: number;
   featureSet: Set<string>;
   pin?: { lat: number; lon: number };
 };
 
-export function RichMap({ regionId, districtId, featureSet, pin }: Props) {
+const places = JSON.parse(
+  readFileSync("geodata/obec_3.geojson", "utf-8")
+) as FeatureCollection;
+
+export function RichMap({
+  regionId,
+  districtId,
+  placeId,
+  featureSet,
+  pin,
+}: Props) {
+  const place =
+    placeId !== undefined
+      ? places.features.find(
+          (feature) => feature.properties?.["IDN4"] === placeId
+        )
+      : undefined;
+
   return (
     <Map
     // background-color="#eee"
@@ -274,6 +294,20 @@ export function RichMap({ regionId, districtId, featureSet, pin }: Props) {
 
             <Parameter name="inline">
               {JSON.stringify(turf.point([pin.lon, pin.lat]))}
+            </Parameter>
+          </Datasource>
+        </Layer>
+      )}
+
+      {place !== undefined && (
+        <Layer name="place" srs="+init=epsg:4326">
+          <StyleName>pin</StyleName>
+
+          <Datasource>
+            <Parameter name="type">geojson</Parameter>
+
+            <Parameter name="inline">
+              {JSON.stringify(turf.centroid(place))}
             </Parameter>
           </Datasource>
         </Layer>
