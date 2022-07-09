@@ -40,11 +40,9 @@ curl 'http://localhost:8080?features=regions,cities,roads&lat=48.5&lon=19.1' | d
 curl 'http://localhost:8080?features=regions,districts&format=svg' > map.svg
 ```
 
-Supported formats: `png`, `jpeg`, `svg`, `pdf`
-
 ## Notes
 
-Generating geodata from https://www.geoportal.sk/sk/zbgis/na-stiahnutie/ ("Tretia úroveň generalizácie" is enough)
+Generating geodata from https://www.geoportal.sk/sk/zbgis/na-stiahnutie/ ("Tretia úroveň generalizácie" is enough):
 
 ```bash
 for layer of ku_3 obec_3 okres_3 kraj_3 sr_3; do

@@ -1,9 +1,0 @@
-{
-  "plugins": [
-    [
-      "@babel/plugin-transform-react-jsx",
-      { "runtime": "automatic", "importSource": "jsx-xml-jsx-runtime" }
-    ],
-    "@babel/plugin-syntax-nullish-coalescing-operator"
-  ]
-}
