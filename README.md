@@ -40,9 +40,16 @@ curl 'http://localhost:8080?features=regions,cities,roads&lat=48.5&lon=19.1' | d
 curl 'http://localhost:8080?features=regions,districts&format=svg' > map.svg
 ```
 
+Generated map must be enclosed with the following attribution:
+
+- borders: GKÚ Bratislava (CC-BY 4.0)
+- other map features: OpenStreetMap contributors (ODbL 1.0)
+
 ## Notes
 
-Generating geodata from https://www.geoportal.sk/sk/zbgis/na-stiahnutie/ ("Tretia úroveň generalizácie" is enough):
+### Preparing borders
+
+Obtain source data from https://www.geoportal.sk/sk/zbgis/na-stiahnutie/ ("Tretia úroveň generalizácie" is enough):
 
 ```bash
 for layer of ku_3 obec_3 okres_3 kraj_3 sr_3; do
@@ -50,7 +57,9 @@ for layer of ku_3 obec_3 okres_3 kraj_3 sr_3; do
 done
 ```
 
-Preparing data for Slovakia:
+### Preparing data for Slovakia
+
+Obtain source data from http://download.geofabrik.de/europe/slovakia.html.
 
 ```bash
 imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping mapping.yaml -read slovakia-latest.osm.pbf -write -overwritecache
