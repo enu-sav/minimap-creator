@@ -5,8 +5,12 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "node dist",
+    "dev": "concurrently \"tsc --watch --preserveWatchOutput\" \"nodemon --delay 250ms --watch dist --watch images -e js,svg dist\"",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "nodemonConfig": {
+    "delay": 250
   },
   "keywords": [],
   "author": "",
@@ -27,6 +31,8 @@
   "devDependencies": {
     "@types/node": "^18.0.3",
     "@types/temp": "^0.9.1",
+    "concurrently": "^7.2.2",
+    "nodemon": "^2.0.19",
     "replace": "^1.2.1",
     "replace-in-file": "^6.3.5"
   }

@@ -9,13 +9,15 @@ import * as turf from "@turf/turf";
 import { URLSearchParams } from "url";
 import stream from "stream";
 import { render } from "jsx-xml";
-import { DistrictMap } from "./DistrictMap";
+import { RichMap } from "./RichMap";
 
 const pipelineAsync = util.promisify(stream.pipeline);
 
 temp.track();
 
 mapnik.register_default_input_plugins();
+
+mapnik.registerFonts("fonts", { recurse: true });
 
 const merc = new mapnik.Projection("+init=epsg:3857");
 
@@ -74,22 +76,26 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const featureSet = new Set(params.get("features")?.split(",") ?? []);
 
-  const okresId = toNumber(params.get("okresId"));
+  const districtId = toNumber(params.get("districtId"));
 
-  const krajId = toNumber(params.get("krajId"));
+  const regionId = toNumber(params.get("regionId"));
 
   const map = new mapnik.Map(800, 400, "+init=epsg:3857");
 
-  await map.fromStringAsync(
-    render(
-      <DistrictMap
-        krajId={krajId}
-        okresId={okresId}
-        featureSet={featureSet}
-        point={lat == undefined || lon == undefined ? undefined : { lat, lon }}
-      />
-    )
+  const pin = lat == undefined || lon == undefined ? undefined : { lat, lon };
+
+  const style = render(
+    <RichMap
+      pin={pin}
+      featureSet={featureSet}
+      regionId={regionId}
+      districtId={districtId}
+    />
   );
+
+  // console.log("Style:", style);
+
+  await map.fromStringAsync(style);
 
   map.zoomToBox(merc.forward(bbox));
 
