@@ -30,6 +30,25 @@ const places = JSON.parse(
   readFileSync("geodata/obec_3.geojson", "utf-8")
 ) as FeatureCollection;
 
+function RichLineSymbolizer({
+  width,
+  color,
+}: {
+  width: number;
+  color: string;
+}) {
+  return (
+    <LineSymbolizer
+      stroke={color}
+      stroke-width={width}
+      stroke-linejoin="round"
+      stroke-linecap="round"
+      simplify={0.5}
+      simplify-algorithm="douglas-peucker"
+    />
+  );
+}
+
 export function RichMap({
   regionId,
   districtId,
@@ -78,11 +97,7 @@ export function RichMap({
 
       <Style name="region">
         <Rule>
-          <LineSymbolizer
-            stroke="#808"
-            stroke-width={1.5}
-            stroke-linejoin="round"
-          />
+          <RichLineSymbolizer color="#808" width={1.5} />
         </Rule>
       </Style>
 
@@ -95,11 +110,7 @@ export function RichMap({
 
       <Style name="district">
         <Rule>
-          <LineSymbolizer
-            stroke="#808"
-            stroke-width={1}
-            stroke-linejoin="round"
-          />
+          <RichLineSymbolizer color="#808" width={1} />
         </Rule>
       </Style>
 
@@ -107,21 +118,13 @@ export function RichMap({
         <Rule>
           <Filter>[admin_level] = 2</Filter>
 
-          <LineSymbolizer
-            stroke="#ff00ff"
-            stroke-width={2}
-            stroke-linejoin="round"
-          />
+          <RichLineSymbolizer color="#ff00ff" width={2} />
         </Rule>
 
         <Rule>
           <Filter>[admin_level] = 4</Filter>
 
-          <LineSymbolizer
-            stroke="#ff00ff"
-            stroke-width={1}
-            stroke-linejoin="round"
-          />
+          <RichLineSymbolizer color="#ff00ff" width={1} />
         </Rule>
       </Style>
 
@@ -129,21 +132,13 @@ export function RichMap({
         <Rule>
           <Filter>[type] = 'motorway'</Filter>
 
-          <LineSymbolizer
-            stroke="#734a08"
-            stroke-width={1.5}
-            stroke-linejoin="round"
-          />
+          <RichLineSymbolizer color="#734a08" width={1.5} />
         </Rule>
 
         <Rule>
           <Filter>[type] = 'trunk' || [type] = 'primary'</Filter>
 
-          <LineSymbolizer
-            stroke="#734a08"
-            stroke-width={1}
-            stroke-linejoin="round"
-          />
+          <RichLineSymbolizer color="#734a08" width={1} />
         </Rule>
       </Style>
 
@@ -204,16 +199,6 @@ export function RichMap({
             [name]
           </ShieldSymbolizer>
         </Rule>
-
-        <Rule>
-          <Filter>[type] = 'trunk' || [type] = 'primary'</Filter>
-
-          <LineSymbolizer
-            stroke="#734a08"
-            stroke-width={1}
-            stroke-linejoin="round"
-          />
-        </Rule>
       </Style>
 
       <Style name="pin">
@@ -222,7 +207,7 @@ export function RichMap({
             file="images/pin.svg"
             allow-overlap={true}
             ignore-placement={true}
-            stroke-width="0"
+            stroke-width={0}
             fill="#d00"
           />
         </Rule>
@@ -267,7 +252,7 @@ export function RichMap({
           <StyleName>roads</StyleName>
 
           <Datasource base="db">
-            <Parameter name="table">osm_roads_gen1</Parameter>
+            <Parameter name="table">osm_roads_gen1_merged</Parameter>
           </Datasource>
         </Layer>
       )}
