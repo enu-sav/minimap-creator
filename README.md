@@ -24,7 +24,7 @@ Query parameters, all are optional:
 - `placeId` - ID of the place (obec) for the pin
 - `format` - output format, one of `png` (default), `jpeg`, `svg`, `pdf`
 
-Exmaples:
+Examples:
 
 ```bash
 curl 'http://localhost:8080?features=regions&regionId=4' | display
@@ -40,6 +40,10 @@ curl 'http://localhost:8080?features=regions,cities,roads&lat=48.5&lon=19.1' | d
 
 ```bash
 curl 'http://localhost:8080?features=regions,cities,roads&placeId=522422' | display
+```
+
+```bash
+curl 'http://localhost:8080?features=regions,cities,roads&placeId=522422&scale=1&width=1200&height=600' | display
 ```
 
 ```bash
