@@ -88,12 +88,14 @@ export function RichMap({
         </Rule>
       </Style>
 
-      <Style name="regionFill">
-        <Rule>
-          <Filter>[IDN2] = {regionId}</Filter>
-          <PolygonSymbolizer fill="#c00" />
-        </Rule>
-      </Style>
+      {regionId !== undefined && (
+        <Style name="regionFill">
+          <Rule>
+            <Filter>[IDN2] = {regionId}</Filter>
+            <PolygonSymbolizer fill="#c00" />
+          </Rule>
+        </Style>
+      )}
 
       <Style name="region">
         <Rule>
@@ -101,12 +103,14 @@ export function RichMap({
         </Rule>
       </Style>
 
-      <Style name="districtFill">
-        <Rule>
-          <Filter>[IDN3] = {districtId}</Filter>
-          <PolygonSymbolizer fill="#c00" />
-        </Rule>
-      </Style>
+      {districtId !== undefined && (
+        <Style name="districtFill">
+          <Rule>
+            <Filter>[IDN3] = {districtId}</Filter>
+            <PolygonSymbolizer fill="#c00" />
+          </Rule>
+        </Style>
+      )}
 
       <Style name="district">
         <Rule>
@@ -156,7 +160,7 @@ export function RichMap({
             halo-opacity={0.75}
             unlock-image={true}
             dy={-10}
-            shield-dy="0"
+            shield-dy={0}
           >
             [name]
           </ShieldSymbolizer>
@@ -175,7 +179,7 @@ export function RichMap({
             halo-opacity={0.75}
             unlock-image={true}
             dy={-10}
-            shield-dy="0"
+            shield-dy={0}
           >
             [name]
           </ShieldSymbolizer>

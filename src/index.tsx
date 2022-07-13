@@ -60,6 +60,10 @@ function requestListener(req: IncomingMessage, res: ServerResponse) {
 }
 
 function toNumber(value: unknown): number | undefined {
+  if (value == undefined) {
+    return undefined;
+  }
+
   const n = Number(value);
 
   return isNaN(n) ? undefined : n;
@@ -74,6 +78,12 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const lon = toNumber(params.get("lon"));
 
+  const width = toNumber(params.get("width")) ?? 800;
+
+  const height = toNumber(params.get("height")) ?? 400;
+
+  const scale = toNumber(params.get("scale")) ?? 1;
+
   const featureSet = new Set(params.get("features")?.split(",") ?? []);
 
   const districtId = toNumber(params.get("districtId"));
@@ -82,7 +92,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const placeId = toNumber(params.get("placeId"));
 
-  const map = new mapnik.Map(800, 400, "+init=epsg:3857");
+  const map = new mapnik.Map(width, height, "+init=epsg:3857");
 
   const pin = lat == undefined || lon == undefined ? undefined : { lat, lon };
 
@@ -107,6 +117,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
     await map.renderFileAsync(tempName, {
       format,
+      scale,
     });
 
     res.writeHead(200, {
@@ -117,9 +128,9 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
     await fsp.unlink(tempName);
   } else if (format === "jpeg" || format === "png") {
-    const image = new mapnik.Image(800, 400);
+    const image = new mapnik.Image(width, height);
 
-    await map.renderAsync(image, {});
+    await map.renderAsync(image, { scale });
 
     const buffer = await image.encodeAsync(format);
 

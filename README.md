@@ -15,8 +15,9 @@ PORT=8080 npm start
 
 Query parameters, all are optional:
 
-- `lat` - pin latitude
-- `lon` - pin longitude
+- `lat`, `lon` - pin latitude and longitude, default no pin
+- `width`, `height` - image dimensions, default 800x400
+- `scale` - graphics scaling factor, default 1
 - `features` - comma separated features: `regions`, `districts`, `roads`, `cities`
 - `regionId` - ID of the region to highlight
 - `districtId` - ID of the district to highlight
