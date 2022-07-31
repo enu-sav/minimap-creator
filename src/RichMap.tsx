@@ -2,21 +2,22 @@ import * as turf from "@turf/turf";
 import { FeatureCollection } from "@turf/turf";
 import { readFileSync } from "fs";
 import { GeoJsonLayer } from "./GeoJsonLayer";
-
-const Map = "Map";
-const Style = "Style";
-const Rule = "Rule";
-const Filter = "Filter";
-const ShieldSymbolizer = "ShieldSymbolizer";
-const LineSymbolizer = "LineSymbolizer";
-const MarkersSymbolizer = "MarkersSymbolizer";
-const Layer = "Layer";
-const StyleName = "StyleName";
-const Datasource = "Datasource";
-const Parameter = "Parameter";
-const Font = "Font";
-const FontSet = "FontSet";
-const PolygonSymbolizer = "PolygonSymbolizer";
+import {
+  Map,
+  Datasource,
+  Filter,
+  Font,
+  FontSet,
+  Layer,
+  LineSymbolizer,
+  MarkersSymbolizer,
+  Parameter,
+  PolygonSymbolizer,
+  Rule,
+  ShieldSymbolizer,
+  Style,
+  StyleName,
+} from "./mapnikConfig";
 
 type Props = {
   regionId?: number;
@@ -252,7 +253,7 @@ export function RichMap({
       )}
 
       {featureSet.has("roads") && (
-        <Layer name="roads" srs="+init=epsg:3857" opacity="0.5">
+        <Layer name="roads" srs="+init=epsg:3857" opacity={0.5}>
           <StyleName>roads</StyleName>
 
           <Datasource base="db">

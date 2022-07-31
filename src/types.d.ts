@@ -5,3 +5,13 @@ declare module "jsx-xml-jsx-runtime/jsx-runtime" {
 }
 
 declare module "mapnik";
+
+declare namespace JSX {
+  interface IntrinsicElements {}
+
+  interface ElementChildrenAttribute {
+    children: {};
+  }
+
+  interface Element {}
+}
