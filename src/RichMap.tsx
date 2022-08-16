@@ -84,7 +84,7 @@ export function RichMap({
 
       <Style name="bgFill">
         <Rule>
-          <PolygonSymbolizer fill="#ccc" />
+          <PolygonSymbolizer fill="#e6edd5" />
         </Rule>
       </Style>
 
@@ -107,14 +107,14 @@ export function RichMap({
         <Style name="districtFill">
           <Rule>
             <Filter>[IDN3] = {districtId}</Filter>
-            <PolygonSymbolizer fill="#c00" />
+            <PolygonSymbolizer fill="#fecc00" />
           </Rule>
         </Style>
       )}
 
       <Style name="district">
         <Rule>
-          <RichLineSymbolizer color="#808" width={1} />
+          <RichLineSymbolizer color="#c7c" width={1} />
         </Rule>
       </Style>
 
