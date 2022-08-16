@@ -1,13 +1,10 @@
+import { Datasource, Layer, Parameter, StyleName } from "./mapnikConfig";
+
 type Props = {
   name: string;
   file: string;
   style?: string;
 };
-
-const Layer = "Layer";
-const StyleName = "StyleName";
-const Datasource = "Datasource";
-const Parameter = "Parameter";
 
 export function GeoJsonLayer({ name, file, style }: Props) {
   return (

@@ -97,13 +97,15 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
   const pin = lat == undefined || lon == undefined ? undefined : { lat, lon };
 
   const style = render(
-    <RichMap
-      pin={pin}
-      featureSet={featureSet}
-      regionId={regionId}
-      districtId={districtId}
-      placeId={placeId}
-    />
+    (
+      <RichMap
+        pin={pin}
+        featureSet={featureSet}
+        regionId={regionId}
+        districtId={districtId}
+        placeId={placeId}
+      />
+    ) as any // TODO type
   );
 
   // console.log("Style:", style);
