@@ -93,7 +93,7 @@ export function RichMap({
         <Style name="regionFill">
           <Rule>
             <Filter>[IDN2] = {regionId}</Filter>
-            <PolygonSymbolizer fill="#c00" />
+            <PolygonSymbolizer fill="#fecc00" />
           </Rule>
         </Style>
       )}
