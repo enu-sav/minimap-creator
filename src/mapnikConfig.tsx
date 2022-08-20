@@ -24,12 +24,41 @@ export const Parameter = "Parameter" as unknown as (props: {
 }) => JSX.Element;
 
 export const Font = "Font" as unknown as (props: {
-  "face-name": string;
+  faceName: string;
 }) => JSX.Element;
 
 export const FontSet = "FontSet" as unknown as (props: {
   name: string;
   children: JSX.Element;
+}) => JSX.Element;
+
+export const MinScaleDenominator = "MinScaleDenominator" as unknown as (props: {
+  children: number;
+}) => JSX.Element;
+
+export const MaxScaleDenominator = "MaxScaleDenominator" as unknown as (props: {
+  children: number;
+}) => JSX.Element;
+
+export const Placement = "Placement" as unknown as (props: {
+  size?: number | string;
+  dx?: number | string;
+  dy?: number | string;
+  fill?: string;
+  children?: string;
+  upright?: "right_only";
+  characterSpacing?: number | string;
+}) => JSX.Element;
+
+export const Layout = "Layout" as unknown as (props: {
+  dx?: number | string;
+  dy?: number | string;
+  children?: string;
+}) => JSX.Element;
+
+export const Format = "Format" as unknown as (props: {
+  size?: number | string;
+  children?: string;
 }) => JSX.Element;
 
 export const Style = "Style" as unknown as (props: {
@@ -41,7 +70,7 @@ export const Style = "Style" as unknown as (props: {
    * Default value: all
    * Default meaning: All Rules in a Style are processed whether they have filters or not and whether or not the filter conditions evaluate to true.
    */
-  "filter-mode"?: "all" | "first";
+  filterMode?: "all" | "first";
 
   /**
    * A list of image filters that will be applied to the active rendering canvas for a given style. The presence of one more `image-filters` will trigger a new canvas to be created before starting to render a style and then this canvas will be composited back into the main canvas after rendering all features and after all `image-filters` have been applied. See `direct-image-filters` if you want to apply a filter directly to the main canvas.
@@ -49,7 +78,7 @@ export const Style = "Style" as unknown as (props: {
    * Default value: none
    * Default meaning: no filters
    */
-  "image-filters"?: string;
+  imageFilters?: string;
 
   /**
    * A property that can be set to true to enable using an inflated image internally for seamless blurring across tiles (requires buffered data).
@@ -57,7 +86,7 @@ export const Style = "Style" as unknown as (props: {
    * Default value: false
    * Default meaning: No special handling will be done and image filters that blur data will only blur up to the edge of a tile boundary
    */
-  "image-filters-inflate"?: boolean;
+  imageFiltersInflate?: boolean;
 
   /**
    * A list of image filters to apply to the main canvas (see the `image-filters` doc for how they work on a separate canvas).
@@ -65,7 +94,7 @@ export const Style = "Style" as unknown as (props: {
    * Default value: none
    * Default meaning: no filters
    */
-  "direct-image-filters"?: string;
+  directImageFilters?: string;
 
   /**
    * Composite operation. This defines how this layer should behave relative to layers atop or below it.
@@ -73,7 +102,7 @@ export const Style = "Style" as unknown as (props: {
    * Default value: src-over
    * Default meaning: add the current layer on top of other layers
    */
-  "comp-op"?:
+  compOp?:
     | "clear"
     | "src"
     | "dst"
@@ -124,6 +153,7 @@ export const Style = "Style" as unknown as (props: {
 }) => JSX.Element;
 
 export const Layer = "Layer" as unknown as (props: {
+  compOp?: string;
   opacity?: number;
 
   /**
@@ -172,7 +202,7 @@ export const Layer = "Layer" as unknown as (props: {
    * Default value: 0
    * Default meaning: The layer will be visible at the minimum possible scale denominator
    */
-  "minimum-scale-denominator"?: number;
+  minimumScaleDenominator?: number;
 
   /**
    * The maximum scale denominator that this layer will be visible at. The default is the numeric limit of the C++ double type, which may vary slightly by system, but is likely a massive number like 1.79769e+308 and ensures that this layer will always be visible unless the value is reduced. A layer's visibility is determined by whether its status is true and if the Map scale denominator >= `minimum-scale-denominator` - 1e-6 and scale denominator < `maximum-scale-denominator` + 1e-6.
@@ -180,7 +210,7 @@ export const Layer = "Layer" as unknown as (props: {
    * Default value: 1.79769e+308
    * Default meaning: The layer will be visible at the maximum possible scale denominator
    */
-  "maximum-scale-denominator"?: number;
+  maximumScaleDenominator?: number;
 
   /**
    * This property was added for GetFeatureInfo/WMS compatibility and is rarely used. It is off by default meaning that in a WMS context the layer will not be able to be queried unless the property is explicitly set to true.
@@ -196,7 +226,7 @@ export const Layer = "Layer" as unknown as (props: {
    * Default value: false
    * Default meaning: The renderer's collision detector cache (used for avoiding duplicate labels and overlapping markers) will not be cleared immediately before processing this layer
    */
-  "clear-label-cache"?: boolean;
+  clearLabelCache?: boolean;
 
   /**
    * https://github.com/mapnik/mapnik/wiki/Grouped-rendering
@@ -204,7 +234,7 @@ export const Layer = "Layer" as unknown as (props: {
    * Default value:
    * Default meaning: No special layer grouping will be used during rendering
    */
-  "group-by"?: string;
+  groupBy?: string;
 
   /**
    * Extra tolerance around the Layer extent (in pixels) used when querying the layer data during rendering. If set this will override the Map buffer-size.
@@ -212,7 +242,7 @@ export const Layer = "Layer" as unknown as (props: {
    * Default value: 0
    * Default meaning: No custom buffer will be used for the layer and rather the Map buffer-size will be used
    */
-  "buffer-size"?: number;
+  bufferSize?: number;
 
   /**
    * An extent to be used to limit the bounds used to query this specific layer data during rendering. Should be minx, miny, maxx, maxy in the coordinates of the Layer.
@@ -220,7 +250,7 @@ export const Layer = "Layer" as unknown as (props: {
    * Default value: none
    * Default meaning: No clipping extent will be used
    */
-  "maximum-extent"?: number[];
+  maximumExtent?: number[];
 
   /**
    * Setting this to `on` triggers Mapnik to attempt to cache features in memory for rendering when (and only when) a layer has multiple styles attached to it.
@@ -228,7 +258,7 @@ export const Layer = "Layer" as unknown as (props: {
    * Default value: off
    * Default meaning: Features are not cached between rendering multiple styles. The datasource is queried for each style.
    */
-  "cache-features"?: boolean;
+  cacheFeatures?: boolean;
 
   children: JSX.Element;
 }) => JSX.Element;
@@ -240,7 +270,7 @@ export const Map = "Map" as unknown as (props: {
    * Default value: none
    * Default meaning: Will be rendered transparent.
    */
-  "background-color"?: string;
+  backgroundColor?: string;
 
   /**
    * An image that is repeated below all features on a map as a background. Accepted formats: svg, jpg, png, tiff, and webp.
@@ -248,7 +278,7 @@ export const Map = "Map" as unknown as (props: {
    * Default value:
    * Default meaning: No background image will be used.
    */
-  "background-image"?: string;
+  backgroundImage?: string;
 
   /**
    * Set the compositing operation used to blend the image into the background.
@@ -256,7 +286,7 @@ export const Map = "Map" as unknown as (props: {
    * Default value: src-over
    * Default meaning: The background-image will be blended with the background normally (placed on top of any existing background-color).
    */
-  "background-image-comp-op"?:
+  backgroundImageCompOp?:
     | "clear"
     | "src"
     | "dst"
@@ -301,7 +331,7 @@ export const Map = "Map" as unknown as (props: {
    * Default value: 1
    * Default meaning: The image opacity will not be changed when applied to the map background.
    */
-  "background-image-opacity"?: number;
+  backgroundImageOpacity?: number;
 
   /**
    * Map spatial reference (proj4 string).
@@ -317,7 +347,7 @@ export const Map = "Map" as unknown as (props: {
    * Default value: 0
    * Default meaning: No buffer will be used.
    */
-  "buffer-size"?: number;
+  bufferSize?: number;
 
   /**
    * An extent to be used to limit the bounds used to query all layers during rendering. Should be minx, miny, maxx, maxy in the coordinates of the Map.
@@ -325,7 +355,7 @@ export const Map = "Map" as unknown as (props: {
    * Default value: -20037508.34,-20037508.34,20037508.34,20037508.34
    * Default meaning: All data will be clipped to global mercator extent (default is applied in Carto.js).
    */
-  "maximum-extent"?: string;
+  maximumExtent?: string;
 
   /**
    * Any relative paths used to reference files will be understood as relative to this directory path if the map is loaded from an in memory object rather than from the filesystem. If the map is loaded from the filesystem and this option is not provided it will be set to the directory of the stylesheet.
@@ -341,7 +371,7 @@ export const Map = "Map" as unknown as (props: {
    * Default value: true
    * Default meaning: Paths read from XML will be interpreted from the location of the XML.
    */
-  "paths-from-xml"?: boolean;
+  pathsFromXml?: boolean;
 
   /**
    * The minumum Mapnik version (e.g. 0.7.2) needed to use certain functionality in the stylesheet.
@@ -349,7 +379,7 @@ export const Map = "Map" as unknown as (props: {
    * Default value: none
    * Default meaning: Mapnik version will not be detected and no error will be thrown about compatibility.
    */
-  "minimum-version"?: string;
+  minimumVersion?: string;
 
   /**
    * Path to a directory which holds fonts which should be registered when the Map is loaded (in addition to any fonts that may be automatically registered).
@@ -357,7 +387,7 @@ export const Map = "Map" as unknown as (props: {
    * Default value: none
    * Default meaning: No map-specific fonts will be registered.
    */
-  "font-directory"?: string;
+  fontDirectory?: string;
 
   children?: JSX.Element;
 }) => JSX.Element;
@@ -385,7 +415,7 @@ export const PolygonSymbolizer = "PolygonSymbolizer" as unknown as (props: {
    * Default value: 1
    * Default meaning: Color is fully opaque.
    */
-  "fill-opacity"?: number;
+  fillOpacity?: number;
 
   /**
    * Level of antialiasing of polygon edges.
@@ -402,7 +432,7 @@ export const PolygonSymbolizer = "PolygonSymbolizer" as unknown as (props: {
    * Default value: power
    * Default meaning: pow(x,gamma) is used to calculate pixel gamma, which produces slightly smoother line and polygon antialiasing than the 'linear' method, while other methods are usually only used to disable AA.
    */
-  "gamma-method"?: "power" | "linear" | "none" | "threshold" | "multiply";
+  gammaMethod?: "power" | "linear" | "none" | "threshold" | "multiply";
 
   /**
    * Turning on clipping can help performance in the case that the boundaries of the geometry extend outside of tile extents. But clipping can result in undesirable rendering artifacts in rare cases.
@@ -426,7 +456,7 @@ export const PolygonSymbolizer = "PolygonSymbolizer" as unknown as (props: {
    * Default value: radial-distance
    * Default meaning: The geometry will be simplified using the radial distance algorithm.
    */
-  "simplify-algorithm"?:
+  simplifyAlgorithm?:
     | "radial-distance"
     | "zhao-saalfeld"
     | "visvalingam-whyatt"
@@ -447,7 +477,7 @@ export const PolygonSymbolizer = "PolygonSymbolizer" as unknown as (props: {
    * Default value: none
    * Default meaning: The geometry will not be transformed.
    */
-  "geometry-transform"?: string;
+  geometryTransform?: string;
 
   /**
    * Composite operation. This defines how this symbolizer should behave relative to symbolizers atop or below it.
@@ -455,7 +485,7 @@ export const PolygonSymbolizer = "PolygonSymbolizer" as unknown as (props: {
    * Default value: src-over
    * Default meaning: Add the current symbolizer on top of other symbolizer.
    */
-  "comp-op"?:
+  compOp?:
     | "clear"
     | "src"
     | "dst"
@@ -518,7 +548,7 @@ export const LineSymbolizer = "LineSymbolizer" as unknown as (props: {
    * Default value: 1
    * Default meaning: The line will be rendered 1 pixel wide.
    */
-  "stroke-width"?: number;
+  strokeWidth?: number | string;
 
   /**
    * The opacity of a line.
@@ -526,7 +556,7 @@ export const LineSymbolizer = "LineSymbolizer" as unknown as (props: {
    * Default value: 1
    * Default meaning: Color is fully opaque.
    */
-  "stroke-opacity"?: number;
+  strokeOpacity?: number | string;
 
   /**
    * The behavior of lines when joining.
@@ -534,7 +564,7 @@ export const LineSymbolizer = "LineSymbolizer" as unknown as (props: {
    * Default value: miter
    * Default meaning: The line joins will be rendered using a miter look.
    */
-  "stroke-linejoin"?: "miter" | "miter-revert" | "round" | "bevel";
+  strokeLinejoin?: "miter" | "miter-revert" | "round" | "bevel";
 
   /**
    * The display of line endings.
@@ -542,7 +572,7 @@ export const LineSymbolizer = "LineSymbolizer" as unknown as (props: {
    * Default value: butt
    * Default meaning: The line endings will be rendered using a butt look.
    */
-  "stroke-linecap"?: "butt" | "round" | "square";
+  strokeLinecap?: "butt" | "round" | "square";
 
   /**
    * Level of antialiasing of stroke line.
@@ -551,7 +581,7 @@ export const LineSymbolizer = "LineSymbolizer" as unknown as (props: {
    * Default value: 1
    * Default meaning: Fully antialiased.
    */
-  "stroke-gamma"?: number;
+  strokeGamma?: number;
 
   /**
    * An Antigrain Geometry specific rendering hint to control the quality of antialiasing. Under the hood in Mapnik this method is used in combination with the 'gamma' value (which defaults to 1). The methods are in the AGG source at https://github.com/mapnik/mapnik/blob/master/deps/agg/include/agg_gamma_functions.
@@ -559,12 +589,7 @@ export const LineSymbolizer = "LineSymbolizer" as unknown as (props: {
    * Default value: power
    * Default meaning: pow(x,gamma) is used to calculate pixel gamma, which produces slightly smoother line and polygon antialiasing than the 'linear' method, while other methods are usually only used to disable AA.
    */
-  "stroke-gamma-method"?:
-    | "power"
-    | "linear"
-    | "none"
-    | "threshold"
-    | "multiply";
+  strokeGammaMethod?: "power" | "linear" | "none" | "threshold" | "multiply";
 
   /**
    * A pair of length values [a,b], where (a) is the dash length and (b) is the gap length respectively. More than two values are supported for more complex patterns.
@@ -572,7 +597,7 @@ export const LineSymbolizer = "LineSymbolizer" as unknown as (props: {
    * Default value: none
    * Default meaning: The line will be drawn without dashes.
    */
-  "stroke-dasharray"?: number[];
+  strokeDasharray?: number[] | string;
 
   /**
    * Valid parameter but not currently used in renderers (only exists for experimental svg support in Mapnik which is not yet enabled).
@@ -580,7 +605,7 @@ export const LineSymbolizer = "LineSymbolizer" as unknown as (props: {
    * Default value: none
    * Default meaning: The line will be drawn without dashes.
    */
-  "stroke-dashoffset"?: number[];
+  strokeDashoffset?: number[];
 
   /**
    * The limit on the ratio of the miter length to the stroke-width. Used to automatically convert miter joins to bevel joins for sharp angles to avoid the miter extending beyond the thickness of the stroking path. Normally will not need to be set, but a larger value can sometimes help avoid jaggy artifacts.
@@ -588,7 +613,7 @@ export const LineSymbolizer = "LineSymbolizer" as unknown as (props: {
    * Default value: 4
    * Default meaning: Will auto-convert miters to bevel line joins when theta is less than 29 degrees as per the SVG spec: 'miterLength / stroke-width = 1 / sin ( theta / 2 )'.
    */
-  "stroke-miterlimit"?: number;
+  strokeMiterlimit?: number;
 
   /**
    * Turning on clipping can help performance in the case that the boundaries of the geometry extent outside of tile extents. But clipping can result in undesirable rendering artifacts in rare cases.
@@ -612,7 +637,7 @@ export const LineSymbolizer = "LineSymbolizer" as unknown as (props: {
    * Default value: radial-distance
    * Default meaning: The geometry will be simplified using the radial distance algorithm.
    */
-  "simplify-algorithm"?:
+  simplifyAlgorithm?:
     | "radial-distance"
     | "zhao-saalfeld"
     | "visvalingam-whyatt"
@@ -649,7 +674,7 @@ export const LineSymbolizer = "LineSymbolizer" as unknown as (props: {
    * Default value: none
    * Default meaning: The geometry will not be transformed.
    */
-  "geometry-transform"?: string;
+  geometryTransform?: string;
 
   /**
    * Composite operation. This defines how this symbolizer should behave relative to symbolizers atop or below it.
@@ -657,7 +682,7 @@ export const LineSymbolizer = "LineSymbolizer" as unknown as (props: {
    * Default value: src-over
    * Default meaning: Add the current symbolizer on top of other symbolizer.
    */
-  "comp-op"?:
+  compOp?:
     | "clear"
     | "src"
     | "dst"
@@ -720,7 +745,7 @@ export const MarkersSymbolizer = "MarkersSymbolizer" as unknown as (props: {
    * Default value: 1
    * Default meaning: The stroke-opacity and fill-opacity of the marker.
    */
-  opacity?: number;
+  opacity?: number | string;
 
   /**
    * The fill opacity of the marker. This property will also set the `fill-opacity` of elements in an SVG loaded from a file.
@@ -728,7 +753,7 @@ export const MarkersSymbolizer = "MarkersSymbolizer" as unknown as (props: {
    * Default value: 1
    * Default meaning: Color is fully opaque.
    */
-  "fill-opacity"?: number;
+  fillOpacity?: number;
 
   /**
    * The color of the stroke around the marker. This property will also set the `stroke` of elements in an SVG loaded from a file.
@@ -744,7 +769,7 @@ export const MarkersSymbolizer = "MarkersSymbolizer" as unknown as (props: {
    * Default value: 0.5
    * Default meaning: The marker will be drawn with an outline of .5 pixels wide.
    */
-  "stroke-width"?: number;
+  strokeWidth?: number;
 
   /**
    * The opacity of a line.
@@ -752,7 +777,7 @@ export const MarkersSymbolizer = "MarkersSymbolizer" as unknown as (props: {
    * Default value: 1
    * Default meaning: Color is fully opaque. This property will also set the `stroke-opacity` of elements in an SVG loaded from a file.
    */
-  "stroke-opacity"?: number;
+  strokeOpacity?: number;
 
   /**
    * Attempt to place markers on a point, in the center of a polygon, or if markers-placement:line, then multiple times along a line. 'interior' placement can be used to ensure that points placed on polygons are forced to be inside the polygon interior. The 'vertex-first' and 'vertex-last' options can be used to place markers at the first or last vertex of lines or polygons.
@@ -768,7 +793,7 @@ export const MarkersSymbolizer = "MarkersSymbolizer" as unknown as (props: {
    * Default value: each
    * Default meaning: If a feature contains multiple geometries and the placement type is either point or interior then a marker will be rendered for each.
    */
-  "multi-policy"?: "each" | "whole" | "largest";
+  multiPolicy?: "each" | "whole" | "largest";
 
   /**
    * The default marker-type. If a SVG file is not given as the marker-file parameter, the renderer provides either an arrow or an ellipse (a circle if height is equal to width).
@@ -776,7 +801,7 @@ export const MarkersSymbolizer = "MarkersSymbolizer" as unknown as (props: {
    * Default value: ellipse
    * Default meaning: The marker shape is an ellipse.
    */
-  "marker-type"?: "arrow" | "ellipse";
+  markerType?: "arrow" | "ellipse";
 
   /**
    * The width of the marker, if using one of the default types.
@@ -808,7 +833,7 @@ export const MarkersSymbolizer = "MarkersSymbolizer" as unknown as (props: {
    * Default value: false
    * Default meaning: Do not allow markers to overlap with each other - overlapping markers will not be shown.
    */
-  "allow-overlap"?: boolean;
+  allowOverlap?: boolean;
 
   /**
    * Avoid placing markers that intersect with tile boundaries.
@@ -816,7 +841,7 @@ export const MarkersSymbolizer = "MarkersSymbolizer" as unknown as (props: {
    * Default value: false
    * Default meaning: Markers will be potentially placed near tile edges and therefore may look cut off unless they are rendered on each adjacent tile.
    */
-  "avoid-edges"?: boolean;
+  avoidEdges?: boolean;
 
   /**
    * Value to control whether the placement of the feature will prevent the placement of other features.
@@ -824,7 +849,7 @@ export const MarkersSymbolizer = "MarkersSymbolizer" as unknown as (props: {
    * Default value: false
    * Default meaning: do not store the bbox of this geometry in the collision detector cache.
    */
-  "ignore-placement"?: boolean;
+  ignorePlacement?: boolean;
 
   /**
    * Space between repeated markers in pixels. If the spacing is less than the marker size or larger than the line segment length then no marker will be placed. Any value less than 1 will be ignored and the default will be used instead.
@@ -840,7 +865,7 @@ export const MarkersSymbolizer = "MarkersSymbolizer" as unknown as (props: {
    * Default value: 0.2
    * Default meaning: N/A: not intended to be changed.
    */
-  "max-error"?: number;
+  maxError?: number;
 
   /**
    * Transform marker instance with specified function. Ignores map scale factor.
@@ -872,7 +897,7 @@ export const MarkersSymbolizer = "MarkersSymbolizer" as unknown as (props: {
    * Default value: radial-distance
    * Default meaning: The geometry will be simplified using the radial distance algorithm.
    */
-  "simplify-algorithm"?:
+  simplifyAlgorithm?:
     | "radial-distance"
     | "zhao-saalfeld"
     | "visvalingam-whyatt"
@@ -893,7 +918,7 @@ export const MarkersSymbolizer = "MarkersSymbolizer" as unknown as (props: {
    * Default value: none
    * Default meaning: The geometry will not be transformed.
    */
-  "geometry-transform"?: string;
+  geometryTransform?: string;
 
   /**
    * Offsets a marker from a line a number of pixels parallel to its actual path. Positive values move the marker left, negative values move it right (relative to the directionality of the line).
@@ -909,7 +934,7 @@ export const MarkersSymbolizer = "MarkersSymbolizer" as unknown as (props: {
    * Default value: src-over
    * Default meaning: Add the current symbolizer on top of other symbolizer.
    */
-  "comp-op"?:
+  compOp?:
     | "clear"
     | "src"
     | "dst"
@@ -966,6 +991,8 @@ export const MarkersSymbolizer = "MarkersSymbolizer" as unknown as (props: {
 }) => JSX.Element;
 
 export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
+  fontsetName?: string;
+
   /**
    * Allows omitting a shield symbolizer rule.
    * Expression: false
@@ -996,7 +1023,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: none
    * Default meaning:
    */
-  "face-name"?: string;
+  faceName?: string;
 
   /**
    * This parameter should be set to true if you are trying to position text beside rather than on top of the shield image.
@@ -1004,7 +1031,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: false
    * Default meaning: text alignment relative to the shield image uses the center of the image as the anchor for text positioning.
    */
-  "unlock-image"?: boolean;
+  unlockImage?: boolean;
 
   /**
    * The size of the shield text in pixels.
@@ -1042,7 +1069,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: false
    * Default meaning: Shields will be potentially placed near tile edges and therefore may look cut off unless they are rendered on each adjacent tile.
    */
-  "avoid-edges"?: boolean;
+  avoidEdges?: boolean;
 
   /**
    * Control whether overlapping shields are shown or hidden.
@@ -1050,7 +1077,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: false
    * Default meaning: Do not allow shields to overlap with other map elements already placed.
    */
-  "allow-overlap"?: boolean;
+  allowOverlap?: boolean;
 
   /**
    * Minimum distance that a shield can be placed from any other text, shield, or marker.
@@ -1066,7 +1093,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: Shields with the same text will be rendered without restriction.
    */
-  "repeat-distance"?: number;
+  repeatDistance?: number;
 
   /**
    * Minimum distance to any other collision object. Deprecated: replaced by `shield-margin`.
@@ -1074,7 +1101,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: Shields with the same text will be rendered without restriction.
    */
-  "minimum-distance"?: number;
+  minimumDistance?: number;
 
   /**
    * Distance the renderer should use to try to place repeated shields on a line.
@@ -1090,7 +1117,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: No margin will be used to detect if a shield is nearby a tile boundary.
    */
-  "minimum-padding"?: number;
+  minimumPadding?: number;
 
   /**
    * Allows the shield to be displaced from its ideal position by a number of pixels (only works with placement:line).
@@ -1098,7 +1125,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: shield-spacing/2.0
    * Default meaning: If a shield cannot be placed then the renderer will advance by shield-spacing/2.0 to try placement again.
    */
-  "label-position-tolerance"?: number;
+  labelPositionTolerance?: number;
 
   /**
    * Length of a chunk of text in pixels before wrapping text. If set to zero, text doesn't wrap.
@@ -1106,7 +1133,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: Text will not be wrapped.
    */
-  "wrap-width"?: number;
+  wrapWidth?: number;
 
   /**
    * Wrap text before wrap-width is reached.
@@ -1114,7 +1141,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: false
    * Default meaning: Wrapped lines will be a bit longer than wrap-width.
    */
-  "wrap-before"?: boolean;
+  wrapBefore?: boolean;
 
   /**
    * Must be a single character. If you set it to other than the space character, Mapnik will wrap strictly on that character without involving any additional rules.
@@ -1122,7 +1149,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: " "
    * Default meaning: Lines will be wrapped conforming to the (untailored) Unicode Line Break Algorithm provided by ICU BreakIterator.
    */
-  "wrap-character"?: string;
+  wrapCharacter?: string;
 
   /**
    * Specifies the color of the halo around the text.
@@ -1130,7 +1157,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: white
    * Default meaning: The shield halo text will be rendered white.
    */
-  "halo-fill"?: string;
+  haloFill?: string;
 
   /**
    * Specify the radius of the halo in pixels.
@@ -1138,7 +1165,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: no halo.
    */
-  "halo-radius"?: number;
+  haloRadius?: number;
 
   /**
    * Exposes an alternate text halo rendering method that sacrifices quality for speed.
@@ -1146,7 +1173,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: full
    * Default meaning: The shield will be rendered using the highest quality method rather than the fastest.
    */
-  "halo-rasterizer"?: "full" | "fast";
+  haloRasterizer?: "full" | "fast";
 
   /**
    * Transform shield halo relative to the actual text with specified function. Allows for shadow or embossed effects. Ignores map scale factor.
@@ -1154,7 +1181,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value:
    * Default meaning: No transformation.
    */
-  "halo-transform"?: string;
+  haloTransform?: string;
 
   /**
    * Composite operation. This defines how this symbolizer should behave relative to symbolizers atop or below it.
@@ -1162,7 +1189,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: src-over
    * Default meaning: Add the current symbolizer on top of other symbolizer.
    */
-  "halo-comp-op"?:
+  haloCompOp?:
     | "clear"
     | "src"
     | "dst"
@@ -1204,7 +1231,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: 1
    * Default meaning: Fully opaque.
    */
-  "halo-opacity"?: number;
+  haloOpacity?: number;
 
   /**
    * Horizontal spacing between characters (in pixels). Currently works for point placement only, not line placement.
@@ -1212,7 +1239,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: The default character spacing of the font will be used.
    */
-  "character-spacing"?: number;
+  characterSpacing?: number;
 
   /**
    * Vertical spacing between lines of multiline labels (in pixels).
@@ -1220,7 +1247,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: The default font spacing will be used.
    */
-  "line-spacing"?: number;
+  lineSpacing?: number;
 
   /**
    * Displace text within shield by fixed amount, in pixels, +/- along the X axis.  A positive value will shift the shield right.
@@ -1244,7 +1271,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: Shield will not be displaced.
    */
-  "shield-dx"?: number;
+  shieldDx?: number;
 
   /**
    * Displace shield by fixed amount, in pixels, +/- along the Y axis.  A positive value will shift the text down.
@@ -1252,7 +1279,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: Shield will not be displaced.
    */
-  "shield-dy"?: number;
+  shieldDy?: number;
 
   /**
    * The opacity of the image used for the shield.
@@ -1268,7 +1295,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: 1
    * Default meaning: Color is fully opaque.
    */
-  "text-opacity"?: number;
+  textOpacity?: number;
 
   /**
    * The shield's horizontal alignment from its centerpoint.
@@ -1276,7 +1303,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: auto
    * Default meaning: TODO.
    */
-  "horizontal-alignment"?: "left" | "middle" | "right" | "auto";
+  horizontalAlignment?: "left" | "middle" | "right" | "auto";
 
   /**
    * The shield's vertical alignment from its centerpoint.
@@ -1284,7 +1311,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: middle
    * Default meaning: TODO.
    */
-  "vertical-alignment"?: "top" | "middle" | "bottom" | "auto";
+  verticalAlignment?: "top" | "middle" | "bottom" | "auto";
 
   /**
    * Re-position and/or re-size shield to avoid overlaps. "simple" for basic algorithm (using shield-placements string,) "dummy" to turn this feature off.
@@ -1292,7 +1319,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: dummy
    * Default meaning: Alternative placements will not be enabled.
    */
-  "placement-type"?: "dummy" | "simple" | "list";
+  placementType?: "dummy" | "simple" | "list";
 
   /**
    * If "placement-type" is set to "simple", use this "POSITIONS,[SIZES]" string. An example is `shield-placements: "E,NE,SE,W,NW,SW";`.
@@ -1308,12 +1335,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: none
    * Default meaning: No text transformation will be applied.
    */
-  "text-transform"?:
-    | "none"
-    | "uppercase"
-    | "lowercase"
-    | "capitalize"
-    | "reverse";
+  textTransform?: "none" | "uppercase" | "lowercase" | "capitalize" | "reverse";
 
   /**
    * Define how text in a shield's label is justified.
@@ -1321,7 +1343,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: auto
    * Default meaning: TODO.
    */
-  "justify-alignment"?: "left" | "center" | "right" | "auto";
+  justifyAlignment?: "left" | "center" | "right" | "auto";
 
   /**
    * Transform shield instance with specified function. Ignores map scale factor.
@@ -1353,7 +1375,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: radial-distance
    * Default meaning: The geometry will be simplified using the radial distance algorithm.
    */
-  "simplify-algorithm"?:
+  simplifyAlgorithm?:
     | "radial-distance"
     | "zhao-saalfeld"
     | "visvalingam-whyatt"
@@ -1374,7 +1396,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: src-over
    * Default meaning: Add the current symbolizer on top of other symbolizer.
    */
-  "comp-op"?:
+  compOp?:
     | "clear"
     | "src"
     | "dst"
@@ -1419,7 +1441,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: No placement will be done.
    */
-  "grid-cell-width"?: number;
+  gridCellWidth?: number;
 
   /**
    * Controls vertical spacing between placements of placement type `grid` or `alternating-grid`.
@@ -1427,7 +1449,7 @@ export const ShieldSymbolizer = "ShieldSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: No placement will be done.
    */
-  "grid-cell-height"?: number;
+  gridCellHeight?: number;
 
   /**
    * In case of `line` placement, offsets a shield position a number of pixels parallel to its actual path. In case of `grid` placement, reduces or expands the polygon area. Positive values move the line left or expand the polygon, negative values move it right or shrink the polygon (relative to the directionality of the line or polygon winding).
@@ -1488,7 +1510,7 @@ export const LinePatternSymbolizer =
      * Default value: radial-distance
      * Default meaning: The geometry will be simplified using the radial distance algorithm.
      */
-    "simplify-algorithm"?:
+    simplifyAlgorithm?:
       | "radial-distance"
       | "zhao-saalfeld"
       | "visvalingam-whyatt"
@@ -1517,7 +1539,7 @@ export const LinePatternSymbolizer =
      * Default value: none
      * Default meaning: The geometry will not be transformed.
      */
-    "geometry-transform"?: string;
+    geometryTransform?: string;
 
     /**
      * Transform line pattern instance with specified function.
@@ -1533,7 +1555,7 @@ export const LinePatternSymbolizer =
      * Default value: src-over
      * Default meaning: Add the current symbolizer on top of other symbolizer.
      */
-    "comp-op"?:
+    compOp?:
       | "clear"
       | "src"
       | "dst"
@@ -1638,7 +1660,7 @@ export const PolygonPatternSymbolizer =
      * Default value: radial-distance
      * Default meaning: The geometry will be simplified using the radial distance algorithm.
      */
-    "simplify-algorithm"?:
+    simplifyAlgorithm?:
       | "radial-distance"
       | "zhao-saalfeld"
       | "visvalingam-whyatt"
@@ -1659,7 +1681,7 @@ export const PolygonPatternSymbolizer =
      * Default value: none
      * Default meaning: The geometry will not be transformed.
      */
-    "geometry-transform"?: string;
+    geometryTransform?: string;
 
     /**
      * Transform polygon pattern instance with specified function.
@@ -1675,7 +1697,7 @@ export const PolygonPatternSymbolizer =
      * Default value: src-over
      * Default meaning: Add the current symbolizer on top of other symbolizer.
      */
-    "comp-op"?:
+    compOp?:
       | "clear"
       | "src"
       | "dst"
@@ -1738,7 +1760,7 @@ export const RasterSymbolizer = "RasterSymbolizer" as unknown as (props: {
    * Default value: -1
    * Default meaning: Allow the datasource to choose appropriate downscaling.
    */
-  "filter-factor"?: number;
+  filterFactor?: number;
 
   /**
    * The scaling algorithm used to making different resolution versions of this raster layer. Bilinear is a good compromise between speed and accuracy, while lanczos gives the highest quality.
@@ -1772,7 +1794,7 @@ export const RasterSymbolizer = "RasterSymbolizer" as unknown as (props: {
    * Default value: 16
    * Default meaning: Reprojection mesh will be 1/16 of the resolution of the source image.
    */
-  "mesh-size"?: number;
+  meshSize?: number;
 
   /**
    * Composite operation. This defines how this symbolizer should behave relative to symbolizers atop or below it.
@@ -1780,7 +1802,7 @@ export const RasterSymbolizer = "RasterSymbolizer" as unknown as (props: {
    * Default value: src-over
    * Default meaning: Add the current symbolizer on top of other symbolizer.
    */
-  "comp-op"?:
+  compOp?:
     | "clear"
     | "src"
     | "dst"
@@ -1825,7 +1847,7 @@ export const RasterSymbolizer = "RasterSymbolizer" as unknown as (props: {
    * Default value: linear
    * Default meaning: A linear interpolation is used to generate colors between the two nearest stops.
    */
-  "default-mode"?: "discrete" | "linear" | "exact";
+  defaultMode?: "discrete" | "linear" | "exact";
 
   /**
    * This can be any color. Sets the color that is applied to all values outside of the range of the colorizer-stops. If not supplied pixels will be fully transparent.
@@ -1833,7 +1855,7 @@ export const RasterSymbolizer = "RasterSymbolizer" as unknown as (props: {
    * Default value: transparent
    * Default meaning: Pixels that are not colored by the colorizer stops will be transparent.
    */
-  "default-color"?: string;
+  defaultColor?: string;
 
   /**
    * This can be any positive floating point value and will be used as a tolerance in floating point comparisions. The higher the value the more likely a stop will match and color data.
@@ -1875,7 +1897,7 @@ export const PointSymbolizer = "PointSymbolizer" as unknown as (props: {
    * Default value: false
    * Default meaning: Do not allow points to overlap with each other - overlapping markers will not be shown. Shields will not overlap and any shields that might collide with previously placed shields will not be rendered.
    */
-  "allow-overlap"?: boolean;
+  allowOverlap?: boolean;
 
   /**
    * Control whether the placement of the feature will prevent the placement of other features.
@@ -1883,7 +1905,7 @@ export const PointSymbolizer = "PointSymbolizer" as unknown as (props: {
    * Default value: false
    * Default meaning: do not store the bbox of this geometry in the collision detector cache.
    */
-  "ignore-placement"?: boolean;
+  ignorePlacement?: boolean;
 
   /**
    * A value from 0 to 1 to control the opacity of the point.
@@ -1915,7 +1937,7 @@ export const PointSymbolizer = "PointSymbolizer" as unknown as (props: {
    * Default value: src-over
    * Default meaning: Add the current symbolizer on top of other symbolizer.
    */
-  "comp-op"?:
+  compOp?:
     | "clear"
     | "src"
     | "dst"
@@ -1978,7 +2000,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: none
    * Default meaning:
    */
-  "face-name"?: string;
+  faceName?: string;
 
   /**
    * Text size in pixels.
@@ -1994,7 +2016,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: TODO.
    */
-  "text-ratio"?: number;
+  textRatio?: number;
 
   /**
    * Length of a chunk of text in pixels before wrapping text. If set to zero, text doesn't wrap.
@@ -2002,7 +2024,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: Text will not be wrapped.
    */
-  "wrap-width"?: number;
+  wrapWidth?: number;
 
   /**
    * Wrap text before wrap-width is reached.
@@ -2010,7 +2032,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: false
    * Default meaning: Wrapped lines will be a bit longer than wrap-width.
    */
-  "wrap-before"?: boolean;
+  wrapBefore?: boolean;
 
   /**
    * Must be a single character. If you set it to other than the space character, Mapnik will wrap strictly on that character without involving any additional rules.
@@ -2018,7 +2040,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: " "
    * Default meaning: Lines will be wrapped conforming to the (untailored) Unicode Line Break Algorithm provided by ICU BreakIterator.
    */
-  "wrap-character"?: string;
+  wrapCharacter?: string;
 
   /**
    * Keep the character used to wrap a line instead of removing it, and repeat it on the new line.
@@ -2026,7 +2048,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: false
    * Default meaning: Character will be removed when used to wrap a line.
    */
-  "repeat-wrap-character"?: boolean;
+  repeatWrapCharacter?: boolean;
 
   /**
    * Distance the renderer should use to try to place repeated text labels on a line.
@@ -2042,7 +2064,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: The default character spacing of the font will be used.
    */
-  "character-spacing"?: number;
+  characterSpacing?: number;
 
   /**
    * Vertical spacing adjustment between lines in pixels.
@@ -2050,7 +2072,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: The default font spacing will be used.
    */
-  "line-spacing"?: number;
+  lineSpacing?: number;
 
   /**
    * Allows the label to be displaced from its ideal position by a number of pixels (only works with placement:line).
@@ -2058,7 +2080,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: text-spacing/2.0
    * Default meaning: If a shield cannot be placed then the renderer will advance by text-spacing/2.0 to try placement again.
    */
-  "label-position-tolerance"?: number;
+  labelPositionTolerance?: number;
 
   /**
    * The maximum angle change, in degrees, allowed between adjacent characters in a label. This value internally is converted to radians to the default is 22.5*math.pi/180.0. The higher the value the fewer labels will be placed around around sharp corners.
@@ -2066,7 +2088,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: 22.5
    * Default meaning: The label will not be placed if a character falls on a line with an angle sharper than 22.5 degrees.
    */
-  "max-char-angle-delta"?: number;
+  maxCharAngleDelta?: number;
 
   /**
    * Specifies the color for the text.
@@ -2090,7 +2112,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: 1
    * Default meaning: Fully opaque.
    */
-  "halo-opacity"?: number;
+  haloOpacity?: number;
 
   /**
    * Specifies the color of the halo around the text.
@@ -2098,7 +2120,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: white
    * Default meaning: The halo will be rendered white.
    */
-  "halo-fill"?: string;
+  haloFill?: string;
 
   /**
    * Specify the radius of the halo in pixels.
@@ -2106,7 +2128,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: no halo.
    */
-  "halo-radius"?: number;
+  haloRadius?: number;
 
   /**
    * Exposes an alternate text halo rendering method that sacrifices quality for speed.
@@ -2114,7 +2136,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: full
    * Default meaning: The text will be rendered using the highest quality method rather than the fastest.
    */
-  "halo-rasterizer"?: "full" | "fast";
+  haloRasterizer?: "full" | "fast";
 
   /**
    * Transform text halo relative to the actual text with specified function. Allows for shadow or embossed effects. Ignores map scale factor.
@@ -2122,7 +2144,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value:
    * Default meaning: No transformation.
    */
-  "halo-transform"?: string;
+  haloTransform?: string;
 
   /**
    * Displace text by fixed amount, in pixels, +/- along the X axis.  With "dummy" placement-type, a positive value displaces to the right. With "simple" placement-type, it is either left, right or unchanged, depending on the placement selected. Any non-zero value implies "horizontal-alignment" changes to "left" by default. Has no effect with 'line' text-placement-type.
@@ -2146,7 +2168,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: auto
    * Default meaning: Default affected by value of dy; "top" for dy>0, "bottom" for dy<0.
    */
-  "vertical-alignment"?: "top" | "middle" | "bottom" | "auto";
+  verticalAlignment?: "top" | "middle" | "bottom" | "auto";
 
   /**
    * Avoid placing labels that intersect with tile boundaries.
@@ -2154,7 +2176,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: false
    * Default meaning: Text will be potentially placed near tile edges and therefore may look cut off unless the same text label is rendered on each adjacent tile.
    */
-  "avoid-edges"?: boolean;
+  avoidEdges?: boolean;
 
   /**
    * Minimum distance that a label can be placed from any other text, shield, or marker.
@@ -2170,7 +2192,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: Labels with the same text will be rendered without restriction.
    */
-  "repeat-distance"?: number;
+  repeatDistance?: number;
 
   /**
    * Minimum distance to the next label with the same text. Only works for line placement. Deprecated: replaced by `text-repeat-distance` and `text-margin`
@@ -2178,7 +2200,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: Labels with the same text will be rendered without restriction.
    */
-  "minimum-distance"?: number;
+  minimumDistance?: number;
 
   /**
    * Minimum distance a text label will be placed from the edge of a tile. This option is similar to shield-avoid-edges:true except that the extra margin is used to discard cases where the shield+margin are not fully inside the tile.
@@ -2186,7 +2208,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: No margin will be used to detect if a text label is nearby a tile boundary.
    */
-  "minimum-padding"?: number;
+  minimumPadding?: number;
 
   /**
    * Place labels only on polygons and lines with a bounding width longer than this value (in pixels).
@@ -2194,7 +2216,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: place labels on all geometries no matter how small they are.
    */
-  "minimum-path-length"?: number;
+  minimumPathLength?: number;
 
   /**
    * Control whether overlapping text is shown or hidden.
@@ -2202,7 +2224,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: false
    * Default meaning: Do not allow text to overlap with other text - overlapping markers will not be shown.
    */
-  "allow-overlap"?: boolean;
+  allowOverlap?: boolean;
 
   /**
    * Rotate the text. (only works with text-placement:point).
@@ -2218,7 +2240,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: false
    * Default meaning: Label center is used for rotation.
    */
-  "rotate-displacement"?: boolean;
+  rotateDisplacement?: boolean;
 
   /**
    * How this label should be placed along lines. By default when more than half of a label's characters are upside down the label is automatically flipped to keep it upright. By changing this parameter you can prevent this "auto-upright" behavior. The "auto-down" value places text in the opposite orientation to "auto". The "left" or "right" settings can be used to force text to always be placed along a line in a given direction and therefore disables flipping if text appears upside down. The "left-only" or "right-only" properties also force a given direction but will discard upside down text rather than trying to flip it.
@@ -2254,7 +2276,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: dummy
    * Default meaning: Alternative placements will not be enabled.
    */
-  "placement-type"?: "dummy" | "simple" | "list";
+  placementType?: "dummy" | "simple" | "list";
 
   /**
    * If "placement-type" is set to "simple", use this "POSITIONS,[SIZES]" string. An example is `text-placements: "E,NE,SE,W,NW,SW";`.
@@ -2270,12 +2292,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: none
    * Default meaning: Transform text instance with specified function. Ignores map scale factor.
    */
-  "text-transform"?:
-    | "none"
-    | "uppercase"
-    | "lowercase"
-    | "capitalize"
-    | "reverse";
+  textTransform?: "none" | "uppercase" | "lowercase" | "capitalize" | "reverse";
 
   /**
    * The text's horizontal alignment from it's centerpoint. If `placement` is set to `line`, then `adjust` can be set to auto-fit the text to the length of the path by dynamically calculating `character-spacing`.
@@ -2283,7 +2300,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: auto
    * Default meaning: TODO.
    */
-  "horizontal-alignment"?: "left" | "middle" | "right" | "auto" | "adjust";
+  horizontalAlignment?: "left" | "middle" | "right" | "auto" | "adjust";
 
   /**
    * Define how text is justified.
@@ -2291,7 +2308,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: auto
    * Default meaning: Auto alignment means that text will be centered by default except when using the `placement-type` parameter - in that case either right or left justification will be used automatically depending on where the text could be fit given the `text-placements` directives.
    */
-  "justify-alignment"?: "left" | "right" | "center" | "auto";
+  justifyAlignment?: "left" | "right" | "center" | "auto";
 
   /**
    * Turning on clipping can help performance in the case that the boundaries of the geometry extent outside of tile extents. But clipping can result in undesirable rendering artifacts in rare cases.
@@ -2315,7 +2332,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: radial-distance
    * Default meaning: The geometry will be simplified using the radial distance algorithm.
    */
-  "simplify-algorithm"?:
+  simplifyAlgorithm?:
     | "radial-distance"
     | "zhao-saalfeld"
     | "visvalingam-whyatt"
@@ -2336,7 +2353,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: src-over
    * Default meaning: Add the current symbolizer on top of other symbolizer.
    */
-  "comp-op"?:
+  compOp?:
     | "clear"
     | "src"
     | "dst"
@@ -2381,7 +2398,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: src-over
    * Default meaning: Add the current symbolizer on top of other symbolizer.
    */
-  "halo-comp-op"?:
+  haloCompOp?:
     | "clear"
     | "src"
     | "dst"
@@ -2423,7 +2440,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value:
    * Default meaning: Default set of typographic features recommended by OpenType specification. Ligatures are turned off by default when `character-spacing` is greater than zero.
    */
-  "font-feature-settings"?: string;
+  fontFeatureSettings?: string;
 
   /**
    * Controls default labeling behavior on multipolygons. The default is true and means that only the polygon with largest bbox is labeled.
@@ -2431,7 +2448,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: true
    * Default meaning: For multipolygons only polygon with largest bbox area is labeled (does not apply to other geometries).
    */
-  "largest-bbox-only"?: boolean;
+  largestBboxOnly?: boolean;
 
   /**
    * Controls horizontal spacing between placements of placement type `grid` or `alternating-grid`.
@@ -2439,7 +2456,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: No placement will be done.
    */
-  "grid-cell-width"?: number;
+  gridCellWidth?: number;
 
   /**
    * Controls vertical spacing between placements of placement type `grid` or `alternating-grid`.
@@ -2447,7 +2464,7 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default value: 0
    * Default meaning: No placement will be done.
    */
-  "grid-cell-height"?: number;
+  gridCellHeight?: number;
 
   /**
    * In case of `line` placement, offsets a text position a number of pixels parallel to its actual path. In case of `grid` placement, reduces or expands the polygon area. Positive values move the line left or expand the polygon, negative values move it right or shrink the polygon (relative to the directionality of the line or polygon winding).
@@ -2456,6 +2473,8 @@ export const TextSymbolizer = "TextSymbolizer" as unknown as (props: {
    * Default meaning: Will not be offset.
    */
   offset?: number;
+
+  children: JSX.Element;
 }) => JSX.Element;
 
 export const BuildingSymbolizer = "BuildingSymbolizer" as unknown as (props: {
@@ -2481,7 +2500,7 @@ export const BuildingSymbolizer = "BuildingSymbolizer" as unknown as (props: {
    * Default value: 1
    * Default meaning: Color is fully opaque.
    */
-  "fill-opacity"?: number;
+  fillOpacity?: number;
 
   /**
    * The height of the building in pixels.
@@ -2549,7 +2568,7 @@ export const DotSymbolizer = "DotSymbolizer" as unknown as (props: {
    * Default value: src-over
    * Default meaning: Add the current layer on top of other layers.
    */
-  "comp-op"?:
+  compOp?:
     | "clear"
     | "src"
     | "dst"

@@ -1,9 +1,3 @@
-module "jsx-xml-jsx-runtime";
-
-declare module "jsx-xml-jsx-runtime/jsx-runtime" {
-  export default any;
-}
-
 declare module "mapnik";
 
 declare namespace JSX {
@@ -13,5 +7,14 @@ declare namespace JSX {
     children: {};
   }
 
-  interface Element {}
+  type Element =
+    | undefined
+    | string
+    | boolean
+    | number
+    | {
+        elem: string;
+        props: { children?: string | string[]; [key: string]: unknown };
+      }
+    | Element[];
 }

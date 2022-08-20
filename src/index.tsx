@@ -8,8 +8,9 @@ import mapnik from "mapnik";
 import * as turf from "@turf/turf";
 import { URLSearchParams } from "url";
 import stream from "stream";
-import { render } from "jsx-xml";
 import { RichMap } from "./RichMap";
+import { countryData } from "./countryData";
+import { serialize } from "./jsxnik/serialize";
 
 const pipelineAsync = util.promisify(stream.pipeline);
 
@@ -31,15 +32,6 @@ for (const [cla, methods] of [
     );
   }
 }
-
-const bbox = turf.bbox(
-  turf.buffer(
-    JSON.parse(
-      fs.readFileSync("geodata/kraj_3.geojson", { encoding: "utf-8" })
-    ),
-    5
-  )
-);
 
 const server = http.createServer(requestListener);
 
@@ -78,11 +70,9 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const lon = toNumber(params.get("lon"));
 
-  const width = toNumber(params.get("width")) ?? 800;
-
-  const height = toNumber(params.get("height")) ?? 400;
-
   const scale = toNumber(params.get("scale")) ?? 1;
+
+  const margin = toNumber(params.get("margin")) ?? 5;
 
   const featureSet = new Set(params.get("features")?.split(",") ?? []);
 
@@ -92,27 +82,45 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const placeId = toNumber(params.get("placeId"));
 
+  const country = params.get("country") ?? "sk";
+
+  const bbox = countryData[country].boundingBox;
+
+  const mBbox = merc.forward(
+    turf.bbox(
+      turf.buffer(
+        turf.bboxPolygon([bbox.sw.lon, bbox.sw.lat, bbox.ne.lon, bbox.ne.lat]),
+        margin
+      )
+    )
+  );
+
+  const aspectRatio = (mBbox[2] - mBbox[0]) / (mBbox[3] - mBbox[1]);
+
+  const width =
+    toNumber(params.get("width")) ??
+    (toNumber(params.get("height")) ?? 600) * aspectRatio;
+
+  const height = toNumber(params.get("height")) ?? width / aspectRatio;
+
   const map = new mapnik.Map(width, height, "+init=epsg:3857");
 
   const pin = lat == undefined || lon == undefined ? undefined : { lat, lon };
 
-  const style = render(
-    (
-      <RichMap
-        pin={pin}
-        featureSet={featureSet}
-        regionId={regionId}
-        districtId={districtId}
-        placeId={placeId}
-      />
-    ) as any // TODO type
+  const style = serialize(
+    <RichMap
+      pin={pin}
+      featureSet={featureSet}
+      regionId={regionId}
+      districtId={districtId}
+      placeId={placeId}
+      country={country.toUpperCase()}
+    />
   );
-
-  // console.log("Style:", style);
 
   await map.fromStringAsync(style);
 
-  map.zoomToBox(merc.forward(bbox));
+  map.zoomToBox(mBbox);
 
   if (format === "pdf" || format === "svg") {
     const tempName = temp.path({ suffix: "." + format });

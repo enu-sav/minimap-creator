@@ -2,38 +2,26 @@
 areas:
   area_tags:
     - landuse
+    - admin
   linear_tags:
     - highway
 generalized_tables:
-  waterareas_gen1:
-    source: waterareas
-    sql_filter: ST_Area(geometry)>50000.000000
-    tolerance: 50
-  waterareas_gen0:
-    source: waterareas_gen1
-    sql_filter: ST_Area(geometry)>500000.000000
-    tolerance: 200
   roads_gen0:
-    source: roads_gen1
-    sql_filter:
-    tolerance: 200
-  roads_gen1:
     source: roads
-    tolerance: 50
+    sql_filter:
+    tolerance: 1000
+  admin_gen0:
+    source: admin
+    tolerance: 1000
   waterways_gen0:
-    source: waterways_gen1
-    tolerance: 200
-  waterways_gen1:
     source: waterways
-    tolerance: 50
-  # landusages_gen1:
-  #   source: landusages
-  #   sql_filter: ST_Area(geometry)>50000.000000
-  #   tolerance: 50
-  # landusages_gen0:
-  #   source: landusages_gen1
-  #   sql_filter: ST_Area(geometry)>500000.000000
-  #   tolerance: 200
+    tolerance: 1000
+  landusages_gen0:
+    source: landusages
+    # sql_filter: ST_Area(geometry)>500000.000000
+    tolerance: 1000
+
+# for topology-preserving simplification see https://trac.osgeo.org/postgis/wiki/UsersWikiSimplifyPreserveTopology
 
 tables:
   places:
@@ -95,7 +83,10 @@ tables:
       - name: admin_level
         type: integer
         key: admin_level
-    type: linestring
+      - name: country_code
+        type: string
+        key: ISO3166-1:alpha2
+    type: polygon
     mapping:
       boundary:
         - administrative
@@ -137,10 +128,10 @@ tables:
             - trunk_link
             - primary
             - primary_link
-            - secondary
-            - secondary_link
+            # - secondary
+            # - secondary_link
 
-  waterareas:
+  landusages:
     columns:
       - name: osm_id
         type: id
@@ -151,11 +142,52 @@ tables:
       - name: area
         type: webmerc_area
     type: polygon
-    mapping:
-      landuse:
-        - basin
-        - reservoir
+    mappings:
+      amenity:
+        mapping:
+          amenity:
+            - college
+            - hospital
+            - school
+            - university
       natural:
-        - water
-      waterway:
-        - riverbank
+        mapping:
+          natural:
+            - bare_rock
+            - beach
+            - fell
+            - grassland
+            - heath
+            - moor
+            - sand
+            - scree
+            - scrub
+            - water
+            - wetland
+            - wood
+      landuse:
+        mapping:
+          landuse:
+            - allotments
+            - basin
+            - brownfield
+            - cemetery
+            - commercial
+            - depot
+            - farm
+            - farmland
+            - farmyard
+            - forest
+            - grass
+            - greenfield
+            - industrial
+            - landfill
+            - meadow
+            - orchard
+            - quarry
+            - reservoir
+            - residential
+            - retail
+            - village_green
+            - vineyard
+            - wood

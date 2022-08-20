@@ -73,8 +73,16 @@ Obtain source data from http://download.geofabrik.de/europe/slovakia.html.
 
 ```bash
 imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping mapping.yaml -read slovakia-latest.osm.pbf -write -overwritecache
+imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping mapping.yaml -deployproduction
 
 echo "create table osm_roads_gen1_merged as (select type,class, st_linemerge(st_collect(geometry)) as geometry from osm_roads_gen1 group by type, class);" | psql -h localhost minimap minimap
+
+create table osm_admin_gen1 as select id, osm_id, name, name_sk, type, admin_level, country_code, ST_SimplifyPreserveTopology(geometry, 1000) as geometry from osm_admin;
+create index osm_admin_gen1_geom on osm_admin_gen1 using gist (geometry);
+
+create table osm_forests as select ST_SimplifyPreserveTopology(st_union(geometry), 1000) as geometry, type from (select geometry, case when type in ('forest', 'wood') then 'forest' when type in ('water') then 'water' else null end as type from osm_landusages) foo group by type having type is not null;
+
+update osm_admin set country_code = a.country_code from (select distinct on(country_code) x.country_code, y.osm_id from osm_admin x join osm_admin y on ST_intersects(x.geometry, y.geometry) and x.admin_level = 2 and x.country_code <> '' and y.admin_level > 2 order by country_code, st_area(st_intersection(x.geometry, y.geometry)) desc) a where admin_level > 2 and a.osm_id = osm_admin.osm_id;
 
 ogr2ogr -F SQLITE slovakia.sqlite PG:"host=localhost port=5432 dbname=minimap user=minimap password=minimap" -dsco SPATIALITE=YES osm_roads_gen1_merged osm_places
 ```
