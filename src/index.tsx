@@ -5,7 +5,6 @@ import util from "util";
 import fs from "fs";
 import fsp from "fs/promises";
 import mapnik from "mapnik";
-import * as turf from "@turf/turf";
 import { URLSearchParams } from "url";
 import stream from "stream";
 import { RichMap } from "./components//RichMap";
@@ -86,14 +85,12 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const bbox = countryData[country].boundingBox;
 
-  const mBbox = merc.forward(
-    turf.bbox(
-      turf.buffer(
-        turf.bboxPolygon([bbox.sw.lon, bbox.sw.lat, bbox.ne.lon, bbox.ne.lat]),
-        margin
-      )
-    )
-  );
+  const mBbox = merc.forward([
+    bbox.sw.lon,
+    bbox.sw.lat,
+    bbox.ne.lon,
+    bbox.ne.lat,
+  ]);
 
   const aspectRatio = (mBbox[2] - mBbox[0]) / (mBbox[3] - mBbox[1]);
 
@@ -118,11 +115,14 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
     />
   );
 
-  console.log(style);
+  // console.log(style);
 
   await map.fromStringAsync(style);
 
-  map.zoomToBox(mBbox);
+  const mx = ((mBbox[2] - mBbox[0]) / width) * margin;
+  const my = ((mBbox[3] - mBbox[1]) / height) * margin;
+
+  map.zoomToBox([mBbox[0] - mx, mBbox[1] - my, mBbox[2] + mx, mBbox[3] + my]);
 
   if (format === "pdf" || format === "svg") {
     const tempName = temp.path({ suffix: "." + format });
