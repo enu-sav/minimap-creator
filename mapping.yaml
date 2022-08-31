@@ -5,21 +5,6 @@ areas:
     - admin
   linear_tags:
     - highway
-generalized_tables:
-  roads_gen0:
-    source: roads
-    sql_filter:
-    tolerance: 1000
-  admin_gen0:
-    source: admin
-    tolerance: 1000
-  waterways_gen0:
-    source: waterways
-    tolerance: 1000
-  landusages_gen0:
-    source: landusages
-    # sql_filter: ST_Area(geometry)>500000.000000
-    tolerance: 1000
 
 # for topology-preserving simplification see https://trac.osgeo.org/postgis/wiki/UsersWikiSimplifyPreserveTopology
 
@@ -78,8 +63,6 @@ tables:
       - name: name_sk
         type: string
         key: name:sk
-      - name: type
-        type: mapping_value
       - name: admin_level
         type: integer
         key: admin_level
@@ -87,6 +70,7 @@ tables:
         type: string
         key: ISO3166-1:alpha2
     type: polygon
+    # sql_filter: admin_level < 9
     mapping:
       boundary:
         - administrative
@@ -111,25 +95,19 @@ tables:
         type: geometry
       - name: type
         type: mapping_value
-      - name: class
-        type: mapping_key
     type: linestring
-    mappings:
-      railway:
-        mapping:
-          railway:
-            - rail
-      roads:
-        mapping:
-          highway:
-            - motorway
-            - motorway_link
-            - trunk
-            - trunk_link
-            - primary
-            - primary_link
-            # - secondary
-            # - secondary_link
+    mapping:
+      # railway:
+      #   - rail
+      highway:
+        - motorway
+        - motorway_link
+        - trunk
+        - trunk_link
+        - primary
+        - primary_link
+        - secondary
+        - secondary_link
 
   landusages:
     columns:
@@ -139,55 +117,42 @@ tables:
         type: geometry
       - name: type
         type: mapping_value
-      - name: area
-        type: webmerc_area
     type: polygon
-    mappings:
-      amenity:
-        mapping:
-          amenity:
-            - college
-            - hospital
-            - school
-            - university
+    mapping:
       natural:
-        mapping:
-          natural:
-            - bare_rock
-            - beach
-            - fell
-            - grassland
-            - heath
-            - moor
-            - sand
-            - scree
-            - scrub
-            - water
-            - wetland
-            - wood
+        # - bare_rock
+        # - beach
+        # - fell
+        # - grassland
+        # - heath
+        # - moor
+        # - sand
+        # - scree
+        - scrub
+        - water
+        # - wetland
+        - wood
       landuse:
-        mapping:
-          landuse:
-            - allotments
-            - basin
-            - brownfield
-            - cemetery
-            - commercial
-            - depot
-            - farm
-            - farmland
-            - farmyard
-            - forest
-            - grass
-            - greenfield
-            - industrial
-            - landfill
-            - meadow
-            - orchard
-            - quarry
-            - reservoir
-            - residential
-            - retail
-            - village_green
-            - vineyard
-            - wood
+        # - allotments
+        - basin
+        # - brownfield
+        - cemetery
+        - commercial
+        - depot
+        # - farm
+        # - farmland
+        # - farmyard
+        - forest
+        # - grass
+        # - greenfield
+        - industrial
+        # - landfill
+        # - meadow
+        # - orchard
+        - quarry
+        - reservoir
+        - residential
+        - retail
+        # - village_green
+        - vineyard
+        - wood

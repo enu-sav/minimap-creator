@@ -8,9 +8,9 @@ import mapnik from "mapnik";
 import * as turf from "@turf/turf";
 import { URLSearchParams } from "url";
 import stream from "stream";
-import { RichMap } from "./RichMap";
+import { RichMap } from "./components//RichMap";
 import { countryData } from "./countryData";
-import { serialize } from "./jsxnik/serialize";
+import { serialize } from "jsxnik/serialize";
 
 const pipelineAsync = util.promisify(stream.pipeline);
 
@@ -117,6 +117,8 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
       country={country.toUpperCase()}
     />
   );
+
+  console.log(style);
 
   await map.fromStringAsync(style);
 

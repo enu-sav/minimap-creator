@@ -1,4 +1,4 @@
-import { Datasource, Layer, Parameter, StyleName } from "./mapnikConfig";
+import { Datasource, Layer, Parameter, StyleName } from "jsxnik/mapnikConfig";
 
 type Props = {
   name: string;

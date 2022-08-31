@@ -77,12 +77,42 @@ imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping m
 
 echo "create table osm_roads_gen1_merged as (select type,class, st_linemerge(st_collect(geometry)) as geometry from osm_roads_gen1 group by type, class);" | psql -h localhost minimap minimap
 
-create table osm_admin_gen1 as select id, osm_id, name, name_sk, type, admin_level, country_code, ST_SimplifyPreserveTopology(geometry, 1000) as geometry from osm_admin;
-create index osm_admin_gen1_geom on osm_admin_gen1 using gist (geometry);
-
-create table osm_forests as select ST_SimplifyPreserveTopology(st_union(geometry), 1000) as geometry, type from (select geometry, case when type in ('forest', 'wood') then 'forest' when type in ('water') then 'water' else null end as type from osm_landusages) foo group by type having type is not null;
-
-update osm_admin set country_code = a.country_code from (select distinct on(country_code) x.country_code, y.osm_id from osm_admin x join osm_admin y on ST_intersects(x.geometry, y.geometry) and x.admin_level = 2 and x.country_code <> '' and y.admin_level > 2 order by country_code, st_area(st_intersection(x.geometry, y.geometry)) desc) a where admin_level > 2 and a.osm_id = osm_admin.osm_id;
 
 ogr2ogr -F SQLITE slovakia.sqlite PG:"host=localhost port=5432 dbname=minimap user=minimap password=minimap" -dsco SPATIALITE=YES osm_roads_gen1_merged osm_places
 ```
+
+update osm_admin set country_code = a.country_code from (select distinct on(y.osm_id) x.country_code, y.osm_id from osm_admin x join osm_admin y on ST_intersects(x.geometry, y.geometry) and x.admin_level = 2 and x.country_code <> '' and y.admin_level > 2 order by y.osm_id, st_area(st_intersection(x.geometry, y.geometry)) desc) a where admin_level > 2 and a.osm_id = osm_admin.osm_id;
+
+update osm_landusages set type = (case when type in ('scrub','wood','vineyard','forest') then 'forest' when type in ('basin','reservoir','water') then 'water' when type in ('cemetery','commercial','depot','industrial','quarry','residential','retail') then 'human' else null end);
+
+v.in.ogr input="PG:host=localhost dbname=minimap user=minimap password=minimap" layer=osm_admin output=admin
+v.generalize --overwrite input=admin output=admin_gen20 method=douglas threshold=20
+v.generalize --overwrite input=admin_gen20 output=admin_gen100 method=douglas threshold=100
+v.generalize --overwrite input=admin_gen100 output=admin_gen500 method=douglas threshold=500
+v.extract input=admin_gen500 where=admin_level=2 output=adm2 dissolve_column=osm_id -d --overwrite
+v.extract input=admin_gen500 where=admin_level=3 output=adm3 dissolve_column=osm_id -d --overwrite
+v.extract input=admin_gen500 where=admin_level=4 output=adm4 dissolve_column=osm_id -d --overwrite
+v.extract input=admin_gen500 where=admin_level=5 output=adm5 dissolve_column=osm_id -d --overwrite
+v.extract input=admin_gen500 where=admin_level=6 output=adm6 dissolve_column=osm_id -d --overwrite
+v.extract input=admin_gen500 where=admin_level=7 output=adm7 dissolve_column=osm_id -d --overwrite
+v.extract input=admin_gen500 where=admin_level=8 output=adm8 dissolve_column=osm_id -d --overwrite
+v.extract input=admin_gen500 where=admin_level=9 output=adm9 dissolve_column=osm_id -d --overwrite
+v.extract input=admin_gen500 where=admin_level=10 output=adm10 dissolve_column=osm_id -d --overwrite
+v.extract input=admin_gen500 where=admin_level=11 output=adm11 dissolve_column=osm_id -d --overwrite
+v.out.ogr input=adm2 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL
+v.out.ogr input=adm3 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
+v.out.ogr input=adm4 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
+v.out.ogr input=adm5 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
+v.out.ogr input=adm6 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
+v.out.ogr input=adm7 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
+v.out.ogr input=adm8 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
+v.out.ogr input=adm9 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
+v.out.ogr input=adm10 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
+v.out.ogr input=adm11 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
+
+ogr2ogr -f "GPKG" admin.gpkg PG:"dbname='minimap' host='localhost' port=5432 user='minimap' password='minimap'" -nln 'admin' -sql "SELECT \* FROM backup.osm_admin where admin_level = 9;"
+java -jar regionsimplify-1.4.1/RegionSimplify.jar -i admin.gpkg -s 9244649
+
+https://github.com/eurostat/RegionSimplify
+https://gis.stackexchange.com/questions/439271/simplify-multipolygon-removing-small-gaps-in-postgis/439274
+https://gadm.org/
