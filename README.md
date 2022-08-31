@@ -81,10 +81,6 @@ echo "create table osm_roads_gen1_merged as (select type,class, st_linemerge(st_
 ogr2ogr -F SQLITE slovakia.sqlite PG:"host=localhost port=5432 dbname=minimap user=minimap password=minimap" -dsco SPATIALITE=YES osm_roads_gen1_merged osm_places
 ```
 
-update osm_admin set country_code = a.country_code from (select distinct on(y.osm_id) x.country_code, y.osm_id from osm_admin x join osm_admin y on ST_intersects(x.geometry, y.geometry) and x.admin_level = 2 and x.country_code <> '' and y.admin_level > 2 order by y.osm_id, st_area(st_intersection(x.geometry, y.geometry)) desc) a where admin_level > 2 and a.osm_id = osm_admin.osm_id;
-
-update osm_landusages set type = (case when type in ('scrub','wood','vineyard','forest') then 'forest' when type in ('basin','reservoir','water') then 'water' when type in ('cemetery','commercial','depot','industrial','quarry','residential','retail') then 'human' else null end);
-
 v.in.ogr input="PG:host=localhost dbname=minimap user=minimap password=minimap" layer=osm_admin output=admin
 v.generalize --overwrite input=admin output=admin_gen20 method=douglas threshold=20
 v.generalize --overwrite input=admin_gen20 output=admin_gen100 method=douglas threshold=100

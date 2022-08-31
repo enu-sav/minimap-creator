@@ -16,7 +16,7 @@ type Props = {
   placeId?: number;
   featureSet: Set<string>;
   pin?: { lat: number; lon: number };
-  country: string;
+  country?: string;
 };
 
 export function RichMap({
@@ -28,7 +28,7 @@ export function RichMap({
   country,
 }: Props) {
   return (
-    <Map backgroundColor="#88f">
+    <Map backgroundColor="#aaf">
       <Fonts />
 
       <Datasource name="db">
@@ -47,15 +47,15 @@ export function RichMap({
         <Parameter name="file">admin.sqlite</Parameter>
       </Datasource>
 
+      <Land />
+
       {featureSet.has("districts") && <SkDistricts districtId={districtId} />}
 
       {featureSet.has("regions") && <SkRegions regionId={regionId} />}
 
-      <Land />
-
       {featureSet.has("landuse") && <Landcover />}
 
-      <CountryMask country={country} />
+      {country !== undefined && <CountryMask country={country} />}
 
       {featureSet.has("roads") && <Roads />}
 

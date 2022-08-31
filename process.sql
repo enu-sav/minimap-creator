@@ -1,16 +1,59 @@
-create
-or replace function ZRes (z integer) returns float returns null on null input language sql immutable parallel safe as $ func $
-select
+CREATE
+OR replace FUNCTION ZRes (z INTEGER) RETURNS FLOAT RETURNS NULL ON NULL input LANGUAGE sql IMMUTABLE PARALLEL SAFE AS $$
+SELECT
   (40075016.6855785 /(256 * 2 ^ z));
 
-$ func $;
+$$;
 
-create
-or replace function ZRes (z float) returns float returns null on null input language sql immutable parallel safe as $ func $
-select
+CREATE
+OR replace FUNCTION ZRes (z FLOAT) RETURNS FLOAT RETURNS NULL ON NULL input LANGUAGE sql IMMUTABLE PARALLEL SAFE AS $$
+SELECT
   (40075016.6855785 /(256 * 2 ^ z));
 
-$ func $;
+$$;
+
+UPDATE
+  osm_admin
+SET
+  country_code = a.country_code
+FROM
+  (
+    SELECT
+      DISTINCT ON(y.id) x.country_code,
+      y.id
+    FROM
+      osm_admin x
+      JOIN osm_admin y ON ST_intersects(x.geometry, y.geometry)
+      AND x.admin_level = 2
+      AND x.country_code <> ''
+      AND y.admin_level > 2
+    ORDER BY
+      y.id,
+      st_area(st_intersection(x.geometry, y.geometry)) DESC
+  ) a
+WHERE
+  admin_level > 2
+  AND a.id = osm_admin.id;
+
+UPDATE
+  osm_landusages
+SET
+  TYPE = (
+    CASE
+      WHEN TYPE IN ('scrub', 'wood', 'vineyard', 'forest') THEN 'forest'
+      WHEN TYPE IN ('basin', 'reservoir', 'water') THEN 'water'
+      WHEN TYPE IN (
+        'cemetery',
+        'commercial',
+        'depot',
+        'industrial',
+        'quarry',
+        'residential',
+        'retail'
+      ) THEN 'human'
+      ELSE NULL
+    END
+  );
 
 DROP TABLE simplify_vw_z7_;
 
@@ -56,7 +99,7 @@ DELETE FROM
 WHERE
   ST_Area(geometry) < power(zres(7), 2);
 
-alter table
-  osm_landuse
-alter column
-  "type" type varchar(8);
+ALTER TABLE
+  osm_landcover_gen_z7_
+ALTER column
+  "type" TYPE VARCHAR(8);
