@@ -7,13 +7,14 @@ import {
   Style,
   StyleName,
 } from "jsxnik/mapnikConfig";
+import { colors } from "../colors";
 
 export function Land() {
   return (
     <>
       <Style name="land">
         <Rule>
-          <PolygonSymbolizer fill="#eee" />
+          <PolygonSymbolizer fill={colors.land} />
         </Rule>
       </Style>
 

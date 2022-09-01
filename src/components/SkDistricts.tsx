@@ -1,4 +1,5 @@
 import { Filter, PolygonSymbolizer, Rule, Style } from "jsxnik/mapnikConfig";
+import { colors } from "../colors";
 import { GeoJsonLayer } from "./GeoJsonLayer";
 import { RichLineSymbolizer } from "./RichLineSymbolizer";
 
@@ -14,7 +15,7 @@ export function SkDistricts({ districtId }: Props) {
           <Style name="districtFill">
             <Rule>
               <Filter>[IDN3] = {districtId}</Filter>
-              <PolygonSymbolizer fill="#fecc00" />
+              <PolygonSymbolizer fill={colors.areaHighlight} />
             </Rule>
           </Style>
 
@@ -28,7 +29,7 @@ export function SkDistricts({ districtId }: Props) {
 
       <Style name="district">
         <Rule>
-          <RichLineSymbolizer color="#c7c" width={1} />
+          <RichLineSymbolizer color={colors.border} width={1} />
         </Rule>
       </Style>
 

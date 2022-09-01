@@ -1,22 +1,16 @@
 import * as turf from "@turf/turf";
 import { FeatureCollection } from "@turf/turf";
 import { readFileSync } from "fs";
-
 import {
-  Map,
   Datasource,
-  Filter,
-  Font,
-  FontSet,
   Layer,
-  LineSymbolizer,
   MarkersSymbolizer,
   Parameter,
-  PolygonSymbolizer,
   Rule,
   Style,
   StyleName,
 } from "jsxnik/mapnikConfig";
+import { colors } from "../colors";
 
 type Props = {
   placeId?: number;
@@ -44,7 +38,7 @@ export function Pin({ placeId, pin }: Props) {
             allowOverlap={true}
             ignorePlacement={true}
             strokeWidth={0}
-            fill="#d00"
+            fill={colors.pin}
           />
         </Rule>
       </Style>

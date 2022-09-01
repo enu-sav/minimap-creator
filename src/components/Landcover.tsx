@@ -8,6 +8,7 @@ import {
   Style,
   StyleName,
 } from "jsxnik/mapnikConfig";
+import { colors } from "../colors";
 
 export function Landcover() {
   return (
@@ -23,17 +24,17 @@ export function Landcover() {
       <Style name="landuse">
         <Rule>
           <Filter>[type] = 'forest'</Filter>
-          <PolygonSymbolizer fill="#bea" />
+          <PolygonSymbolizer fill={colors.forest} />
         </Rule>
 
         <Rule>
           <Filter>[type] = 'water'</Filter>
-          <PolygonSymbolizer fill="#aaf" />
+          <PolygonSymbolizer fill={colors.water} />
         </Rule>
 
         <Rule>
           <Filter>[type] = 'human'</Filter>
-          <PolygonSymbolizer fill="#ccc" />
+          <PolygonSymbolizer fill={colors.human} />
         </Rule>
       </Style>
     </>

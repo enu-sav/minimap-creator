@@ -1,4 +1,5 @@
 import { Filter, PolygonSymbolizer, Rule, Style } from "jsxnik/mapnikConfig";
+import { colors } from "../colors";
 import { GeoJsonLayer } from "./GeoJsonLayer";
 
 type Props = {
@@ -11,7 +12,7 @@ export function Region({ regionId }: Props) {
       <Style name="regionFill">
         <Rule>
           <Filter>[IDN2] = {regionId}</Filter>
-          <PolygonSymbolizer fill="#c00" />
+          <PolygonSymbolizer fill={colors.areaHighlight} />
         </Rule>
       </Style>
 

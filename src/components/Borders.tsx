@@ -3,10 +3,12 @@ import {
   Filter,
   Layer,
   Parameter,
+  PolygonSymbolizer,
   Rule,
   Style,
   StyleName,
 } from "jsxnik/mapnikConfig";
+import { colors } from "../colors";
 import { RichLineSymbolizer } from "./RichLineSymbolizer";
 
 export function Borders() {
@@ -16,20 +18,19 @@ export function Borders() {
         <Rule>
           <Filter>[admin_level] = 2</Filter>
 
-          <RichLineSymbolizer color="#808" width={3} />
+          <RichLineSymbolizer color={colors.border} width={3} />
         </Rule>
 
         <Rule>
           <Filter>[admin_level] = 4</Filter>
 
-          <RichLineSymbolizer color="#808" width={1} />
+          <RichLineSymbolizer color={colors.border} width={1.5} />
         </Rule>
 
-        {/* <Rule>
-          <Filter>[admin_level] = 8</Filter>
-
-          <RichLineSymbolizer color="#808" width={1} />
-        </Rule> */}
+        <Rule>
+          <Filter>[name] = "Prešovský kraj"</Filter>
+          <PolygonSymbolizer fill={colors.areaHighlight} />
+        </Rule>
       </Style>
 
       <Layer name="borders" srs="+init=epsg:3857">
@@ -37,8 +38,8 @@ export function Borders() {
 
         <Datasource base="db">
           <Parameter name="table">
-            (select ogc_fid, admin_level, wkb_geometry from admin where
-            admin_level in (2, 4)) AS foo
+            (select admin_level, name, geometry from admin_areas where
+            admin_level &lt; 8) AS foo
           </Parameter>
         </Datasource>
       </Layer>

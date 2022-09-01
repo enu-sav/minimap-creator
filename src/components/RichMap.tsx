@@ -1,4 +1,5 @@
 import { Datasource, Map, Parameter } from "jsxnik/mapnikConfig";
+import { colors } from "../colors";
 import { Borders } from "./Borders";
 import { CountryMask } from "./CountryMask";
 import { Fonts } from "./Fonts";
@@ -28,7 +29,7 @@ export function RichMap({
   country,
 }: Props) {
   return (
-    <Map backgroundColor="#aaf">
+    <Map backgroundColor={colors.water}>
       <Fonts />
 
       <Datasource name="db">
@@ -55,9 +56,9 @@ export function RichMap({
 
       {featureSet.has("landuse") && <Landcover />}
 
-      {country !== undefined && <CountryMask country={country} />}
-
       {featureSet.has("roads") && <Roads />}
+
+      {country !== undefined && <CountryMask country={country} />}
 
       {featureSet.has("osm_borders") && <Borders />}
 
