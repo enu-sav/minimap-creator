@@ -1,16 +1,16 @@
 CREATE
-OR replace FUNCTION ZRes (z INTEGER) RETURNS FLOAT RETURNS NULL ON NULL input LANGUAGE sql IMMUTABLE PARALLEL SAFE AS $$
+OR replace FUNCTION ZRes (z INTEGER) RETURNS FLOAT RETURNS NULL ON NULL input LANGUAGE sql IMMUTABLE PARALLEL SAFE AS $ $
 SELECT
   (40075016.6855785 /(256 * 2 ^ z));
 
-$$;
+$ $;
 
 CREATE
-OR replace FUNCTION ZRes (z FLOAT) RETURNS FLOAT RETURNS NULL ON NULL input LANGUAGE sql IMMUTABLE PARALLEL SAFE AS $$
+OR replace FUNCTION ZRes (z FLOAT) RETURNS FLOAT RETURNS NULL ON NULL input LANGUAGE sql IMMUTABLE PARALLEL SAFE AS $ $
 SELECT
   (40075016.6855785 /(256 * 2 ^ z));
 
-$$;
+$ $;
 
 UPDATE
   osm_admin
@@ -103,3 +103,36 @@ ALTER TABLE
   osm_landcover_gen_z7_
 ALTER column
   "type" TYPE VARCHAR(8);
+
+CREATE TABLE osm_roads_gen_merged AS (
+  SELECT
+    type,
+    st_simplify(st_linemerge(st_collect(geometry)), 100) AS geometry
+  FROM
+    (
+      SELECT
+        type,
+        ST_ClusterDBSCAN(geometry, eps := 0, minpoints := 1) OVER () AS cid,
+        geometry
+      FROM
+        osm_roads
+    ) foo
+  GROUP BY
+    type,
+    cid
+);
+
+CREATE TABLE admin_areas AS
+SELECT
+  osm_id,
+  name,
+  name_sk,
+  admin_level,
+  country_code,
+  wkb_geometry AS geometry
+FROM
+  admin;
+
+CREATE INDEX admin_areas_geom ON admin_areas USING gist(geometry);
+
+CREATE INDEX osm_roads_gen_merged_geom ON osm_roads_gen_merged USING gist(geometry);

@@ -75,12 +75,11 @@ Obtain source data from http://download.geofabrik.de/europe/slovakia.html.
 imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping mapping.yaml -read slovakia-latest.osm.pbf -write -overwritecache
 imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping mapping.yaml -deployproduction
 
-echo "create table osm_roads_gen1_merged as (select type,class, st_linemerge(st_collect(geometry)) as geometry from osm_roads_gen1 group by type, class);" | psql -h localhost minimap minimap
-
 
 ogr2ogr -F SQLITE slovakia.sqlite PG:"host=localhost port=5432 dbname=minimap user=minimap password=minimap" -dsco SPATIALITE=YES osm_roads_gen1_merged osm_places
 ```
 
+```
 v.in.ogr input="PG:host=localhost dbname=minimap user=minimap password=minimap" layer=osm_admin output=admin
 v.generalize --overwrite input=admin output=admin_gen20 method=douglas threshold=20
 v.generalize --overwrite input=admin_gen20 output=admin_gen100 method=douglas threshold=100
@@ -105,10 +104,18 @@ v.out.ogr input=adm8 type=area output="PG:host=localhost dbname=minimap user=min
 v.out.ogr input=adm9 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
 v.out.ogr input=adm10 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
 v.out.ogr input=adm11 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
+```
 
+```
 ogr2ogr -f "GPKG" admin.gpkg PG:"dbname='minimap' host='localhost' port=5432 user='minimap' password='minimap'" -nln 'admin' -sql "SELECT \* FROM backup.osm_admin where admin_level = 9;"
-java -jar regionsimplify-1.4.1/RegionSimplify.jar -i admin.gpkg -s 9244649
+```
+
+<!-- java -jar regionsimplify-1.4.1/RegionSimplify.jar -i admin.gpkg -s 9244649 -->
 
 https://github.com/eurostat/RegionSimplify
 https://gis.stackexchange.com/questions/439271/simplify-multipolygon-removing-small-gaps-in-postgis/439274
 https://gadm.org/
+
+```
+
+```
