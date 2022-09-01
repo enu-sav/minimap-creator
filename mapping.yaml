@@ -2,38 +2,11 @@
 areas:
   area_tags:
     - landuse
+    - admin
   linear_tags:
     - highway
-generalized_tables:
-  waterareas_gen1:
-    source: waterareas
-    sql_filter: ST_Area(geometry)>50000.000000
-    tolerance: 50
-  waterareas_gen0:
-    source: waterareas_gen1
-    sql_filter: ST_Area(geometry)>500000.000000
-    tolerance: 200
-  roads_gen0:
-    source: roads_gen1
-    sql_filter:
-    tolerance: 200
-  roads_gen1:
-    source: roads
-    tolerance: 50
-  waterways_gen0:
-    source: waterways_gen1
-    tolerance: 200
-  waterways_gen1:
-    source: waterways
-    tolerance: 50
-  # landusages_gen1:
-  #   source: landusages
-  #   sql_filter: ST_Area(geometry)>50000.000000
-  #   tolerance: 50
-  # landusages_gen0:
-  #   source: landusages_gen1
-  #   sql_filter: ST_Area(geometry)>500000.000000
-  #   tolerance: 200
+
+# for topology-preserving simplification see https://trac.osgeo.org/postgis/wiki/UsersWikiSimplifyPreserveTopology
 
 tables:
   places:
@@ -90,12 +63,14 @@ tables:
       - name: name_sk
         type: string
         key: name:sk
-      - name: type
-        type: mapping_value
       - name: admin_level
         type: integer
         key: admin_level
-    type: linestring
+      - name: country_code
+        type: string
+        key: ISO3166-1:alpha2
+    type: polygon
+    # sql_filter: admin_level < 9
     mapping:
       boundary:
         - administrative
@@ -120,27 +95,21 @@ tables:
         type: geometry
       - name: type
         type: mapping_value
-      - name: class
-        type: mapping_key
     type: linestring
-    mappings:
-      railway:
-        mapping:
-          railway:
-            - rail
-      roads:
-        mapping:
-          highway:
-            - motorway
-            - motorway_link
-            - trunk
-            - trunk_link
-            - primary
-            - primary_link
-            - secondary
-            - secondary_link
+    mapping:
+      # railway:
+      #   - rail
+      highway:
+        - motorway
+        - motorway_link
+        - trunk
+        - trunk_link
+        - primary
+        - primary_link
+        - secondary
+        - secondary_link
 
-  waterareas:
+  landcover:
     columns:
       - name: osm_id
         type: id
@@ -148,14 +117,42 @@ tables:
         type: geometry
       - name: type
         type: mapping_value
-      - name: area
-        type: webmerc_area
     type: polygon
     mapping:
-      landuse:
-        - basin
-        - reservoir
       natural:
+        # - bare_rock
+        # - beach
+        # - fell
+        # - grassland
+        # - heath
+        # - moor
+        # - sand
+        # - scree
+        - scrub
         - water
-      waterway:
-        - riverbank
+        # - wetland
+        - wood
+      landuse:
+        # - allotments
+        - basin
+        # - brownfield
+        - cemetery
+        - commercial
+        - depot
+        # - farm
+        # - farmland
+        # - farmyard
+        - forest
+        # - grass
+        # - greenfield
+        - industrial
+        # - landfill
+        # - meadow
+        # - orchard
+        - quarry
+        - reservoir
+        - residential
+        - retail
+        # - village_green
+        - vineyard
+        - wood

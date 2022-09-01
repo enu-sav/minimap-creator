@@ -14,7 +14,7 @@
     "outDir": "dist",
     "baseUrl": ".",
     "jsx": "react-jsx",
-    "jsxImportSource": "jsx-xml-jsx-runtime"
+    "jsxImportSource": "jsxnik"
   },
   "include": ["src/**/*"]
 }

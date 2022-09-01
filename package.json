@@ -14,7 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@turf/turf": "^6.5.0",
-    "jsx-xml-jsx-runtime": "^1.0.1",
+    "jsxnik": "0.0.1",
     "mapnik": "^4.5.9",
     "temp": "^0.9.4",
     "typescript": "^4.7.4"

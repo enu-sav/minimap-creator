@@ -5,11 +5,11 @@ import util from "util";
 import fs from "fs";
 import fsp from "fs/promises";
 import mapnik from "mapnik";
-import * as turf from "@turf/turf";
 import { URLSearchParams } from "url";
 import stream from "stream";
-import { render } from "jsx-xml";
-import { RichMap } from "./RichMap";
+import { RichMap } from "./components//RichMap";
+import { countryData } from "./countryData";
+import { serialize } from "jsxnik/serialize";
 
 const pipelineAsync = util.promisify(stream.pipeline);
 
@@ -31,15 +31,6 @@ for (const [cla, methods] of [
     );
   }
 }
-
-const bbox = turf.bbox(
-  turf.buffer(
-    JSON.parse(
-      fs.readFileSync("geodata/kraj_3.geojson", { encoding: "utf-8" })
-    ),
-    5
-  )
-);
 
 const server = http.createServer(requestListener);
 
@@ -78,11 +69,9 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const lon = toNumber(params.get("lon"));
 
-  const width = toNumber(params.get("width")) ?? 800;
-
-  const height = toNumber(params.get("height")) ?? 400;
-
   const scale = toNumber(params.get("scale")) ?? 1;
+
+  const margin = toNumber(params.get("margin")) ?? 5;
 
   const featureSet = new Set(params.get("features")?.split(",") ?? []);
 
@@ -92,27 +81,56 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const placeId = toNumber(params.get("placeId"));
 
+  const country = params.get("country") ?? "sk";
+
+  const highlightAdminArea = params.get("highlight-admin-area") ?? undefined;
+
+  const bboxParam = params.get("bbox");
+
+  let bbox: number[];
+
+  if (bboxParam) {
+    bbox = bboxParam.split(",").map((c) => Number(c));
+  } else {
+    const { sw, ne } = countryData[country].boundingBox;
+
+    bbox = [sw.lon, sw.lat, ne.lon, ne.lat];
+  }
+
+  const mBbox = merc.forward(bbox);
+
+  const aspectRatio = (mBbox[2] - mBbox[0]) / (mBbox[3] - mBbox[1]);
+
+  const width =
+    toNumber(params.get("width")) ??
+    (toNumber(params.get("height")) ?? 600) * aspectRatio;
+
+  const height = toNumber(params.get("height")) ?? width / aspectRatio;
+
   const map = new mapnik.Map(width, height, "+init=epsg:3857");
 
   const pin = lat == undefined || lon == undefined ? undefined : { lat, lon };
 
-  const style = render(
-    (
-      <RichMap
-        pin={pin}
-        featureSet={featureSet}
-        regionId={regionId}
-        districtId={districtId}
-        placeId={placeId}
-      />
-    ) as any // TODO type
+  const style = serialize(
+    <RichMap
+      pin={pin}
+      featureSet={featureSet}
+      regionId={regionId}
+      districtId={districtId}
+      placeId={placeId}
+      country={country.toUpperCase()}
+      highlightAdminArea={highlightAdminArea}
+    />
   );
 
-  // console.log("Style:", style);
+  // console.log(style);
 
   await map.fromStringAsync(style);
 
-  map.zoomToBox(merc.forward(bbox));
+  const mx = ((mBbox[2] - mBbox[0]) / width) * margin;
+  const my = ((mBbox[3] - mBbox[1]) / height) * margin;
+
+  map.zoomToBox([mBbox[0] - mx, mBbox[1] - my, mBbox[2] + mx, mBbox[3] + my]);
 
   if (format === "pdf" || format === "svg") {
     const tempName = temp.path({ suffix: "." + format });
@@ -120,6 +138,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
     await map.renderFileAsync(tempName, {
       format,
       scale,
+      variables: {},
     });
 
     res.writeHead(200, {
@@ -132,7 +151,10 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
   } else if (format === "jpeg" || format === "png") {
     const image = new mapnik.Image(width, height);
 
-    await map.renderAsync(image, { scale });
+    await map.renderAsync(image, {
+      scale,
+      variables: {},
+    });
 
     const buffer = await image.encodeAsync(format);
 
