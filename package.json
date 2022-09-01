@@ -17,10 +17,10 @@
     "jsxnik": "0.0.3",
     "mapnik": "^4.5.9",
     "temp": "^0.9.4",
-    "typescript": "^4.7.4"
+    "typescript": "^4.8.2"
   },
   "devDependencies": {
-    "@types/node": "^18.6.3",
+    "@types/node": "^18.7.14",
     "@types/temp": "^0.9.1",
     "concurrently": "^7.3.0",
     "nodemon": "^2.0.19"
