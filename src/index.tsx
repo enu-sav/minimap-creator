@@ -83,14 +83,21 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const country = params.get("country") ?? "sk";
 
-  const bbox = countryData[country].boundingBox;
+  const highlightAdminArea = params.get("highlight-admin-area") ?? undefined;
 
-  const mBbox = merc.forward([
-    bbox.sw.lon,
-    bbox.sw.lat,
-    bbox.ne.lon,
-    bbox.ne.lat,
-  ]);
+  const bboxParam = params.get("bbox");
+
+  let bbox: number[];
+
+  if (bboxParam) {
+    bbox = bboxParam.split(",").map((c) => Number(c));
+  } else {
+    const { sw, ne } = countryData[country].boundingBox;
+
+    bbox = [sw.lon, sw.lat, ne.lon, ne.lat];
+  }
+
+  const mBbox = merc.forward(bbox);
 
   const aspectRatio = (mBbox[2] - mBbox[0]) / (mBbox[3] - mBbox[1]);
 
@@ -112,6 +119,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
       districtId={districtId}
       placeId={placeId}
       country={country.toUpperCase()}
+      highlightAdminArea={highlightAdminArea}
     />
   );
 
@@ -130,6 +138,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
     await map.renderFileAsync(tempName, {
       format,
       scale,
+      variables: {},
     });
 
     res.writeHead(200, {
@@ -142,7 +151,10 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
   } else if (format === "jpeg" || format === "png") {
     const image = new mapnik.Image(width, height);
 
-    await map.renderAsync(image, { scale });
+    await map.renderAsync(image, {
+      scale,
+      variables: {},
+    });
 
     const buffer = await image.encodeAsync(format);
 

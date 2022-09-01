@@ -11,7 +11,12 @@ import {
 import { colors } from "../colors";
 import { RichLineSymbolizer } from "./RichLineSymbolizer";
 
-export function Borders() {
+type Props = {
+  highlight?: string | number;
+};
+
+export function Borders({ highlight }: Props) {
+  console.log(highlight);
   return (
     <>
       <Style name="borders">
@@ -27,10 +32,16 @@ export function Borders() {
           <RichLineSymbolizer color={colors.border} width={1.5} />
         </Rule>
 
-        <Rule>
-          <Filter>[name] = "Prešovský kraj"</Filter>
-          <PolygonSymbolizer fill={colors.areaHighlight} />
-        </Rule>
+        {highlight !== undefined && (
+          <Rule>
+            {isNaN(Number(highlight)) ? (
+              <Filter>[name] = "{highlight}"</Filter>
+            ) : (
+              <Filter>[osm_id] = -({highlight})</Filter>
+            )}
+            <PolygonSymbolizer fill={colors.areaHighlight} />
+          </Rule>
+        )}
       </Style>
 
       <Layer name="borders" srs="+init=epsg:3857">
@@ -38,8 +49,8 @@ export function Borders() {
 
         <Datasource base="db">
           <Parameter name="table">
-            (SELECT ogc_fid, admin_level, name, geometry FROM admin_areas WHERE
-            admin_level &lt; 8) AS foo
+            (SELECT ogc_fid, osm_id, admin_level, name, geometry FROM
+            admin_areas WHERE admin_level &lt; 8) AS foo
           </Parameter>
         </Datasource>
       </Layer>

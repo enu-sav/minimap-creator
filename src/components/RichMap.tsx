@@ -18,6 +18,7 @@ type Props = {
   featureSet: Set<string>;
   pin?: { lat: number; lon: number };
   country?: string;
+  highlightAdminArea?: string | number;
 };
 
 export function RichMap({
@@ -27,6 +28,7 @@ export function RichMap({
   featureSet,
   pin,
   country,
+  highlightAdminArea,
 }: Props) {
   return (
     <Map backgroundColor={colors.water}>
@@ -57,7 +59,7 @@ export function RichMap({
 
       {country !== undefined && <CountryMask country={country} />}
 
-      {featureSet.has("borders") && <Borders />}
+      {featureSet.has("borders") && <Borders highlight={highlightAdminArea} />}
 
       {featureSet.has("cities") && <Places />}
 

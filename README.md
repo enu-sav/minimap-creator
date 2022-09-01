@@ -16,12 +16,23 @@ PORT=8080 npm start
 Query parameters, all are optional:
 
 - `lat`, `lon` - pin latitude and longitude, default no pin
-- `width`, `height` - image dimensions, default 800x400
+- `width` - image width, default 800, or computed from `country` and `height` if specified
+- `height` - image height, default 400, or computed from `country` and `width` if specified
 - `scale` - graphics scaling factor, default 1
-- `features` - comma separated features: `regions`, `districts`, `roads`, `cities`
-- `regionId` - ID of the region to highlight
-- `districtId` - ID of the district to highlight
-- `placeId` - ID of the place (obec) for the pin
+- `features` - comma separated features:
+  - `regions` - Slovakia regions
+  - `districts` - Slovakia districts
+  - `roads` - roads
+  - `borders` - global borders (admin_level=2 for country borders, admin_level=4 for region borders)
+  - `cities` - cities
+  - `landcover` - forests, water bodies, urban areas
+- `country` - country to zoom to and to highlight
+- `regionId` - ID of the region to highlight (Slovakia only)
+- `districtId` - ID of the district to highlight (Slovakia only)
+- `placeId` - ID of the place (obec) for the pin (Slovakia only)
+- `highlight-admin-area` - OSM ID or name of the area to highlight
+- `bbox` - explicit bounding box to render (minLon,minLat,maxLon,maxLat)
+- `margin` - map margin in pixels, default 5
 - `format` - output format, one of `png` (default), `jpeg`, `svg`, `pdf`
 
 Examples:
@@ -48,6 +59,17 @@ curl 'http://localhost:8080?features=regions,cities,roads&placeId=522422&scale=1
 
 ```bash
 curl 'http://localhost:8080?features=regions,districts&format=svg' > map.svg
+```
+
+```bash
+curl -G -v 'http://localhost:8080' \
+  --data-urlencode "features=cities,borders,landcover,roads" \
+  --data-urlencode "placeId=522422" \
+  --data-urlencode "country=sk" \
+  --data-urlencode "width=1200" \
+  --data-urlencode "scale=1" \
+  --data-urlencode "margin=20" \
+  --data-urlencode "highlight-admin-area=Prešovský kraj" | display
 ```
 
 Generated map must be enclosed with the following attribution:
