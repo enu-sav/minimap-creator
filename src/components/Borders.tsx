@@ -16,7 +16,6 @@ type Props = {
 };
 
 export function Borders({ highlight }: Props) {
-  console.log(highlight);
   return (
     <>
       <Style name="borders">
