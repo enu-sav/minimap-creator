@@ -1,15 +1,16 @@
-## Building
+## Preparation
 
-```bash
-npm i
-npm run build
-```
-
-## Runing
-
-```bash
-PORT=8080 npm start
-```
+1. clone the project
+1. [download map data](https://drive.google.com/file/d/1r1l2KTpI1ksuoRiyakHRi9GXlJB4Je1D/view?usp=sharing) or prepare it on your own (see Nodes below)
+1. install dependencies and build the project
+   ```bash
+   npm i
+   npm run build
+   ```
+1. start the server
+   ```bash
+   PORT=8080 npm start
+   ```
 
 ## Map generation
 
@@ -23,7 +24,7 @@ Query parameters, all are optional:
   - `regions` - Slovakia regions
   - `districts` - Slovakia districts
   - `roads` - roads
-  - `borders` - global borders (admin_level=2 for country borders, admin_level=4 for region borders)
+  - `borders` - global borders (admin_level=2 for country borders, admin_level=4 for region borders); see https://wiki.openstreetmap.org/wiki/Tag:boundary=administrative#10_admin_level_values_for_specific_countries
   - `cities` - cities
   - `landcover` - forests, water bodies, urban areas
 - `country` - country to zoom to and to highlight
@@ -62,7 +63,7 @@ curl 'http://localhost:8080?features=regions,districts&format=svg' > map.svg
 ```
 
 ```bash
-curl -G -v 'http://localhost:8080' \
+curl -G 'http://localhost:8080' \
   --data-urlencode "features=cities,borders,landcover,roads" \
   --data-urlencode "placeId=522422" \
   --data-urlencode "country=sk" \
