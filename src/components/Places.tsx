@@ -75,10 +75,12 @@ export function Places() {
         <StyleName>places</StyleName>
 
         <Datasource base="db">
+          <Parameter name="key_field">id</Parameter>
+
           <Parameter name="table">
-            (SELECT coalesce(NULLIF(name_sk, ''), name) AS name, geometry, type,
-            capital FROM osm_places ORDER BY z_order DESC, population DESC) AS
-            foo
+            (SELECT id, coalesce(NULLIF(name_sk, ''), name) AS name, geometry,
+            type, capital FROM osm_places ORDER BY z_order DESC, population
+            DESC) AS foo
           </Parameter>
         </Datasource>
       </Layer>

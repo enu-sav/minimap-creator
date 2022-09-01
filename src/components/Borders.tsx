@@ -38,7 +38,7 @@ export function Borders() {
 
         <Datasource base="db">
           <Parameter name="table">
-            (select admin_level, name, geometry from admin_areas where
+            (SELECT ogc_fid, admin_level, name, geometry FROM admin_areas WHERE
             admin_level &lt; 8) AS foo
           </Parameter>
         </Datasource>

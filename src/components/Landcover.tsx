@@ -13,15 +13,15 @@ import { colors } from "../colors";
 export function Landcover() {
   return (
     <>
-      <Layer name="landuse" srs="+init=epsg:3857">
-        <StyleName>landuse</StyleName>
+      <Layer name="landcover" srs="+init=epsg:3857">
+        <StyleName>landcover</StyleName>
 
         <Datasource base="db">
-          <Parameter name="table">osm_landcover_gen_z7_</Parameter>
+          <Parameter name="table">landcover</Parameter>
         </Datasource>
       </Layer>
 
-      <Style name="landuse">
+      <Style name="landcover">
         <Rule>
           <Filter>[type] = 'forest'</Filter>
           <PolygonSymbolizer fill={colors.forest} />

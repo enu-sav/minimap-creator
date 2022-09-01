@@ -32,20 +32,17 @@ export function RichMap({
     <Map backgroundColor={colors.water}>
       <Fonts />
 
-      <Datasource name="db">
+      {/* <Datasource name="db">
         <Parameter name="type">postgis</Parameter>
         <Parameter name="host">localhost</Parameter>
         <Parameter name="dbname">minimap</Parameter>
         <Parameter name="user">minimap</Parameter>
         <Parameter name="password">minimap</Parameter>
+      </Datasource> */}
 
-        {/* <Parameter name="type">sqlite</Parameter>
-        <Parameter name="file">slovakia.sqlite</Parameter> */}
-      </Datasource>
-
-      <Datasource name="admin_db">
+      <Datasource name="db">
         <Parameter name="type">sqlite</Parameter>
-        <Parameter name="file">admin.sqlite</Parameter>
+        <Parameter name="file">map.sqlite</Parameter>
       </Datasource>
 
       <Land />
@@ -54,13 +51,13 @@ export function RichMap({
 
       {featureSet.has("regions") && <SkRegions regionId={regionId} />}
 
-      {featureSet.has("landuse") && <Landcover />}
+      {featureSet.has("landcover") && <Landcover />}
 
       {featureSet.has("roads") && <Roads />}
 
       {country !== undefined && <CountryMask country={country} />}
 
-      {featureSet.has("osm_borders") && <Borders />}
+      {featureSet.has("borders") && <Borders />}
 
       {featureSet.has("cities") && <Places />}
 

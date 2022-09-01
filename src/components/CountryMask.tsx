@@ -46,8 +46,8 @@ export function CountryMask({ country }: Props) {
 
           <Datasource base="db">
             <Parameter name="table">
-              (SELECT ogc_fid, wkb_geometry FROM admin WHERE admin_level = 2 AND
-              country_code = '{country}') AS foo
+              (SELECT ogc_fid, geometry FROM admin_areas WHERE admin_level = 2
+              AND country_code = '{country}') AS foo
             </Parameter>
           </Datasource>
         </Layer>

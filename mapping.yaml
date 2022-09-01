@@ -109,7 +109,7 @@ tables:
         - secondary
         - secondary_link
 
-  landusages:
+  landcover:
     columns:
       - name: osm_id
         type: id

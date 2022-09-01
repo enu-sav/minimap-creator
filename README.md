@@ -74,9 +74,16 @@ Obtain source data from http://download.geofabrik.de/europe/slovakia.html.
 ```bash
 imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping mapping.yaml -read slovakia-latest.osm.pbf -write -overwritecache
 imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping mapping.yaml -deployproduction
+```
 
+```bash
+psql -h localhost minimap minimap < process.sql
+```
 
-ogr2ogr -F SQLITE slovakia.sqlite PG:"host=localhost port=5432 dbname=minimap user=minimap password=minimap" -dsco SPATIALITE=YES osm_roads_gen1_merged osm_places
+Export
+
+```
+ogr2ogr -F SQLITE map.sqlite PG:"host=localhost port=5432 dbname=minimap user=minimap password=minimap" -dsco SPATIALITE=YES roads osm_places admin_areas landcover
 ```
 
 ```

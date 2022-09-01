@@ -55,9 +55,9 @@ SET
     END
   );
 
-DROP TABLE simplify_vw_z7_;
+DROP TABLE simplify_landcover;
 
-CREATE TABLE simplify_vw_z7_ AS (
+CREATE TABLE simplify_landcover AS (
   SELECT
     type,
     ST_MakeValid(
@@ -67,14 +67,14 @@ CREATE TABLE simplify_vw_z7_ AS (
       )
     ) AS geometry
   FROM
-    osm_landuse
+    osm_landusages
 );
 
-CREATE INDEX ON simplify_vw_z7_ USING GIST (geometry);
+CREATE INDEX ON simplify_landcover USING GIST (geometry);
 
-DROP TABLE osm_landcover_gen_z7_;
+DROP TABLE landcover;
 
-CREATE TABLE osm_landcover_gen_z7_ AS (
+CREATE TABLE landcover AS (
   SELECT
     type,
     ST_MakeValid((ST_Dump(ST_Union(geometry))).geom) AS geometry
@@ -85,26 +85,26 @@ CREATE TABLE osm_landcover_gen_z7_ AS (
         ST_ClusterDBSCAN(geometry, eps := 0, minpoints := 1) OVER () AS cid,
         geometry
       FROM
-        simplify_vw_z7_
+        simplify_landcover
     ) union_geom
   GROUP BY
     type,
     cid
 );
 
-CREATE INDEX ON osm_landcover_gen_z7_ USING GIST (geometry);
+CREATE INDEX ON landcover USING GIST (geometry);
 
 DELETE FROM
-  osm_landcover_gen_z7_
+  landcover
 WHERE
   ST_Area(geometry) < power(zres(7), 2);
 
 ALTER TABLE
-  osm_landcover_gen_z7_
+  landcover
 ALTER column
   "type" TYPE VARCHAR(8);
 
-CREATE TABLE osm_roads_gen_merged AS (
+CREATE TABLE roads AS (
   SELECT
     type,
     st_simplify(st_linemerge(st_collect(geometry)), 100) AS geometry
@@ -135,4 +135,19 @@ FROM
 
 CREATE INDEX admin_areas_geom ON admin_areas USING gist(geometry);
 
-CREATE INDEX osm_roads_gen_merged_geom ON osm_roads_gen_merged USING gist(geometry);
+CREATE INDEX roads_geom ON roads USING gist(geometry);
+
+ALTER TABLE
+  roads
+ADD
+  COLUMN ogc_fid SERIAL PRIMARY KEY;
+
+ALTER TABLE
+  landcover
+ADD
+  COLUMN ogc_fid SERIAL PRIMARY KEY;
+
+ALTER TABLE
+  admin_areas
+ADD
+  COLUMN ogc_fid SERIAL PRIMARY KEY;

@@ -32,8 +32,7 @@ export function Roads() {
 
         <Datasource base="db">
           <Parameter name="table">
-            (SELECT geometry, type FROM osm_roads_gen_merged ORDER BY type DESC)
-            foo
+            (SELECT ogc_fid, geometry, type FROM roads ORDER BY type DESC) foo
           </Parameter>
         </Datasource>
       </Layer>
