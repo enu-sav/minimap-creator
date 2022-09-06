@@ -3,9 +3,12 @@
 1. clone the project
 1. [download map data](https://drive.google.com/file/d/1r1l2KTpI1ksuoRiyakHRi9GXlJB4Je1D/view?usp=sharing) or prepare it on your own (see Nodes below) and put it to the project directory
 1. [download simplified land polygons](https://osmdata.openstreetmap.de/download/simplified-land-polygons-complete-3857.zip) and unpack it to project directory
-1. install dependencies and build the project
+1. install dependencies
    ```bash
    npm i
+   ```
+1. build the project
+   ```bash
    npm run build
    ```
 1. start the server
