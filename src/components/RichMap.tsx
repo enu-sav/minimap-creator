@@ -49,11 +49,11 @@ export function RichMap({
 
       <Land />
 
+      {featureSet.has("landcover") && <Landcover />}
+
       {featureSet.has("districts") && <SkDistricts districtId={districtId} />}
 
       {featureSet.has("regions") && <SkRegions regionId={regionId} />}
-
-      {featureSet.has("landcover") && <Landcover />}
 
       {featureSet.has("roads") && <Roads />}
 
