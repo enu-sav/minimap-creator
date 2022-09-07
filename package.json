@@ -14,7 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@turf/turf": "^6.5.0",
-    "jsxnik": "0.0.6",
+    "jsxnik": "0.0.7",
     "mapnik": "^4.5.9",
     "temp": "^0.9.4"
   },
