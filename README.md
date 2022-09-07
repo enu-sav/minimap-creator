@@ -1,3 +1,9 @@
+# Minimap Creator
+
+Minimap Creator is a HTTP server for creating minimaps.
+
+![Slovakia, Košický región](sample.png)
+
 ## Preparation
 
 1. clone the project
