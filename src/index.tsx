@@ -111,6 +111,16 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const pin = lat == undefined || lon == undefined ? undefined : { lat, lon };
 
+  const [minorBorders, microBorders] = [
+    params.get("minor-borders"),
+    params.get("micro-borders"),
+  ].map((b) =>
+    b
+      ?.toUpperCase()
+      .split(",")
+      .map((item) => item.split(":"))
+  );
+
   const style = serialize(
     <RichMap
       pin={pin}
@@ -120,10 +130,10 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
       placeId={placeId}
       country={country.toUpperCase()}
       highlightAdminArea={highlightAdminArea}
+      minorBorders={minorBorders && Object.fromEntries(minorBorders)}
+      microBorders={microBorders && Object.fromEntries(microBorders)}
     />
   );
-
-  // console.log(style);
 
   await map.fromStringAsync(style);
 

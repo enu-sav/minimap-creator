@@ -13,34 +13,56 @@ import { RichLineSymbolizer } from "./RichLineSymbolizer";
 
 type Props = {
   highlight?: string | number;
+  minor?: Record<string, number>;
+  micro?: Record<string, number>;
 };
 
-export function Borders({ highlight }: Props) {
+function Lower({
+  value,
+  ...rest
+}: {
+  value: Record<string, number>;
+} & Parameters<typeof RichLineSymbolizer>[0]) {
+  return (
+    <Rule>
+      <Filter>
+        {Object.entries(value)
+          .map(
+            ([cc, level]) =>
+              `([admin_level] = ${level} and [country_code] = "${cc}")`
+          )
+          .join(" or ")}
+      </Filter>
+
+      <RichLineSymbolizer {...rest} />
+    </Rule>
+  );
+}
+
+export function Borders({ highlight, minor, micro }: Props) {
   return (
     <>
       <Style name="borders">
-        <Rule>
-          <Filter>[admin_level] = 2</Filter>
-
-          <RichLineSymbolizer color={colors.border} width={3} />
-        </Rule>
-
-        <Rule>
-          <Filter>[admin_level] = 4</Filter>
-
-          <RichLineSymbolizer color={colors.border} width={1.5} />
-        </Rule>
-
         {highlight !== undefined && (
           <Rule>
             {isNaN(Number(highlight)) ? (
               <Filter>[name] = "{highlight}"</Filter>
             ) : (
-              <Filter>[osm_id] = -({highlight})</Filter>
+              <Filter>[osm_id] = {highlight}</Filter>
             )}
             <PolygonSymbolizer fill={colors.areaHighlight} />
           </Rule>
         )}
+
+        {micro && <Lower value={micro} width={0.75} color={colors.border} />}
+
+        {minor && <Lower value={minor} width={1.5} color={colors.border} />}
+
+        <Rule>
+          <Filter>[admin_level] = 2</Filter>
+
+          <RichLineSymbolizer color={colors.border} width={3} />
+        </Rule>
       </Style>
 
       <Layer name="borders" srs="+init=epsg:3857">
@@ -48,8 +70,20 @@ export function Borders({ highlight }: Props) {
 
         <Datasource base="db">
           <Parameter name="table">
-            (SELECT ogc_fid, osm_id, admin_level, name, geometry FROM
-            admin_areas WHERE admin_level &lt; 8) AS foo
+            (SELECT ogc_fid, osm_id, country_code, admin_level, name, geometry
+            FROM admin_areas WHERE admin_level = 2 OR{" "}
+            {[
+              ...new Set([
+                ...Object.entries(minor ?? {}),
+                ...Object.entries(micro ?? {}),
+              ]),
+            ]
+              .map(
+                ([cc, level]) =>
+                  `admin_level = ${level} AND [country_code] = '${cc}'`
+              )
+              .join(" OR ")}
+            ) AS foo
           </Parameter>
         </Datasource>
       </Layer>
