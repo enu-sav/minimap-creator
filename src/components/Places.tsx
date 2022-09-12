@@ -1,5 +1,6 @@
 import {
   Datasource,
+  DebugSymbolizer,
   Filter,
   Layer,
   Parameter,
@@ -9,6 +10,17 @@ import {
   StyleName,
 } from "jsxnik/mapnikConfig";
 
+const commonProps: Partial<Parameters<typeof ShieldSymbolizer>[0]> = {
+  fontsetName: "regular",
+  margin: 0,
+  haloFill: "white",
+  haloRadius: 2,
+  haloOpacity: 0.75,
+  unlockImage: true,
+  dy: -10,
+  shieldDy: 0,
+};
+
 export function Places() {
   return (
     <>
@@ -17,16 +29,9 @@ export function Places() {
           <Filter>[type] = 'city' &amp;&amp; [capital] = 'yes'</Filter>
 
           <ShieldSymbolizer
-            fontsetName="regular"
+            {...commonProps}
             file="images/capital.svg"
-            margin={20}
             size={20}
-            haloFill="white"
-            haloRadius={2}
-            haloOpacity={0.75}
-            unlockImage={true}
-            dy={-10}
-            shieldDy={0}
           >
             [name]
           </ShieldSymbolizer>
@@ -35,18 +40,7 @@ export function Places() {
         <Rule>
           <Filter>[type] = 'city'</Filter>
 
-          <ShieldSymbolizer
-            fontsetName="regular"
-            file="images/city.svg"
-            margin={20}
-            size={20}
-            haloFill="white"
-            haloRadius={2}
-            haloOpacity={0.75}
-            unlockImage={true}
-            dy={-10}
-            shieldDy={0}
-          >
+          <ShieldSymbolizer {...commonProps} file="images/city.svg" size={20}>
             [name]
           </ShieldSymbolizer>
         </Rule>
@@ -54,18 +48,7 @@ export function Places() {
         <Rule>
           <Filter>[type] = 'town'</Filter>
 
-          <ShieldSymbolizer
-            fontsetName="regular"
-            file="images/town.svg"
-            margin={20}
-            size={16}
-            haloFill="white"
-            haloRadius={2}
-            haloOpacity={0.75}
-            unlockImage={true}
-            dy={-10}
-            shieldDy={0}
-          >
+          <ShieldSymbolizer {...commonProps} file="images/town.svg" size={16}>
             [name]
           </ShieldSymbolizer>
         </Rule>
