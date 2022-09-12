@@ -1,6 +1,5 @@
 import {
   Datasource,
-  DebugSymbolizer,
   Filter,
   Layer,
   Parameter,
