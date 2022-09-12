@@ -35,8 +35,9 @@ Query parameters, all are optional:
   - `districts` - Slovakia districts
   - `roads` - roads
   - `borders` - global borders (admin_level=2 for country borders, admin_level=4 for region borders); see https://wiki.openstreetmap.org/wiki/Tag:boundary=administrative#10_admin_level_values_for_specific_countries
-  - `cities` - cities
+  - `cities` - show places of type `city` and `town`. Deprecated, use `place-types`.
   - `landcover` - forests, water bodies, urban areas
+- `place-types` - which places to render, comma separated values of: `city`, `town`, `village`.
 - `country` - country to zoom to and to highlight
 - `regionId` - ID of the region to highlight (Slovakia only)
 - `districtId` - ID of the district to highlight (Slovakia only)
@@ -76,7 +77,7 @@ curl 'http://localhost:8080?features=regions,districts&format=svg' > map.svg
 
 ```bash
 curl -G 'http://localhost:8080' \
-  --data-urlencode "features=cities,borders,landcover,roads" \
+  --data-urlencode "features=borders,landcover,roads" \
   --data-urlencode "placeId=522422" \
   --data-urlencode "country=sk" \
   --data-urlencode "width=1200" \
@@ -84,6 +85,7 @@ curl -G 'http://localhost:8080' \
   --data-urlencode "margin=20" \
   --data-urlencode "minor-borders=hu:4,uk:4,at:4,pl:4,sk:4,cz:4" \
   --data-urlencode "micro-borders=sk:8" \
+  --data-urlencode "place-types=city,town" \
   --data-urlencode "highlight-admin-area=Prešovský kraj" | display
 ```
 

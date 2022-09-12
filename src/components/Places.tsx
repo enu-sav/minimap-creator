@@ -11,16 +11,23 @@ import {
 
 const commonProps: Partial<Parameters<typeof ShieldSymbolizer>[0]> = {
   fontsetName: "regular",
-  margin: 0,
+  margin: 20,
   haloFill: "white",
   haloRadius: 2,
   haloOpacity: 0.75,
   unlockImage: true,
-  dy: -10,
   shieldDy: 0,
 };
 
-export function Places() {
+type Props = {
+  placeTypes?: string[];
+};
+
+export function Places({ placeTypes = ["city", "town"] }: Props) {
+  if (placeTypes.some((p) => /[^a-z]/.test(p))) {
+    throw new Error("invalid place type");
+  }
+
   return (
     <>
       <Style name="places">
@@ -39,7 +46,12 @@ export function Places() {
         <Rule>
           <Filter>[type] = 'city'</Filter>
 
-          <ShieldSymbolizer {...commonProps} file="images/city.svg" size={20}>
+          <ShieldSymbolizer
+            {...commonProps}
+            file="images/city.svg"
+            size={20}
+            dy={-10}
+          >
             [name]
           </ShieldSymbolizer>
         </Rule>
@@ -47,7 +59,25 @@ export function Places() {
         <Rule>
           <Filter>[type] = 'town'</Filter>
 
-          <ShieldSymbolizer {...commonProps} file="images/town.svg" size={16}>
+          <ShieldSymbolizer
+            {...commonProps}
+            file="images/town.svg"
+            size={16}
+            dy={-8}
+          >
+            [name]
+          </ShieldSymbolizer>
+        </Rule>
+
+        <Rule>
+          <Filter>[type] = 'village'</Filter>
+
+          <ShieldSymbolizer
+            {...commonProps}
+            file="images/village.svg"
+            size={14}
+            dy={-7}
+          >
             [name]
           </ShieldSymbolizer>
         </Rule>
@@ -61,8 +91,9 @@ export function Places() {
 
           <Parameter name="table">
             (SELECT id, coalesce(NULLIF(name_sk, ''), name) AS name, geometry,
-            type, capital FROM osm_places ORDER BY z_order DESC, population
-            DESC) AS foo
+            type, capital FROM osm_places WHERE type IN (
+            {placeTypes.map((p) => `'${p}'`).join(", ")}) ORDER BY z_order DESC,
+            population DESC) AS foo
           </Parameter>
         </Datasource>
       </Layer>

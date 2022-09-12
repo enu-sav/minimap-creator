@@ -75,6 +75,8 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const featureSet = new Set(params.get("features")?.split(",") ?? []);
 
+  const placeTypes = params.get("place-types")?.split(",");
+
   const districtId = toNumber(params.get("districtId"));
 
   const regionId = toNumber(params.get("regionId"));
@@ -132,6 +134,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
       highlightAdminArea={highlightAdminArea}
       minorBorders={minorBorders && Object.fromEntries(minorBorders)}
       microBorders={microBorders && Object.fromEntries(microBorders)}
+      placeTypes={placeTypes}
     />
   );
 
