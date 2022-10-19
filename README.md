@@ -9,6 +9,7 @@ Minimap Creator is a HTTP server for creating minimaps.
 1. clone the project
 1. [download map data](https://drive.google.com/file/d/1r1l2KTpI1ksuoRiyakHRi9GXlJB4Je1D/view?usp=sharing) or prepare it on your own (see Nodes below) and put it to the project directory
 1. [download simplified land polygons](https://osmdata.openstreetmap.de/download/simplified-land-polygons-complete-3857.zip) and unpack it to project directory
+1. save hillshading data as `hillshading.tif` (and `hillshading.tif.ovr`)
 1. install dependencies
    ```bash
    npm i
@@ -46,6 +47,7 @@ Query parameters, all are optional:
 - `micro-borders` - country codes and _admin levels_ to show as micro borders, format: `cc:level,cc:level,...`
 - `border-width-factor` - scale of the borders width, default 1
 - `highlight-admin-area` - OSM ID or name (local or slovak) of the area to highlight
+- `hillshading-opacity` - opacity of the hillshading in range from 0 (no shading, default) to 1 (full shading)
 - `bbox` - explicit bounding box to render (minLon,minLat,maxLon,maxLat)
 - `margin` - map margin in pixels, default 5
 - `format` - output format, one of `png` (default), `jpeg`, `svg`, `pdf`

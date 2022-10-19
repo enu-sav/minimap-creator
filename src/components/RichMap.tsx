@@ -3,6 +3,7 @@ import { colors } from "../colors";
 import { Borders } from "./Borders";
 import { CountryMask } from "./CountryMask";
 import { Fonts } from "./Fonts";
+import { Hillshading } from "./Hillshading";
 import { Land } from "./Land";
 import { Landcover } from "./Landcover";
 import { Pin } from "./Pin";
@@ -23,6 +24,7 @@ type Props = {
   microBorders?: Record<string, number>;
   placeTypes?: string[];
   borderWidthFactor?: number;
+  hillshadingOpacity?: number;
 };
 
 export function RichMap({
@@ -37,6 +39,7 @@ export function RichMap({
   microBorders,
   placeTypes,
   borderWidthFactor,
+  hillshadingOpacity,
 }: Props) {
   return (
     <Map backgroundColor={colors.water}>
@@ -58,6 +61,8 @@ export function RichMap({
       <Land />
 
       {featureSet.has("landcover") && <Landcover />}
+
+      {hillshadingOpacity && <Hillshading opacity={hillshadingOpacity} />}
 
       {featureSet.has("districts") && <SkDistricts districtId={districtId} />}
 

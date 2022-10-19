@@ -5,3 +5,4 @@ dist
 simplified-land-polygons-complete-*
 map.sqlite
 *.qgz
+*.tif*

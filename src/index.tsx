@@ -95,6 +95,8 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const borderWidthFactor = toNumber(params.get("border-width-factor"));
 
+  const hillshadingOpacity = toNumber(params.get("hillshading-opacity"));
+
   const bboxParam = params.get("bbox");
 
   let bbox: number[];
@@ -152,6 +154,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
       microBorders={microBorders && Object.fromEntries(microBorders)}
       placeTypes={placeTypes}
       borderWidthFactor={borderWidthFactor}
+      hillshadingOpacity={hillshadingOpacity}
     />
   );
 
