@@ -44,6 +44,7 @@ Query parameters, all are optional:
 - `placeId` - ID of the place (obec) for the pin (Slovakia only)
 - `minor-borders` - country codes and _admin levels_ to show as minor borders, format: `cc:level,cc:level,...`
 - `micro-borders` - country codes and _admin levels_ to show as micro borders, format: `cc:level,cc:level,...`
+- `border-width-factor` - scale of the borders width, default 1
 - `highlight-admin-area` - OSM ID or name of the area to highlight
 - `bbox` - explicit bounding box to render (minLon,minLat,maxLon,maxLat)
 - `margin` - map margin in pixels, default 5

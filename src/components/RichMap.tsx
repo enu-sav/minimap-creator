@@ -22,6 +22,7 @@ type Props = {
   minorBorders?: Record<string, number>;
   microBorders?: Record<string, number>;
   placeTypes?: string[];
+  borderWidthFactor?: number;
 };
 
 export function RichMap({
@@ -35,6 +36,7 @@ export function RichMap({
   minorBorders,
   microBorders,
   placeTypes,
+  borderWidthFactor,
 }: Props) {
   return (
     <Map backgroundColor={colors.water}>
@@ -70,6 +72,7 @@ export function RichMap({
           highlight={highlightAdminArea}
           minor={minorBorders}
           micro={microBorders}
+          widthFactor={borderWidthFactor}
         />
       )}
 

@@ -93,6 +93,8 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const highlightAdminArea = params.get("highlight-admin-area") ?? undefined;
 
+  const borderWidthFactor = toNumber(params.get("border-width-factor"));
+
   const bboxParam = params.get("bbox");
 
   let bbox: number[];
@@ -149,6 +151,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
       minorBorders={minorBorders && Object.fromEntries(minorBorders)}
       microBorders={microBorders && Object.fromEntries(microBorders)}
       placeTypes={placeTypes}
+      borderWidthFactor={borderWidthFactor}
     />
   );
 

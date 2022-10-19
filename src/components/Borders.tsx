@@ -15,6 +15,7 @@ type Props = {
   highlight?: string | number;
   minor?: Record<string, number>;
   micro?: Record<string, number>;
+  widthFactor?: number;
 };
 
 function Lower({
@@ -39,7 +40,7 @@ function Lower({
   );
 }
 
-export function Borders({ highlight, minor, micro }: Props) {
+export function Borders({ highlight, minor, micro, widthFactor = 1 }: Props) {
   const condition =
     "admin_level = 2" +
     [
@@ -68,14 +69,26 @@ export function Borders({ highlight, minor, micro }: Props) {
           </Rule>
         )}
 
-        {micro && <Lower value={micro} width={0.75} color={colors.border} />}
+        {micro && (
+          <Lower
+            value={micro}
+            width={0.75 * widthFactor}
+            color={colors.border}
+          />
+        )}
 
-        {minor && <Lower value={minor} width={1.5} color={colors.border} />}
+        {minor && (
+          <Lower
+            value={minor}
+            width={1.5 * widthFactor}
+            color={colors.border}
+          />
+        )}
 
         <Rule>
           <Filter>[admin_level] = 2</Filter>
 
-          <RichLineSymbolizer color={colors.border} width={3} />
+          <RichLineSymbolizer color={colors.border} width={3 * widthFactor} />
         </Rule>
       </Style>
 
