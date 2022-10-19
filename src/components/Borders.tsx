@@ -40,6 +40,20 @@ function Lower({
 }
 
 export function Borders({ highlight, minor, micro }: Props) {
+  const condition =
+    "admin_level = 2" +
+    [
+      ...new Set([
+        ...Object.entries(minor ?? {}),
+        ...Object.entries(micro ?? {}),
+      ]),
+    ]
+      .map(
+        ([cc, level]) =>
+          ` OR admin_level = ${level} AND [country_code] = '${cc}'`
+      )
+      .join("");
+
   return (
     <>
       <Style name="borders">
@@ -71,19 +85,7 @@ export function Borders({ highlight, minor, micro }: Props) {
         <Datasource base="db">
           <Parameter name="table">
             (SELECT ogc_fid, osm_id, country_code, admin_level, name, geometry
-            FROM admin_areas WHERE admin_level = 2 OR{" "}
-            {[
-              ...new Set([
-                ...Object.entries(minor ?? {}),
-                ...Object.entries(micro ?? {}),
-              ]),
-            ]
-              .map(
-                ([cc, level]) =>
-                  `admin_level = ${level} AND [country_code] = '${cc}'`
-              )
-              .join(" OR ")}
-            ) AS foo
+            FROM admin_areas WHERE {condition}) AS foo
           </Parameter>
         </Datasource>
       </Layer>
