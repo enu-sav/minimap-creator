@@ -61,7 +61,9 @@ export function Borders({ highlight, minor, micro, widthFactor = 1 }: Props) {
         {highlight !== undefined && (
           <Rule>
             {isNaN(Number(highlight)) ? (
-              <Filter>[name] = "{highlight}"</Filter>
+              <Filter>
+                [name] = "{highlight}" or [name_sk] = "{highlight}"
+              </Filter>
             ) : (
               <Filter>[osm_id] = {highlight}</Filter>
             )}
@@ -97,8 +99,8 @@ export function Borders({ highlight, minor, micro, widthFactor = 1 }: Props) {
 
         <Datasource base="db">
           <Parameter name="table">
-            (SELECT ogc_fid, osm_id, country_code, admin_level, name, geometry
-            FROM admin_areas WHERE {condition}) AS foo
+            (SELECT ogc_fid, osm_id, country_code, admin_level, name, name_sk,
+            geometry FROM admin_areas WHERE {condition}) AS foo
           </Parameter>
         </Datasource>
       </Layer>
