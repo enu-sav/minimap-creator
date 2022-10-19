@@ -32,19 +32,20 @@ export function Places({ placeTypes = ["city", "town"] }: Props) {
     <>
       <Style name="places">
         <Rule>
-          <Filter>[type] = 'city' &amp;&amp; [capital] = 'yes'</Filter>
+          <Filter>[capital] = 'yes'</Filter>
 
           <ShieldSymbolizer
             {...commonProps}
             file="images/capital.svg"
             size={20}
+            dy={-12}
           >
             [name]
           </ShieldSymbolizer>
         </Rule>
 
         <Rule>
-          <Filter>[type] = 'city'</Filter>
+          <Filter>[type] = 'city' &amp;&amp; [capital] != 'yes'</Filter>
 
           <ShieldSymbolizer
             {...commonProps}
@@ -57,7 +58,7 @@ export function Places({ placeTypes = ["city", "town"] }: Props) {
         </Rule>
 
         <Rule>
-          <Filter>[type] = 'town'</Filter>
+          <Filter>[type] = 'town' &amp;&amp; [capital] != 'yes'</Filter>
 
           <ShieldSymbolizer
             {...commonProps}
@@ -70,7 +71,7 @@ export function Places({ placeTypes = ["city", "town"] }: Props) {
         </Rule>
 
         <Rule>
-          <Filter>[type] = 'village'</Filter>
+          <Filter>[type] = 'village' &amp;&amp; [capital] != 'yes'</Filter>
 
           <ShieldSymbolizer
             {...commonProps}
@@ -90,10 +91,21 @@ export function Places({ placeTypes = ["city", "town"] }: Props) {
           <Parameter name="key_field">id</Parameter>
 
           <Parameter name="table">
-            (SELECT id, coalesce(NULLIF(name_sk, ''), name) AS name, geometry,
-            type, capital FROM osm_places WHERE type IN (
-            {placeTypes.map((p) => `'${p}'`).join(", ")}) ORDER BY z_order DESC,
-            population DESC) AS foo
+            {`
+              (
+                SELECT id, coalesce(NULLIF(name_sk, ''), name) AS name, geometry, type, capital
+                FROM osm_places
+                WHERE
+                  ${
+                    placeTypes.includes("capital")
+                      ? "capital = 'yes'"
+                      : `type IN (${placeTypes
+                          .map((p) => `'${p}'`)
+                          .join(", ")})`
+                  }
+                ORDER BY z_order DESC, population DESC
+              ) AS foo
+            `}
           </Parameter>
         </Datasource>
       </Layer>
