@@ -52,27 +52,27 @@ Query parameters, all are optional:
 Examples:
 
 ```bash
-curl 'http://localhost:8080?features=regions&regionId=4' | display
+curl 'http://localhost:8080?country=sk&features=regions&regionId=4' | display
 ```
 
 ```bash
-curl 'http://localhost:8080?features=regions,districts&districtId=204' | display
+curl 'http://localhost:8080?country=sk&features=regions,districts&districtId=204' | display
 ```
 
 ```bash
-curl 'http://localhost:8080?features=regions,cities,roads&lat=48.5&lon=19.1' | display
+curl 'http://localhost:8080?country=sk&features=regions,cities,roads&lat=48.5&lon=19.1' | display
 ```
 
 ```bash
-curl 'http://localhost:8080?features=regions,cities,roads&placeId=522422' | display
+curl 'http://localhost:8080?country=sk&features=regions,cities,roads&placeId=522422' | display
 ```
 
 ```bash
-curl 'http://localhost:8080?features=regions,cities,roads&placeId=522422&scale=1&width=1200&height=600' | display
+curl 'http://localhost:8080?country=sk&features=regions,cities,roads&placeId=522422&scale=1&width=1200&height=600' | display
 ```
 
 ```bash
-curl 'http://localhost:8080?features=regions,districts&format=svg' > map.svg
+curl 'http://localhost:8080?country=sk&features=regions,districts&format=svg' > map.svg
 ```
 
 ```bash

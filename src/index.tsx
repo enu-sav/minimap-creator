@@ -11,6 +11,8 @@ import { RichMap } from "./components//RichMap";
 import { countryData } from "./countryData";
 import { serialize } from "jsxnik/serialize";
 
+class InvalidParamError extends Error {}
+
 const pipelineAsync = util.promisify(stream.pipeline);
 
 temp.track();
@@ -42,11 +44,15 @@ server.listen(port, () => {
 
 function requestListener(req: IncomingMessage, res: ServerResponse) {
   generate(req, res).catch((err) => {
-    console.error(err);
+    if (err instanceof InvalidParamError) {
+      res.writeHead(400).end(err.message);
+    } else {
+      console.error(err);
 
-    res.writeHead(500);
+      res.writeHead(500);
 
-    res.end(err.toString());
+      res.end(err.toString());
+    }
   });
 }
 
@@ -83,7 +89,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const placeId = toNumber(params.get("placeId"));
 
-  const country = params.get("country") ?? "sk";
+  const country = params.get("country") ?? undefined;
 
   const highlightAdminArea = params.get("highlight-admin-area") ?? undefined;
 
@@ -93,10 +99,18 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   if (bboxParam) {
     bbox = bboxParam.split(",").map((c) => Number(c));
-  } else {
-    const { sw, ne } = countryData[country].boundingBox;
+  } else if (country) {
+    const data = countryData[country];
+
+    if (!data) {
+      throw new InvalidParamError("no such country");
+    }
+
+    const { sw, ne } = data.boundingBox;
 
     bbox = [sw.lon, sw.lat, ne.lon, ne.lat];
+  } else {
+    throw new InvalidParamError("one of `bbox` or `country` must be provided");
   }
 
   const mBbox = merc.forward(bbox);
@@ -130,7 +144,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
       regionId={regionId}
       districtId={districtId}
       placeId={placeId}
-      country={country.toUpperCase()}
+      country={country?.toUpperCase()}
       highlightAdminArea={highlightAdminArea}
       minorBorders={minorBorders && Object.fromEntries(minorBorders)}
       microBorders={microBorders && Object.fromEntries(microBorders)}
