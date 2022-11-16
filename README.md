@@ -63,34 +63,28 @@ curl 'http://localhost:8080?country=sk&features=regions&regionId=4' | display
 curl 'http://localhost:8080?country=sk&features=regions,districts&districtId=204' | display
 ```
 
+Show marker on specific location:
+
 ```bash
 curl 'http://localhost:8080?country=sk&features=regions,cities,roads&lat=48.5&lon=19.1' | display
 ```
 
-```bash
-curl 'http://localhost:8080?country=sk&features=regions,cities,roads&placeId=522422' | display
-```
-
-```bash
-curl 'http://localhost:8080?country=sk&features=regions,cities,roads&placeId=522422&scale=1&width=1200&height=600' | display
-```
+Export to SVG:
 
 ```bash
 curl 'http://localhost:8080?country=sk&features=regions,districts&format=svg' > map.svg
 ```
 
+Highlight administrative area and show place marker:
+
 ```bash
-curl -G 'http://localhost:8080' \
-  --data-urlencode "features=borders,landcover,roads" \
-  --data-urlencode "placeId=522422" \
-  --data-urlencode "country=sk" \
-  --data-urlencode "width=1200" \
-  --data-urlencode "scale=1" \
-  --data-urlencode "margin=20" \
-  --data-urlencode "minor-borders=hu:4,uk:4,at:4,pl:4,sk:4,cz:4" \
-  --data-urlencode "micro-borders=sk:8" \
-  --data-urlencode "place-types=city,town" \
-  --data-urlencode "highlight-admin-area=Prešovský kraj" | display
+curl 'http://localhost:8080?features=borders,landcover,roads&placeId=522422&country=sk&width=1200&scale=1&margin=20&minor-borders=hu:4,uk:4,at:4,pl:4,sk:4,cz:4&micro-borders=sk:8&place-types=city,town&highlight-admin-area=Ko%C5%A1ick%C3%BD%20kraj&hillshading-opacity=0.5' | display
+```
+
+Watershed _Hornád_:
+
+```bash
+curl 'http://localhost:8080?features=borders,landcover&country=sk&width=1200&scale=1&margin=20&minor-borders=hu:4,uk:4,at:4,pl:4,sk:4,cz:4&micro-borders=sk:8&place-types=city,town&hillshading-opacity=0.5&watershed-name=hornad' | display
 ```
 
 Generated map must be enclosed with the following attribution:
