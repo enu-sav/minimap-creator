@@ -97,6 +97,8 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const hillshadingOpacity = toNumber(params.get("hillshading-opacity"));
 
+  const watershedName = params.get("watershed-name") ?? undefined;
+
   const bboxParam = params.get("bbox");
 
   let bbox: number[];
@@ -155,6 +157,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
       placeTypes={placeTypes}
       borderWidthFactor={borderWidthFactor}
       hillshadingOpacity={hillshadingOpacity}
+      watershedName={watershedName}
     />
   );
 

@@ -1,7 +1,7 @@
 import { Datasource, Map, Parameter } from "jsxnik/mapnikConfig";
 import { colors } from "../colors";
 import { Borders } from "./Borders";
-import { CountryMask } from "./CountryMask";
+import { Mask } from "./Mask";
 import { Fonts } from "./Fonts";
 import { Hillshading } from "./Hillshading";
 import { Land } from "./Land";
@@ -11,6 +11,9 @@ import { Places } from "./Places";
 import { Roads } from "./Roads";
 import { SkDistricts } from "./SkDistricts";
 import { SkRegions } from "./SkRegions";
+import { Waterways } from "./Waterways";
+import { CountryMask } from "./CountryMask";
+import { WatershedMask } from "./WatershedMask";
 
 type Props = {
   regionId?: number;
@@ -25,6 +28,7 @@ type Props = {
   placeTypes?: string[];
   borderWidthFactor?: number;
   hillshadingOpacity?: number;
+  watershedName?: string;
 };
 
 export function RichMap({
@@ -40,6 +44,7 @@ export function RichMap({
   placeTypes,
   borderWidthFactor,
   hillshadingOpacity,
+  watershedName,
 }: Props) {
   return (
     <Map backgroundColor={colors.water}>
@@ -70,7 +75,19 @@ export function RichMap({
 
       {featureSet.has("roads") && <Roads />}
 
-      {country !== undefined && <CountryMask country={country} />}
+      {watershedName ? (
+        <>
+          <Mask>
+            <WatershedMask name={watershedName} />
+          </Mask>
+
+          <Waterways name={watershedName} />
+        </>
+      ) : country ? (
+        <Mask>
+          <CountryMask country={country} />
+        </Mask>
+      ) : undefined}
 
       {featureSet.has("borders") && (
         <Borders

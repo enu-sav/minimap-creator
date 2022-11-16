@@ -48,6 +48,7 @@ Query parameters, all are optional:
 - `border-width-factor` - scale of the borders width, default 1
 - `highlight-admin-area` - OSM ID or name (local or slovak) of the area to highlight
 - `hillshading-opacity` - opacity of the hillshading in range from 0 (no shading, default) to 1 (full shading)
+- `watershed-name` - name of watershed to render
 - `bbox` - explicit bounding box to render (minLon,minLat,maxLon,maxLat)
 - `margin` - map margin in pixels, default 5
 - `format` - output format, one of `png` (default), `jpeg`, `svg`, `pdf`
@@ -152,6 +153,26 @@ done
    ```
    ogr2ogr -F SQLITE map.sqlite PG:"host=localhost port=5432 dbname=minimap user=minimap password=minimap" -dsco SPATIALITE=YES roads osm_places admin_areas landcover
    ```
+
+### Watershed
+
+Download geopackage(s) from https://land.copernicus.eu/imagery-in-situ/eu-hydro/eu-hydro-river-network-database?tab=download (for example _EU-Hydro-Danube-GeoPackage_)
+
+Extract waterways of a watershed for a particular river - find its last segment `object_id`. For _Hornád_ it is `RL35137645`, _Bodva_ `RL35139104`, _Slaná (Sajó)_ `RL35136833`.
+
+```
+ogr2ogr -sql "WITH RECURSIVE cte(objectid, object_id, shape) AS (SELECT objectid, object_id, shape FROM River_Net_l WHERE object_id = 'RL35137645' UNION ALL SELECT River_Net_l.objectid, River_Net_l.object_id, River_Net_l.shape FROM cte, River_Net_l WHERE River_Net_l.nextdownid = cte.object_id) SELECT objectid, shape FROM cte" -dsco SPATIALITE=YES -nln waterways_hornad waterways_hornad.sqlite euhydro_danube_v013.gpkg
+```
+
+Make watershed polygon:
+
+1. FlowAccumulationFullWorkflow
+1. ExtractStreams (100000)
+1. add point to sink
+1. Watershed
+1. Polygonnize (gdal)
+1. SmoothVectors (10)
+1. Simplify (10)
 
 ### More resources / ideas
 
