@@ -7,7 +7,7 @@ Minimap Creator is a HTTP server for creating minimaps.
 ## Preparation
 
 1. clone the project
-1. [download map data](https://drive.google.com/file/d/1r1l2KTpI1ksuoRiyakHRi9GXlJB4Je1D/view?usp=sharing) or prepare it on your own (see Nodes below) and put it to the project directory
+1. [download map data](https://drive.google.com/drive/folders/1nSxT4YOUBVoU_7Dt-qbiwodZmCSelP8f?usp=sharing) or prepare it on your own (see Nodes below) and put it to the project directory
 1. [download simplified land polygons](https://osmdata.openstreetmap.de/download/simplified-land-polygons-complete-3857.zip) and unpack it to project directory
 1. save hillshading data as `hillshading.tif` (and `hillshading.tif.ovr`)
 1. install dependencies
