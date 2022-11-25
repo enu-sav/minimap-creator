@@ -75,7 +75,7 @@ export function Borders({
                 [name] = "{highlight}" or [name_sk] = "{highlight}"
               </Filter>
             ) : (
-              <Filter>[osm_id] = {highlight}</Filter>
+              <Filter>[osm_id] = {-Number(highlight)}</Filter>
             )}
             <PolygonSymbolizer fill={colors.areaHighlight} />
           </Rule>
