@@ -13,6 +13,7 @@ import { RichLineSymbolizer } from "./RichLineSymbolizer";
 
 type Props = {
   highlight?: string | number;
+  major?: Record<string, number>;
   minor?: Record<string, number>;
   micro?: Record<string, number>;
   widthFactor?: number;
@@ -30,7 +31,9 @@ function Lower({
         {Object.entries(value)
           .map(
             ([cc, level]) =>
-              `([admin_level] = ${level} and [country_code] = "${cc}")`
+              `([admin_level] = ${level}` +
+              (cc ? ` and [country_code] = "${cc}"` : "") +
+              ")"
           )
           .join(" or ")}
       </Filter>
@@ -40,20 +43,27 @@ function Lower({
   );
 }
 
-export function Borders({ highlight, minor, micro, widthFactor = 1 }: Props) {
-  const condition =
-    "admin_level = 2" +
-    [
-      ...new Set([
-        ...Object.entries(minor ?? {}),
-        ...Object.entries(micro ?? {}),
-      ]),
-    ]
-      .map(
-        ([cc, level]) =>
-          ` OR admin_level = ${level} AND [country_code] = '${cc}'`
-      )
-      .join("");
+export function Borders({
+  highlight,
+  major = { "": 2 },
+  minor,
+  micro,
+  widthFactor = 1,
+}: Props) {
+  const condition = [
+    ...new Set([
+      ...Object.entries(major ?? {}),
+      ...Object.entries(minor ?? {}),
+      ...Object.entries(micro ?? {}),
+    ]),
+  ]
+    .map(
+      ([cc, level]) =>
+        `admin_level = ${level}` + (cc ? ` AND [country_code] = '${cc}'` : "")
+    )
+    .join(" OR ");
+
+  console.log(condition);
 
   return (
     <>
@@ -87,11 +97,9 @@ export function Borders({ highlight, minor, micro, widthFactor = 1 }: Props) {
           />
         )}
 
-        <Rule>
-          <Filter>[admin_level] = 2</Filter>
-
-          <RichLineSymbolizer color={colors.border} width={3 * widthFactor} />
-        </Rule>
+        {major && (
+          <Lower value={major} width={3 * widthFactor} color={colors.border} />
+        )}
       </Style>
 
       <Layer name="borders" srs="+init=epsg:3857">

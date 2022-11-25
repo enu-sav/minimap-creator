@@ -43,6 +43,7 @@ Query parameters, all are optional:
 - `regionId` - ID of the region to highlight (Slovakia only)
 - `districtId` - ID of the district to highlight (Slovakia only)
 - `placeId` - ID of the place (obec) for the pin (Slovakia only)
+- `major-borders` - country codes and _admin levels_ to show as major borders, format: `cc:level,cc:level,...`; default `:2` (`admin_level=2` for every country)
 - `minor-borders` - country codes and _admin levels_ to show as minor borders, format: `cc:level,cc:level,...`
 - `micro-borders` - country codes and _admin levels_ to show as micro borders, format: `cc:level,cc:level,...`
 - `border-width-factor` - scale of the borders width, default 1

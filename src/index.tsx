@@ -133,7 +133,8 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const pin = lat == undefined || lon == undefined ? undefined : { lat, lon };
 
-  const [minorBorders, microBorders] = [
+  const [majorBorders, minorBorders, microBorders] = [
+    params.get("major-borders"),
     params.get("minor-borders"),
     params.get("micro-borders"),
   ].map((b) =>
@@ -152,6 +153,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
       placeId={placeId}
       country={country?.toUpperCase()}
       highlightAdminArea={highlightAdminArea}
+      majorBorders={majorBorders && Object.fromEntries(majorBorders)}
       minorBorders={minorBorders && Object.fromEntries(minorBorders)}
       microBorders={microBorders && Object.fromEntries(microBorders)}
       placeTypes={placeTypes}
