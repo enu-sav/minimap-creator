@@ -65,6 +65,16 @@ export function RichMap({
 
       {featureSet.has("roads") && <Roads />}
 
+      {featureSet.has("borders") && (
+        <Borders
+          highlight={highlightAdminArea}
+          major={majorBorders}
+          minor={minorBorders}
+          micro={microBorders}
+          widthFactor={borderWidthFactor}
+        />
+      )}
+
       {watershedName ? (
         <>
           <Mask>
@@ -78,16 +88,6 @@ export function RichMap({
           <CountryMask country={country} />
         </Mask>
       ) : undefined}
-
-      {featureSet.has("borders") && (
-        <Borders
-          highlight={highlightAdminArea}
-          major={majorBorders}
-          minor={minorBorders}
-          micro={microBorders}
-          widthFactor={borderWidthFactor}
-        />
-      )}
 
       {(featureSet.has("cities") || placeTypes != null) && (
         <Places placeTypes={placeTypes} />

@@ -63,8 +63,6 @@ export function Borders({
     )
     .join(" OR ");
 
-  console.log(condition);
-
   return (
     <>
       <Style name="borders">

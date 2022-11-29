@@ -1,5 +1,7 @@
 import {
   Datasource,
+  ElseFilter,
+  Filter,
   Layer,
   LineSymbolizer,
   Parameter,
@@ -17,7 +19,7 @@ export function Waterways({ name }: Props) {
     <>
       <Style name="waterways">
         <Rule>
-          <LineSymbolizer stroke="#0000ff" />
+          <LineSymbolizer stroke="[color]" strokeWidth="[strahler] / 3" />
         </Rule>
       </Style>
 
@@ -26,10 +28,20 @@ export function Waterways({ name }: Props) {
 
         <Datasource>
           <Parameter name="type">sqlite</Parameter>
-
           <Parameter name="file">waterways_{name}.sqlite</Parameter>
+          <Parameter name="table">{`(SELECT *, '#8080ff' AS color FROM waterways_${name}) AS foo`}</Parameter>
+          <Parameter name="geometry_field">shape</Parameter>
+        </Datasource>
+      </Layer>
 
-          <Parameter name="table">waterways_{name}</Parameter>
+      <Layer srs="+init=epsg:3035">
+        <StyleName>waterways</StyleName>
+
+        <Datasource>
+          <Parameter name="type">sqlite</Parameter>
+          <Parameter name="file">waterways_{name}_main.sqlite</Parameter>
+          <Parameter name="table">{`(SELECT *, '#0000ff' AS color FROM waterways_${name}) AS foo`}</Parameter>
+          <Parameter name="geometry_field">shape</Parameter>
         </Datasource>
       </Layer>
     </>

@@ -107,7 +107,7 @@ Generated map must be enclosed with the following attribution: _OpenStreetMap co
    psql -h localhost minimap minimap < process.sql
    ```
 1. Export the data from PostGIS to `map.sqlite`:
-   ```
+   ```bash
    ogr2ogr -F SQLITE map.sqlite PG:"host=localhost port=5432 dbname=minimap user=minimap password=minimap" -dsco SPATIALITE=YES roads osm_places admin_areas landcover
    ```
 
@@ -117,8 +117,8 @@ Download geopackage(s) from https://land.copernicus.eu/imagery-in-situ/eu-hydro/
 
 Extract waterways of a watershed for a particular river - find its last segment `object_id`. For _Hornád_ it is `RL35137645`, _Bodva_ `RL35139104`, _Slaná (Sajó)_ `RL35136833`.
 
-```
-ogr2ogr -sql "WITH RECURSIVE cte(objectid, object_id, shape) AS (SELECT objectid, object_id, shape FROM River_Net_l WHERE object_id = 'RL35137645' UNION ALL SELECT River_Net_l.objectid, River_Net_l.object_id, River_Net_l.shape FROM cte, River_Net_l WHERE River_Net_l.nextdownid = cte.object_id) SELECT objectid, shape FROM cte" -dsco SPATIALITE=YES -nln waterways_hornad waterways_hornad.sqlite euhydro_danube_v013.gpkg
+```bash
+scripts/gen_waterways.sh hornad RL35137645
 ```
 
 Make watershed polygon:
