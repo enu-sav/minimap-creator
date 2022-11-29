@@ -2,8 +2,6 @@
 
 Minimap Creator is a HTTP server for creating minimaps.
 
-![Slovakia, Košický región](sample.png)
-
 ## Preparation
 
 1. clone the project
@@ -49,21 +47,25 @@ Query parameters, all are optional:
 - `margin` - map margin in pixels, default 5
 - `format` - output format, one of `png` (default), `jpeg`, `svg`, `pdf`
 
-Examples:
+**Generated map must be enclosed with the following attribution: _OpenStreetMap contributors (ODbL 1.0)_**
 
-Highlight administrative area and show place marker:
+## Examples
+
+Highlight administrative area and show a marker:
 
 ```bash
-curl 'http://localhost:8080?features=borders,landcover,roads&placeId=522422&country=sk&width=1200&scale=1&margin=20&minor-borders=hu:4,uk:4,at:4,pl:4,sk:4,cz:4&micro-borders=sk:8&place-types=city,town&highlight-admin-area=Ko%C5%A1ick%C3%BD%20kraj&hillshading-opacity=0.5' | display
+curl 'http://localhost:8080?features=borders,landcover,roads&placeId=522422&country=sk&width=1200&scale=1&margin=20&minor-borders=hu:4,uk:4,at:4,pl:4,sk:4,cz:4&micro-borders=sk:8&place-types=city,town&highlight-admin-area=Ko%C5%A1ick%C3%BD%20kraj&hillshading-opacity=0.5&lat=48.700142&lon=20.891184' | display
 ```
+
+![Slovakia, Košický región](sample.png)
 
 Watershed _Hornád_:
 
 ```bash
-curl 'http://localhost:8080?features=borders,landcover&country=sk&width=1200&scale=1&margin=20&minor-borders=hu:4,uk:4,at:4,pl:4,sk:4,cz:4&micro-borders=sk:8&place-types=city,town&hillshading-opacity=0.5&watershed-name=hornad' | display
+curl "http://localhost:8080?features=borders,landcover&width=1200&scale=2&margin=20&place-types=city,town&hillshading-opacity=0.5&watershed-name=hornad&bbox="`ogrinfo -sql "select st_transform(st_envelope(st_union(geometry)), 4326) from watershed_hornad" watershed_hornad.sqlite watershed_hornad | grep Extent | sed -e 's/[^0-9\.]\{1,\}/,/g' | sed -e 's/^.\|.$//g'` | display
 ```
 
-Generated map must be enclosed with the following attribution: _OpenStreetMap contributors (ODbL 1.0)_
+![Hornád watershed](sample-watershed.png)
 
 ## Notes
 
