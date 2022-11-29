@@ -13,22 +13,10 @@ import {
 import { colors } from "../colors";
 
 type Props = {
-  placeId?: number;
-  pin?: { lat: number; lon: number };
+  pin: { lat: number; lon: number };
 };
 
-const places = JSON.parse(
-  readFileSync("geodata/obec_3.geojson", "utf-8")
-) as FeatureCollection;
-
-export function Pin({ placeId, pin }: Props) {
-  const place =
-    placeId !== undefined
-      ? places.features.find(
-          (feature) => feature.properties?.["IDN4"] === placeId
-        )
-      : undefined;
-
+export function Pin({ pin }: Props) {
   return (
     <>
       <Style name="pin">
@@ -43,33 +31,17 @@ export function Pin({ placeId, pin }: Props) {
         </Rule>
       </Style>
 
-      {pin !== undefined && (
-        <Layer name="pin" srs="+init=epsg:4326">
-          <StyleName>pin</StyleName>
+      <Layer name="pin" srs="+init=epsg:4326">
+        <StyleName>pin</StyleName>
 
-          <Datasource>
-            <Parameter name="type">geojson</Parameter>
+        <Datasource>
+          <Parameter name="type">geojson</Parameter>
 
-            <Parameter name="inline">
-              {JSON.stringify(turf.point([pin.lon, pin.lat]))}
-            </Parameter>
-          </Datasource>
-        </Layer>
-      )}
-
-      {place !== undefined && (
-        <Layer name="place" srs="+init=epsg:4326">
-          <StyleName>pin</StyleName>
-
-          <Datasource>
-            <Parameter name="type">geojson</Parameter>
-
-            <Parameter name="inline">
-              {JSON.stringify(turf.centroid(place))}
-            </Parameter>
-          </Datasource>
-        </Layer>
-      )}
+          <Parameter name="inline">
+            {JSON.stringify(turf.point([pin.lon, pin.lat]))}
+          </Parameter>
+        </Datasource>
+      </Layer>
     </>
   );
 }

@@ -9,16 +9,11 @@ import { Landcover } from "./Landcover";
 import { Pin } from "./Pin";
 import { Places } from "./Places";
 import { Roads } from "./Roads";
-import { SkDistricts } from "./SkDistricts";
-import { SkRegions } from "./SkRegions";
 import { Waterways } from "./Waterways";
 import { CountryMask } from "./CountryMask";
 import { WatershedMask } from "./WatershedMask";
 
 type Props = {
-  regionId?: number;
-  districtId?: number;
-  placeId?: number;
   featureSet: Set<string>;
   pin?: { lat: number; lon: number };
   country?: string;
@@ -33,9 +28,6 @@ type Props = {
 };
 
 export function RichMap({
-  regionId,
-  districtId,
-  placeId,
   featureSet,
   pin,
   country,
@@ -71,10 +63,6 @@ export function RichMap({
 
       {hillshadingOpacity && <Hillshading opacity={hillshadingOpacity} />}
 
-      {featureSet.has("districts") && <SkDistricts districtId={districtId} />}
-
-      {featureSet.has("regions") && <SkRegions regionId={regionId} />}
-
       {featureSet.has("roads") && <Roads />}
 
       {watershedName ? (
@@ -105,7 +93,7 @@ export function RichMap({
         <Places placeTypes={placeTypes} />
       )}
 
-      <Pin pin={pin} placeId={placeId} />
+      {pin && <Pin pin={pin} />}
     </Map>
   );
 }

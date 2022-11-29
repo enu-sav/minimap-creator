@@ -83,12 +83,6 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const placeTypes = params.get("place-types")?.split(",");
 
-  const districtId = toNumber(params.get("districtId"));
-
-  const regionId = toNumber(params.get("regionId"));
-
-  const placeId = toNumber(params.get("placeId"));
-
   const country = params.get("country") ?? undefined;
 
   const highlightAdminArea = params.get("highlight-admin-area") ?? undefined;
@@ -148,9 +142,6 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
     <RichMap
       pin={pin}
       featureSet={featureSet}
-      regionId={regionId}
-      districtId={districtId}
-      placeId={placeId}
       country={country?.toUpperCase()}
       highlightAdminArea={highlightAdminArea}
       majorBorders={majorBorders && Object.fromEntries(majorBorders)}

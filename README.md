@@ -32,17 +32,12 @@ Query parameters, all are optional:
 - `height` - image height, default 400, or computed from `country` and `width` if specified
 - `scale` - graphics scaling factor, default 1
 - `features` - comma separated features:
-  - `regions` - Slovakia regions
-  - `districts` - Slovakia districts
   - `roads` - roads
   - `borders` - global borders (admin_level=2 for country borders, admin_level=4 for region borders); see https://wiki.openstreetmap.org/wiki/Tag:boundary=administrative#10_admin_level_values_for_specific_countries
   - `cities` - show places of type `city` and `town`. Deprecated, use `place-types`.
   - `landcover` - forests, water bodies, urban areas
 - `place-types` - which places to render, comma separated values of: `city`, `town`, `village`. It can also contain a single value `capital` to only display capitals.
 - `country` - country to zoom to and to highlight
-- `regionId` - ID of the region to highlight (Slovakia only)
-- `districtId` - ID of the district to highlight (Slovakia only)
-- `placeId` - ID of the place (obec) for the pin (Slovakia only)
 - `major-borders` - country codes and _admin levels_ to show as major borders, format: `cc:level,cc:level,...`; default `:2` (`admin_level=2` for every country)
 - `minor-borders` - country codes and _admin levels_ to show as minor borders, format: `cc:level,cc:level,...`
 - `micro-borders` - country codes and _admin levels_ to show as micro borders, format: `cc:level,cc:level,...`
@@ -56,26 +51,6 @@ Query parameters, all are optional:
 
 Examples:
 
-```bash
-curl 'http://localhost:8080?country=sk&features=regions&regionId=4' | display
-```
-
-```bash
-curl 'http://localhost:8080?country=sk&features=regions,districts&districtId=204' | display
-```
-
-Show marker on specific location:
-
-```bash
-curl 'http://localhost:8080?country=sk&features=regions,cities,roads&lat=48.5&lon=19.1' | display
-```
-
-Export to SVG:
-
-```bash
-curl 'http://localhost:8080?country=sk&features=regions,districts&format=svg' > map.svg
-```
-
 Highlight administrative area and show place marker:
 
 ```bash
@@ -88,29 +63,16 @@ Watershed _Hornád_:
 curl 'http://localhost:8080?features=borders,landcover&country=sk&width=1200&scale=1&margin=20&minor-borders=hu:4,uk:4,at:4,pl:4,sk:4,cz:4&micro-borders=sk:8&place-types=city,town&hillshading-opacity=0.5&watershed-name=hornad' | display
 ```
 
-Generated map must be enclosed with the following attribution:
-
-- borders: GKÚ Bratislava (CC-BY 4.0) (only if Slovakia borders from www.geoportal.sk is used)
-- other map features: OpenStreetMap contributors (ODbL 1.0)
+Generated map must be enclosed with the following attribution: _OpenStreetMap contributors (ODbL 1.0)_
 
 ## Notes
-
-### Preparing Slovakia borders
-
-Obtain source data from https://www.geoportal.sk/sk/zbgis/na-stiahnutie/ ("Tretia úroveň generalizácie" is enough):
-
-```bash
-for layer of ku_3 obec_3 okres_3 kraj_3 sr_3; do
-  ogr2ogr -t_srs epsg:3857 -f 'geojson' $layer.geojson USJ_hranice_3.gpkg $layer
-done
-```
 
 ### Preparing map data
 
 1. Obtain latest [planet.osm.pbf](https://planet.openstreetmap.org/pbf/planet-latest.osm.pbf) from planet.openstreetmap.org.
 1. Import the data:
    ```bash
-   imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping mapping.yaml -read slovakia-latest.osm.pbf -write -overwritecache
+   imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping mapping.yaml -read europe-latest.osm.pbf -write -overwritecache
    imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping mapping.yaml -deployproduction
    ```
 1. Process the data with GRASS GIS using the following script:
