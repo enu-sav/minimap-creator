@@ -32,12 +32,6 @@ export function Waterways({ name }: Props) {
           <Parameter name="table">waterways_{name}</Parameter>
         </Datasource>
       </Layer>
-
-      <Style name="waterways">
-        <Rule>
-          <LineSymbolizer stroke="#0000ff" />
-        </Rule>
-      </Style>
     </>
   );
 }
