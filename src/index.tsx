@@ -89,6 +89,10 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const borderWidthFactor = toNumber(params.get("border-width-factor"));
 
+  const waterwayWidthFactor = toNumber(params.get("waterway-width-factor"));
+
+  const placeSizeFactor = toNumber(params.get("place-size-factor"));
+
   const hillshadingOpacity = toNumber(params.get("hillshading-opacity"));
 
   const watershedName = params.get("watershed-name") ?? undefined;
@@ -149,6 +153,8 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
       microBorders={microBorders && Object.fromEntries(microBorders)}
       placeTypes={placeTypes}
       borderWidthFactor={borderWidthFactor}
+      waterwayWidthFactor={waterwayWidthFactor}
+      placeSizeFactor={placeSizeFactor}
       hillshadingOpacity={hillshadingOpacity}
       watershedName={watershedName}
     />

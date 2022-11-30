@@ -28,7 +28,7 @@ Query parameters, all are optional:
 - `lat`, `lon` - pin latitude and longitude, default no pin
 - `width` - image width, default 800, or computed from `country` and `height` if specified
 - `height` - image height, default 400, or computed from `country` and `width` if specified
-- `scale` - graphics scaling factor, default 1
+- `scale` - global graphics scaling factor, default 1
 - `features` - comma separated features:
   - `roads` - roads
   - `borders` - global borders (admin_level=2 for country borders, admin_level=4 for region borders); see https://wiki.openstreetmap.org/wiki/Tag:boundary=administrative#10_admin_level_values_for_specific_countries
@@ -40,6 +40,8 @@ Query parameters, all are optional:
 - `minor-borders` - country codes and _admin levels_ to show as minor borders, format: `cc:level,cc:level,...`
 - `micro-borders` - country codes and _admin levels_ to show as micro borders, format: `cc:level,cc:level,...`
 - `border-width-factor` - scale of the borders width, default 1
+- `waterway-width-factor` - scale of the waterway width, default 1
+- `place-size-factor` - scale of the places, default 1
 - `highlight-admin-area` - OSM ID or name (local or slovak) of the area to highlight
 - `hillshading-opacity` - opacity of the hillshading in range from 0 (no shading, default) to 1 (full shading)
 - `watershed-name` - name of watershed to render
@@ -123,7 +125,7 @@ Extract waterways of a watershed for a particular river - find its last segment 
 scripts/gen_waterways.sh hornad RL35137645
 ```
 
-Make watershed polygon:
+Make watershed polygon (QGIS):
 
 1. FlowAccumulationFullWorkflow
 1. ExtractStreams (100000)

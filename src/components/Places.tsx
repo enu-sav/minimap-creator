@@ -9,24 +9,28 @@ import {
   StyleName,
 } from "jsxnik/mapnikConfig";
 
-const commonProps: Partial<Parameters<typeof ShieldSymbolizer>[0]> = {
-  fontsetName: "regular",
-  margin: 20,
-  haloFill: "white",
-  haloRadius: 2,
-  haloOpacity: 0.75,
-  unlockImage: true,
-  shieldDy: 0,
-};
-
 type Props = {
   placeTypes?: string[];
+  sizeFactor?: number;
 };
 
-export function Places({ placeTypes = ["city", "town"] }: Props) {
+export function Places({
+  placeTypes = ["city", "town"],
+  sizeFactor = 1,
+}: Props) {
   if (placeTypes.some((p) => /[^a-z]/.test(p))) {
     throw new Error("invalid place type");
   }
+
+  const commonProps: Partial<Parameters<typeof ShieldSymbolizer>[0]> = {
+    fontsetName: "regular",
+    margin: 20,
+    haloFill: "white",
+    haloRadius: 2 * sizeFactor,
+    haloOpacity: 0.75,
+    unlockImage: true,
+    shieldDy: 0,
+  };
 
   return (
     <>
@@ -37,8 +41,9 @@ export function Places({ placeTypes = ["city", "town"] }: Props) {
           <ShieldSymbolizer
             {...commonProps}
             file="images/capital.svg"
-            size={20}
-            dy={-12}
+            transform={`scale(${sizeFactor})`}
+            size={20 * sizeFactor}
+            dy={-12 * sizeFactor}
           >
             [name]
           </ShieldSymbolizer>
@@ -50,8 +55,9 @@ export function Places({ placeTypes = ["city", "town"] }: Props) {
           <ShieldSymbolizer
             {...commonProps}
             file="images/city.svg"
-            size={20}
-            dy={-10}
+            transform={`scale(${sizeFactor})`}
+            size={20 * sizeFactor}
+            dy={-10 * sizeFactor}
           >
             [name]
           </ShieldSymbolizer>
@@ -63,8 +69,9 @@ export function Places({ placeTypes = ["city", "town"] }: Props) {
           <ShieldSymbolizer
             {...commonProps}
             file="images/town.svg"
-            size={16}
-            dy={-8}
+            transform={`scale(${sizeFactor})`}
+            size={16 * sizeFactor}
+            dy={-8 * sizeFactor}
           >
             [name]
           </ShieldSymbolizer>
@@ -76,8 +83,9 @@ export function Places({ placeTypes = ["city", "town"] }: Props) {
           <ShieldSymbolizer
             {...commonProps}
             file="images/village.svg"
-            size={14}
-            dy={-7}
+            transform={`scale(${sizeFactor})`}
+            size={14 * sizeFactor}
+            dy={-7 * sizeFactor}
           >
             [name]
           </ShieldSymbolizer>

@@ -12,14 +12,18 @@ import {
 
 type Props = {
   name: string;
+  widthFactor?: number;
 };
 
-export function Waterways({ name }: Props) {
+export function Waterways({ name, widthFactor = 1 }: Props) {
   return (
     <>
       <Style name="waterways">
         <Rule>
-          <LineSymbolizer stroke="[color]" strokeWidth="[strahler] / 3" />
+          <LineSymbolizer
+            stroke="[color]"
+            strokeWidth={`${widthFactor} * [strahler] / 3`}
+          />
         </Rule>
       </Style>
 

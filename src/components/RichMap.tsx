@@ -23,6 +23,8 @@ type Props = {
   microBorders?: Record<string, number>;
   placeTypes?: string[];
   borderWidthFactor?: number;
+  waterwayWidthFactor?: number;
+  placeSizeFactor?: number;
   hillshadingOpacity?: number;
   watershedName?: string;
 };
@@ -37,6 +39,8 @@ export function RichMap({
   microBorders,
   placeTypes,
   borderWidthFactor,
+  waterwayWidthFactor,
+  placeSizeFactor,
   hillshadingOpacity,
   watershedName,
 }: Props) {
@@ -81,7 +85,7 @@ export function RichMap({
             <WatershedMask name={watershedName} />
           </Mask>
 
-          <Waterways name={watershedName} />
+          <Waterways name={watershedName} widthFactor={waterwayWidthFactor} />
         </>
       ) : country ? (
         <Mask>
@@ -90,7 +94,7 @@ export function RichMap({
       ) : undefined}
 
       {(featureSet.has("cities") || placeTypes != null) && (
-        <Places placeTypes={placeTypes} />
+        <Places placeTypes={placeTypes} sizeFactor={placeSizeFactor} />
       )}
 
       {pin && <Pin pin={pin} />}
