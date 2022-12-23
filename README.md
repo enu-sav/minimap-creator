@@ -34,6 +34,7 @@ Query parameters, all are optional:
   - `borders` - global borders (admin_level=2 for country borders, admin_level=4 for region borders); see https://wiki.openstreetmap.org/wiki/Tag:boundary=administrative#10_admin_level_values_for_specific_countries
   - `cities` - show places of type `city` and `town`. Deprecated, use `place-types`.
   - `landcover` - forests, water bodies, urban areas
+  - `scale` - map scale
 - `place-types` - which places to render, comma separated values of: `city`, `town`, `village`. It can also contain a single value `capital` to only display capitals.
 - `country` - country to zoom to and to highlight
 - `major-borders` - country codes and _admin levels_ to show as major borders, format: `cc:level,cc:level,...`; default `:2` (`admin_level=2` for every country)

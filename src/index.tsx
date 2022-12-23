@@ -157,6 +157,8 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
       placeSizeFactor={placeSizeFactor}
       hillshadingOpacity={hillshadingOpacity}
       watershedName={watershedName}
+      bbox={bbox}
+      pxLon={width / (bbox[2] - bbox[0])}
     />
   );
 

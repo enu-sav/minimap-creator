@@ -14,15 +14,16 @@
   "license": "ISC",
   "dependencies": {
     "@turf/turf": "^6.5.0",
+    "geolib": "^3.3.3",
     "jsxnik": "0.0.12",
     "mapnik": "^4.5.9",
     "temp": "^0.9.4"
   },
   "devDependencies": {
-    "typescript": "^4.8.2",
-    "@types/node": "^18.7.14",
+    "@types/node": "^18.11.17",
     "@types/temp": "^0.9.1",
-    "concurrently": "^7.3.0",
-    "nodemon": "^2.0.19"
+    "concurrently": "^7.6.0",
+    "nodemon": "^2.0.20",
+    "typescript": "^4.9.4"
   }
 }

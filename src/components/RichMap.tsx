@@ -12,6 +12,7 @@ import { Roads } from "./Roads";
 import { Waterways } from "./Waterways";
 import { CountryMask } from "./CountryMask";
 import { WatershedMask } from "./WatershedMask";
+import { MapScale } from "./MapScale";
 
 type Props = {
   featureSet: Set<string>;
@@ -27,6 +28,8 @@ type Props = {
   placeSizeFactor?: number;
   hillshadingOpacity?: number;
   watershedName?: string;
+  bbox: number[];
+  pxLon: number;
 };
 
 export function RichMap({
@@ -43,6 +46,8 @@ export function RichMap({
   placeSizeFactor,
   hillshadingOpacity,
   watershedName,
+  bbox,
+  pxLon,
 }: Props) {
   return (
     <Map backgroundColor={colors.water}>
@@ -59,6 +64,9 @@ export function RichMap({
       <Datasource name="db">
         <Parameter name="type">sqlite</Parameter>
         <Parameter name="file">map.sqlite</Parameter>
+        {/* <Parameter name="type">ogr</Parameter>
+        {/* <Parameter name="driver">ogr</Parameter> */}
+        {/* <Parameter name="file">ref-countries-2020-60m.gdb.zip</Parameter> */}
       </Datasource>
 
       <Land />
@@ -96,6 +104,8 @@ export function RichMap({
       {(featureSet.has("cities") || placeTypes != null) && (
         <Places placeTypes={placeTypes} sizeFactor={placeSizeFactor} />
       )}
+
+      {featureSet.has("scale") && <MapScale bbox={bbox} pxLon={pxLon} />}
 
       {pin && <Pin pin={pin} />}
     </Map>
