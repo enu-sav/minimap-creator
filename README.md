@@ -65,7 +65,9 @@ curl 'http://localhost:8080?features=borders,landcover,roads&placeId=522422&coun
 Watershed _Hornád_:
 
 ```bash
-curl "http://localhost:8080?features=borders,landcover&width=1200&scale=2&margin=20&place-types=city,town&hillshading-opacity=0.5&watershed-name=hornad&bbox="`ogrinfo -sql "select st_transform(st_envelope(st_union(geometry)), 4326) from watershed_hornad" watershed_hornad.sqlite watershed_hornad | grep Extent | sed -e 's/[^0-9\.]\{1,\}/,/g' | sed -e 's/^.\|.$//g'` | display
+RIVER=hornad
+
+curl "http://localhost:8080?features=borders,landcover,scale&width=1200&scale=2&place-size-factor=0.8&margin=20&place-types=city,town&hillshading-opacity=0.5&watershed-name=$RIVER&bbox="`ogrinfo -sql "select st_transform(st_envelope(st_union(geometry)), 4326) from watershed_$RIVER" watershed_$RIVER.sqlite watershed_$RIVER | grep Extent | sed -e 's/[^0-9\.]\{1,\}/,/g' | sed -e 's/^.\|.$//g'` | display
 ```
 
 ![Hornád watershed](sample-watershed.png)
@@ -80,6 +82,9 @@ curl "http://localhost:8080?features=borders,landcover&width=1200&scale=2&margin
    imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping mapping.yaml -read europe-latest.osm.pbf -write -overwritecache
    imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping mapping.yaml -deployproduction
    ```
+
+````
+
 1. Process the data with GRASS GIS using the following script:
    ```
    v.in.ogr input="PG:host=localhost dbname=minimap user=minimap password=minimap" layer=osm_admin output=admin
@@ -120,21 +125,27 @@ curl "http://localhost:8080?features=borders,landcover&width=1200&scale=2&margin
 
 Download geopackage(s) from https://land.copernicus.eu/imagery-in-situ/eu-hydro/eu-hydro-river-network-database?tab=download (for example _EU-Hydro-Danube-GeoPackage_)
 
-Extract waterways of a watershed for a particular river - find its last segment `object_id`. For _Hornád_ it is `RL35137645`, _Bodva_ `RL35139104`, _Slaná (Sajó)_ `RL35136833`.
+Extract waterways of a watershed for a particular river - find its first and last segment `object_id` and also for its parent.
+
+- _Hornád_: `danube hornad RL35142907 RL35137645 RL35137675 RL35136997`
+- _Dunajec_: `vistula dunajec RL37002352 RL37004091 RL37004010 RL37004177`
+- _Ipeľ_: `danube ipel RL35140937 RL35122706 RL35122124 RL35122824`
 
 ```bash
-scripts/gen_waterways.sh hornad RL35137645
+scripts/gen_waterways.sh danube hornad RL35142907 RL35137645 RL35137675 RL35136997
 ```
 
 Make watershed polygon (QGIS):
 
+1. Clip
 1. FlowAccumulationFullWorkflow
 1. ExtractStreams (100000)
 1. add point to sink
 1. Watershed
-1. Polygonnize (gdal)
+1. Polygonize (gdal)
 1. SmoothVectors (10)
 1. Simplify (10)
+1. export to `watershed_{name}.sqlite`
 
 ### More resources / ideas
 
@@ -142,3 +153,4 @@ Make watershed polygon (QGIS):
   - java -jar regionsimplify-1.4.1/RegionSimplify.jar -i admin.gpkg -s 9244649
 - https://gis.stackexchange.com/questions/439271/simplify-multipolygon-removing-small-gaps-in-postgis/439274
 - https://gadm.org/
+````
