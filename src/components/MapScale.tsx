@@ -52,7 +52,7 @@ export function MapScale({ bbox, pxLon }: Params) {
 
   return (
     <>
-      <Layer name="mapScale" srs="+init=epsg:4326">
+      <Layer name="mapScale" srs="+init=epsg:4326" clearLabelCache>
         <StyleName>mapScale</StyleName>
 
         <Datasource>
@@ -65,17 +65,9 @@ export function MapScale({ bbox, pxLon }: Params) {
         <Rule>
           <LineSymbolizer stroke="white" strokeWidth={4} strokeLinecap="butt" />
 
-          <MarkersSymbolizer
-            placement="vertex-first"
-            file="images/tick.svg"
-            ignorePlacement
-          />
+          <MarkersSymbolizer placement="vertex-first" file="images/tick.svg" />
 
-          <MarkersSymbolizer
-            placement="vertex-last"
-            file="images/tick.svg"
-            ignorePlacement
-          />
+          <MarkersSymbolizer placement="vertex-last" file="images/tick.svg" />
           <LineSymbolizer stroke="black" strokeWidth={2} strokeLinecap="butt" />
 
           <TextSymbolizer
@@ -85,7 +77,7 @@ export function MapScale({ bbox, pxLon }: Params) {
             haloFill="white"
             halo-radius="1"
             placement="line"
-            allowOverlap={true}
+            allowOverlap
             dy="-5"
           >
             {'"' +
