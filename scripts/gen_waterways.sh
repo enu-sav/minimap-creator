@@ -7,8 +7,8 @@ if [ $# -ne 6 ]; then
 fi
 
 
-BASIN=$1 # eg. danube
-NAME=$2 # eg. hornad
+NAME=$1 # eg. hornad
+BASIN=$2 # eg. danube
 SOURCE_OBJECT_ID=$3 # eg. RL35142907
 SINK_OBJECT_ID=$4 # eg. RL35137645
 PARENT_SOURCE_OBJECT_ID=$5 # eg. RL35142029

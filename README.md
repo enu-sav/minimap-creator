@@ -82,9 +82,6 @@ curl "http://localhost:8080?features=borders,landcover,scale&width=1200&scale=2&
    imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping mapping.yaml -read europe-latest.osm.pbf -write -overwritecache
    imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping mapping.yaml -deployproduction
    ```
-
-````
-
 1. Process the data with GRASS GIS using the following script:
    ```
    v.in.ogr input="PG:host=localhost dbname=minimap user=minimap password=minimap" layer=osm_admin output=admin
@@ -127,9 +124,18 @@ Download geopackage(s) from https://land.copernicus.eu/imagery-in-situ/eu-hydro/
 
 Extract waterways of a watershed for a particular river - find its first and last segment `object_id` and also for its parent.
 
-- _Hornád_: `danube hornad RL35142907 RL35137645 RL35137675 RL35136997`
-- _Dunajec_: `vistula dunajec RL37002352 RL37004091 RL37004010 RL37004177`
-- _Ipeľ_: `danube ipel RL35140937 RL35122706 RL35122124 RL35122824`
+- _Hornád_: `hornad danube RL35142907 RL35137645 RL35137675 RL35136997`
+- _Dunajec_: `dunajec vistula RL37002352 RL37004091 RL37004010 RL37004177`
+- _Ipeľ_: `ipel danube RL35140937 RL35122706 RL35122124 RL35122824`
+- _Hron_: `hron danube RL35142316 RL35122640 RL35122124 RL35122360`
+- _Kysuca_: `kysuca danube RL35131906 RL35131464 RL35131304 RL35131518`
+- _Bečva_: `becva danube RL35132213 RL35131855 RL35131847 RL35131675`
+- _Berounka_: `berounka elbe RL27008052 RL27009356 RL27009029 RL27009979`
+- _Bobr_: `bobr oder RL36000033 RL36003020 RL36003045 RL36003091`
+- _Dyje_: `dyje danube RL35128009 RL35127268 RL35127599 RL35126849`
+- _Jihlava_: `jihlava danube RL35130614 RL35128643 RL35128423 RL35128414`
+- _Jizera_: `jizera elbe RL27014232 RL27010591 RL27010611 RL27010903`
+- _Bodrog_: `bodrog danube RL35141164 RL35139123 RL35139542 RL35138716`
 
 ```bash
 scripts/gen_waterways.sh danube hornad RL35142907 RL35137645 RL35137675 RL35136997
@@ -153,4 +159,7 @@ Make watershed polygon (QGIS):
   - java -jar regionsimplify-1.4.1/RegionSimplify.jar -i admin.gpkg -s 9244649
 - https://gis.stackexchange.com/questions/439271/simplify-multipolygon-removing-small-gaps-in-postgis/439274
 - https://gadm.org/
-````
+
+```
+
+```
