@@ -52,7 +52,16 @@ export function MapScale({ bbox, pxLon }: Params) {
 
   return (
     <>
-      <Layer name="mapScale" srs="+init=epsg:4326" clearLabelCache>
+      <Layer srs="+init=epsg:4326" clearLabelCache opacity={0.8}>
+        <StyleName>mapScaleBg</StyleName>
+
+        <Datasource>
+          <Parameter name="type">geojson</Parameter>
+          <Parameter name="inline">{JSON.stringify(scale)}</Parameter>
+        </Datasource>
+      </Layer>
+
+      <Layer srs="+init=epsg:4326" clearLabelCache>
         <StyleName>mapScale</StyleName>
 
         <Datasource>
@@ -61,24 +70,51 @@ export function MapScale({ bbox, pxLon }: Params) {
         </Datasource>
       </Layer>
 
+      <Style name="mapScaleBg">
+        <Rule>
+          <LineSymbolizer
+            stroke="white"
+            strokeWidth={27}
+            strokeLinecap="butt"
+            offset={-9}
+            geometryTransform="translate(-3, 0)"
+          />
+
+          <LineSymbolizer
+            stroke="white"
+            strokeWidth={27}
+            strokeLinecap="butt"
+            offset={-9}
+            geometryTransform="translate(3, 0)"
+          />
+        </Rule>
+      </Style>
+
       <Style name="mapScale">
         <Rule>
-          <LineSymbolizer stroke="white" strokeWidth={4} strokeLinecap="butt" />
+          {/* <LineSymbolizer stroke="white" strokeWidth={8} strokeLinecap="butt" /> */}
 
-          <MarkersSymbolizer placement="vertex-first" file="images/tick.svg" />
+          {/* <MarkersSymbolizer
+            offset={-9}
+            placement="vertex-first"
+            file="images/tick.svg"
+          />
 
-          <MarkersSymbolizer placement="vertex-last" file="images/tick.svg" />
-          <LineSymbolizer stroke="black" strokeWidth={2} strokeLinecap="butt" />
+          <MarkersSymbolizer
+            offset={-9}
+            placement="vertex-last"
+            file="images/tick-r.svg"
+          /> */}
+
+          <LineSymbolizer stroke="black" strokeWidth={3} strokeLinecap="butt" />
 
           <TextSymbolizer
             fontsetName="regular"
-            size="12"
+            size={16}
             fill="black"
-            haloFill="white"
-            halo-radius="1"
             placement="line"
             allowOverlap
-            dy="-5"
+            dy={-6}
           >
             {'"' +
               nf.format(Math.round(d > 999 ? d / 1000 : d)) +
