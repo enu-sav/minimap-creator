@@ -159,6 +159,19 @@ Make watershed polygon (QGIS):
 
 Get countries from https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/countries (1:1) and export table with 3857 projection to `countries.sqlite` (SpatiaLite).
 
+### Krym belongs to Ukraine
+
+```bash
+sqlite3 map.sqlite
+```
+
+```sql
+SELECT load_extension('mod_spatialite');
+delete from admin_areas where ogc_fid = 785489; -- find ID of border making Krym Russian
+insert into admin_areas select null, 1 as osm_id, name as name, name_sk, admin_level, country_code, st_union(geometry) as geometry from admin_areas where country_code = 'UA' and admin_level = 2 group by country_code;
+delete from admin_areas where country_code = 'UA' and admin_level = 2 and osm_id <> 1;
+```
+
 ### More resources / ideas
 
 - https://github.com/eurostat/RegionSimplify
