@@ -35,6 +35,7 @@ Query parameters, all are optional:
   - `landcover` - forests, water bodies, urban areas
   - `scale` - map scale
   - `limitPlacesToCountry` - show only places of specified country
+  - `transliterate` - transliterate non-latin names
 - `place-types` - which places to render, comma separated values of: `city`, `town`, `village`. It can also contain a single value `capital` to only display capitals.
 - `country` - country to zoom to and to highlight
 - `major-borders` - country codes and _admin levels_ to show as major borders, format: `cc:level,cc:level,...`; default `:2` (`admin_level=2` for every country)

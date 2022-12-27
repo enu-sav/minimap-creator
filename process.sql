@@ -152,18 +152,52 @@ ALTER TABLE
 ADD
   COLUMN ogc_fid SERIAL PRIMARY KEY;
 
-create temporary table cc as
-select
+CREATE temporary TABLE cc AS
+SELECT
   osm_places.osm_id,
   admin_areas.country_code
-from
+FROM
   osm_places
-  left join admin_areas on st_contains(admin_areas.geometry, osm_places.geometry)
-where
+  LEFT JOIN admin_areas ON ST_Contains(admin_areas.geometry, osm_places.geometry)
+WHERE
   admin_level = 2;
 
-create index cc_idx on cc (osm_id);
+CREATE INDEX cc_idx ON cc (osm_id);
 
-alter table osm_places add column country_code char(2);
+ALTER TABLE
+  osm_places
+ADD
+  column country_code CHAR(2);
 
-update osm_places set country_code = (select max(country_code) from cc where osm_places.osm_id = cc.osm_id group by cc.osm_id);
+UPDATE
+  osm_places
+SET
+  country_code = (
+    SELECT
+      MAX(country_code)
+    FROM
+      cc
+    WHERE
+      osm_places.osm_id = cc.osm_id
+    GROUP BY
+      cc.osm_id
+  );
+
+-- comment out following lines to disable transliteration feature
+-- first compile and install transliterate function from https://github.com/imagico/openstreetmap-carto-german/tree/master/utf8translit
+CREATE FUNCTION transliterate(text) RETURNS text AS '$libdir/utf8translit',
+'transliterate' LANGUAGE C STRICT;
+
+ALTER TABLE
+  osm_places
+ADD
+  column name_trl VARCHAR;
+
+UPDATE
+  osm_places
+SET
+  name_trl = CASE
+    WHEN transliterate(name) = name THEN NULL
+    ELSE initcap(transliterate(name))
+  END;
+-- end transliteration support

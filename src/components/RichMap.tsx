@@ -105,6 +105,7 @@ export function RichMap({
           countryCode={
             featureSet.has("limitPlacesToCountry") ? country : undefined
           }
+          transliterate={featureSet.has("transliterate")}
         />
       )}
 
