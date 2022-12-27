@@ -7,3 +7,5 @@ simplified-land-polygons-complete-*
 *.qgz
 *.tif*
 *.BAK
+*.OLD
+

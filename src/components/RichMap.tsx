@@ -13,6 +13,7 @@ import { Waterways } from "./Waterways";
 import { CountryMask } from "./CountryMask";
 import { WatershedMask } from "./WatershedMask";
 import { MapScale } from "./MapScale";
+import { CoastlinedCoutryBorders } from "./CoastlinedCoutryBorders";
 
 type Props = {
   featureSet: Set<string>;
@@ -49,6 +50,8 @@ export function RichMap({
   bbox,
   pxLon,
 }: Props) {
+  const coastlineBorders = featureSet.has("coastlineBorders");
+
   return (
     <Map backgroundColor={colors.water}>
       <Fonts />
@@ -74,6 +77,8 @@ export function RichMap({
 
       {featureSet.has("roads") && <Roads />}
 
+      {coastlineBorders && <CoastlinedCoutryBorders />}
+
       {featureSet.has("borders") && (
         <Borders
           highlight={highlightAdminArea}
@@ -94,7 +99,7 @@ export function RichMap({
         </>
       ) : country ? (
         <Mask>
-          <CountryMask country={country} />
+          <CountryMask country={country} coastlineBorders={coastlineBorders} />
         </Mask>
       ) : undefined}
 

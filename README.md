@@ -32,6 +32,7 @@ Query parameters, all are optional:
 - `features` - comma separated features:
   - `roads` - roads
   - `borders` - global borders (admin_level=2 for country borders, admin_level=4 for region borders); see https://wiki.openstreetmap.org/wiki/Tag:boundary=administrative#10_admin_level_values_for_specific_countries
+  - `coastlineBorders` - draw coastline-clamped coundry borders
   - `landcover` - forests, water bodies, urban areas
   - `scale` - map scale
   - `limitPlacesToCountry` - show only places of specified country
@@ -154,13 +155,13 @@ Make watershed polygon (QGIS):
 1. Simplify (10)
 1. export to `watershed_{name}.sqlite`
 
+### Suport for `coastlineBorders`
+
+Get countries from https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/countries (1:1) and export table with 3857 projection to `countries.sqlite` (SpatiaLite).
+
 ### More resources / ideas
 
 - https://github.com/eurostat/RegionSimplify
   - java -jar regionsimplify-1.4.1/RegionSimplify.jar -i admin.gpkg -s 9244649
 - https://gis.stackexchange.com/questions/439271/simplify-multipolygon-removing-small-gaps-in-postgis/439274
 - https://gadm.org/
-
-```
-
-```
