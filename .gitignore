@@ -3,6 +3,7 @@ node_modules
 dist
 *.pbf
 simplified-land-polygons-complete-*
-map.sqlite
+*.sqlite
 *.qgz
 *.tif*
+*.BAK
