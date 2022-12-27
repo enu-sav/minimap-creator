@@ -12,11 +12,13 @@ import {
 type Props = {
   placeTypes?: string[];
   sizeFactor?: number;
+  countryCode?: string;
 };
 
 export function Places({
   placeTypes = ["city", "town"],
   sizeFactor = 1,
+  countryCode,
 }: Props) {
   if (placeTypes.some((p) => /[^a-z]/.test(p))) {
     throw new Error("invalid place type");
@@ -96,14 +98,15 @@ export function Places({
         <StyleName>places</StyleName>
 
         <Datasource base="db">
-          <Parameter name="key_field">id</Parameter>
+          <Parameter name="key_field">ogc_fid</Parameter>
 
           <Parameter name="table">
             {`
               (
-                SELECT id, coalesce(NULLIF(name_sk, ''), name) AS name, geometry, type, capital
+                SELECT ogc_fid, coalesce(NULLIF(name_sk, ''), name) AS name, geometry, type, capital
                 FROM osm_places
                 WHERE
+                  ${countryCode ? `country_code = '${countryCode}' AND ` : ""}
                   ${
                     placeTypes.includes("capital")
                       ? "capital = 'yes'"

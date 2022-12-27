@@ -151,3 +151,19 @@ ALTER TABLE
   admin_areas
 ADD
   COLUMN ogc_fid SERIAL PRIMARY KEY;
+
+create temporary table cc as
+select
+  osm_places.osm_id,
+  admin_areas.country_code
+from
+  osm_places
+  left join admin_areas on st_contains(admin_areas.geometry, osm_places.geometry)
+where
+  admin_level = 2;
+
+create index cc_idx on cc (osm_id);
+
+alter table osm_places add column country_code char(2);
+
+update osm_places set country_code = (select max(country_code) from cc where osm_places.osm_id = cc.osm_id group by cc.osm_id);

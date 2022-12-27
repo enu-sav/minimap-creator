@@ -64,9 +64,6 @@ export function RichMap({
       <Datasource name="db">
         <Parameter name="type">sqlite</Parameter>
         <Parameter name="file">map.sqlite</Parameter>
-        {/* <Parameter name="type">ogr</Parameter>
-        {/* <Parameter name="driver">ogr</Parameter> */}
-        {/* <Parameter name="file">ref-countries-2020-60m.gdb.zip</Parameter> */}
       </Datasource>
 
       <Land />
@@ -101,8 +98,14 @@ export function RichMap({
         </Mask>
       ) : undefined}
 
-      {(featureSet.has("cities") || placeTypes != null) && (
-        <Places placeTypes={placeTypes} sizeFactor={placeSizeFactor} />
+      {placeTypes != null && (
+        <Places
+          placeTypes={placeTypes}
+          sizeFactor={placeSizeFactor}
+          countryCode={
+            featureSet.has("limitPlacesToCountry") ? country : undefined
+          }
+        />
       )}
 
       {featureSet.has("scale") && <MapScale bbox={bbox} pxLon={pxLon} />}
