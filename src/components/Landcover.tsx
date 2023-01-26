@@ -13,7 +13,7 @@ import { colors } from "../colors";
 export function Landcover() {
   return (
     <>
-      <Layer name="landcover" srs="+init=epsg:3857">
+      <Layer srs="+init=epsg:3857">
         <StyleName>landcover</StyleName>
 
         <Datasource base="db">

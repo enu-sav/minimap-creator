@@ -18,7 +18,7 @@ export function Land() {
         </Rule>
       </Style>
 
-      <Layer name="land" srs="+init=epsg:3857">
+      <Layer srs="+init=epsg:3857">
         <StyleName>land</StyleName>
 
         <Datasource>

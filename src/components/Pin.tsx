@@ -31,7 +31,7 @@ export function Pin({ pin }: Props) {
         </Rule>
       </Style>
 
-      <Layer name="pin" srs="+init=epsg:4326">
+      <Layer srs="+init=epsg:4326">
         <StyleName>pin</StyleName>
 
         <Datasource>

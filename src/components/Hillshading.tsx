@@ -19,7 +19,7 @@ export function Hillshading({ opacity }: Props) {
         </Rule>
       </Style>
 
-      <Layer name="hillshading" srs="+init=epsg:3035">
+      <Layer srs="+init=epsg:3035">
         <StyleName>hillshading</StyleName>
 
         <Datasource>

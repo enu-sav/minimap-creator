@@ -27,7 +27,7 @@ export function Roads() {
         </Rule>
       </Style>
 
-      <Layer name="roads" srs="+init=epsg:3857">
+      <Layer srs="+init=epsg:3857">
         <StyleName>roads</StyleName>
 
         <Datasource base="db">

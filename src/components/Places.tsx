@@ -96,7 +96,7 @@ export function Places({
         </Rule>
       </Style>
 
-      <Layer name="places" srs="+init=epsg:3857">
+      <Layer srs="+init=epsg:3857">
         <StyleName>places</StyleName>
 
         <Datasource base="db">

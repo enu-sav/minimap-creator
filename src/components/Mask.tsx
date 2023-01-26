@@ -19,7 +19,7 @@ export function Mask({ children }: Props) {
         </Rule>
       </Style>
 
-      <Layer name="mask" srs="+init=epsg:4326" compOp="src-over" opacity={0.25}>
+      <Layer srs="+init=epsg:4326" compOp="src-over" opacity={0.25}>
         <StyleName>mask</StyleName>
 
         <Datasource>
