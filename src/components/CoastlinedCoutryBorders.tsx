@@ -16,7 +16,7 @@ export function CoastlinedCoutryBorders({ widthFactor = 1 }: Props) {
     <>
       <Style name="coastlineCountryBorders">
         <Rule>
-          <RichLineSymbolizer color={colors.border} width={3 * widthFactor} />
+          <RichLineSymbolizer color={colors.coastline} width={1 * widthFactor} />
         </Rule>
       </Style>
 
