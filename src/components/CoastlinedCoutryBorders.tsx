@@ -9,12 +9,14 @@ import {
 import { colors } from "../colors";
 import { RichLineSymbolizer } from "./RichLineSymbolizer";
 
-export function CoastlinedCoutryBorders() {
+type Props = { widthFactor?: number };
+
+export function CoastlinedCoutryBorders({ widthFactor = 1 }: Props) {
   return (
     <>
       <Style name="coastlineCountryBorders">
         <Rule>
-          <RichLineSymbolizer color={colors.border} width={3} />
+          <RichLineSymbolizer color={colors.border} width={3 * widthFactor} />
         </Rule>
       </Style>
 
