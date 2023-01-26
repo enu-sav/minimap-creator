@@ -17,6 +17,7 @@ type Props = {
   minor?: Record<string, number>;
   micro?: Record<string, number>;
   widthFactor?: number;
+  noMajor?: boolean;
 };
 
 function Lower({
@@ -49,6 +50,7 @@ export function Borders({
   minor,
   micro,
   widthFactor = 1,
+  noMajor = false,
 }: Props) {
   const condition = [
     ...new Set([
@@ -95,7 +97,7 @@ export function Borders({
           />
         )}
 
-        {major && (
+        {major && !noMajor && (
           <Lower value={major} width={3 * widthFactor} color={colors.border} />
         )}
       </Style>
