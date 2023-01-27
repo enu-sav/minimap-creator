@@ -10,6 +10,7 @@ import stream from "stream";
 import { RichMap } from "./components//RichMap";
 import { countryData } from "./countryData";
 import { serialize } from "jsxnik/serialize";
+import { LandcoverTypes } from "./components/Landcover";
 
 class InvalidParamError extends Error {}
 
@@ -79,9 +80,11 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const margin = toNumber(params.get("margin")) ?? 5;
 
-  const featureSet = new Set(params.get("features")?.split(",") ?? []);
+  const features = params.get("features")?.split(",") ?? [];
 
-  const placeTypes = params.get("place-types")?.split(",");
+  const placeTypes = params.get("place-types")?.split(",") ?? [];
+
+  const landcoverTypes = params.get("landcover-types")?.split(",") ?? [];
 
   const country = params.get("country") ?? undefined;
 
@@ -145,12 +148,13 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
   const style = serialize(
     <RichMap
       pin={pin}
-      featureSet={featureSet}
+      features={features}
       country={country?.toUpperCase()}
       highlightAdminArea={highlightAdminArea}
       majorBorders={majorBorders && Object.fromEntries(majorBorders)}
       minorBorders={minorBorders && Object.fromEntries(minorBorders)}
       microBorders={microBorders && Object.fromEntries(microBorders)}
+      landcoverTypes={landcoverTypes as LandcoverTypes[]}
       placeTypes={placeTypes}
       borderWidthFactor={borderWidthFactor}
       waterwayWidthFactor={waterwayWidthFactor}

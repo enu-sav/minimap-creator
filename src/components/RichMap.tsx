@@ -5,7 +5,7 @@ import { Mask } from "./Mask";
 import { Fonts } from "./Fonts";
 import { Hillshading } from "./Hillshading";
 import { Land } from "./Land";
-import { Landcover } from "./Landcover";
+import { Landcover, LandcoverTypes } from "./Landcover";
 import { Pin } from "./Pin";
 import { Places } from "./Places";
 import { Roads } from "./Roads";
@@ -17,14 +17,14 @@ import { CoastlinedCoutryBorders } from "./CoastlinedCoutryBorders";
 import { LandMask } from "./LandMask";
 
 type Props = {
-  featureSet: Set<string>;
+  features: string[];
   pin?: { lat: number; lon: number };
   country?: string;
   highlightAdminArea?: string | number;
   majorBorders?: Record<string, number>;
   minorBorders?: Record<string, number>;
   microBorders?: Record<string, number>;
-  placeTypes?: string[];
+  placeTypes: string[];
   borderWidthFactor?: number;
   waterwayWidthFactor?: number;
   placeSizeFactor?: number;
@@ -32,10 +32,11 @@ type Props = {
   watershedName?: string;
   bbox: number[];
   pxLon: number;
+  landcoverTypes: LandcoverTypes[];
 };
 
 export function RichMap({
-  featureSet,
+  features,
   pin,
   country,
   highlightAdminArea,
@@ -50,8 +51,9 @@ export function RichMap({
   watershedName,
   bbox,
   pxLon,
+  landcoverTypes,
 }: Props) {
-  const coastlineBorders = featureSet.has("coastlineBorders");
+  const coastlineBorders = features.includes("coastlineBorders");
 
   return (
     <Map backgroundColor={colors.water}>
@@ -72,26 +74,27 @@ export function RichMap({
 
       <Land />
 
-      {featureSet.has("landcover") && <Landcover />}
+      {landcoverTypes.length > 0 && <Landcover types={landcoverTypes} />}
 
       {hillshadingOpacity && <Hillshading opacity={hillshadingOpacity} />}
 
-      {featureSet.has("roads") && <Roads />}
+      {features.includes("roads") && <Roads />}
 
-      {featureSet.has("borders") && (
+      {features.includes("borders") && (
         <Borders
           highlight={highlightAdminArea}
           major={majorBorders}
           minor={minorBorders}
           micro={microBorders}
           widthFactor={borderWidthFactor}
-          noMajor={coastlineBorders}
+          // noMajor={coastlineBorders}
         />
       )}
 
       {coastlineBorders && (
         <>
           <LandMask />
+
           <CoastlinedCoutryBorders widthFactor={borderWidthFactor} />
         </>
       )}
@@ -110,18 +113,18 @@ export function RichMap({
         </Mask>
       ) : undefined}
 
-      {placeTypes != null && (
+      {placeTypes.length > 0 && (
         <Places
           placeTypes={placeTypes}
           sizeFactor={placeSizeFactor}
           countryCode={
-            featureSet.has("limitPlacesToCountry") ? country : undefined
+            features.includes("limitPlacesToCountry") ? country : undefined
           }
-          transliterate={featureSet.has("transliterate")}
+          transliterate={features.includes("transliterate")}
         />
       )}
 
-      {featureSet.has("scale") && <MapScale bbox={bbox} pxLon={pxLon} />}
+      {features.includes("scale") && <MapScale bbox={bbox} pxLon={pxLon} />}
 
       {pin && <Pin pin={pin} />}
     </Map>

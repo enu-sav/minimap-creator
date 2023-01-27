@@ -32,12 +32,12 @@ Query parameters, all are optional:
 - `features` - comma separated features:
   - `roads` - roads
   - `borders` - global borders (admin_level=2 for country borders, admin_level=4 for region borders); see https://wiki.openstreetmap.org/wiki/Tag:boundary=administrative#10_admin_level_values_for_specific_countries
-  - `coastlineBorders` - draw coastline-clamped coundry borders
-  - `landcover` - forests, water bodies, urban areas
+  - `coastlineBorders` - draw coastline border and mask maritime borders
   - `scale` - map scale
   - `limitPlacesToCountry` - show only places of specified country
   - `transliterate` - transliterate non-latin names
 - `place-types` - which places to render, comma separated values of: `city`, `town`, `village`. It can also contain a single value `capital` to only display capitals.
+- `landcover-types` - what landcover to render, comma separated values of: `forest`, `water-body`, `water-outline`, `urban`.
 - `country` - country to zoom to and to highlight
 - `major-borders` - country codes and _admin levels_ to show as major borders, format: `cc:level,cc:level,...`; default `:2` (`admin_level=2` for every country)
 - `minor-borders` - country codes and _admin levels_ to show as minor borders, format: `cc:level,cc:level,...`

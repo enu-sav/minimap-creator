@@ -7,6 +7,7 @@ import {
   Style,
   StyleName,
 } from "jsxnik/mapnikConfig";
+import { PlanetPolygonDatasource } from "./PlanetPolygonDatasource";
 
 type Props = { children: JSX.Element };
 
@@ -22,19 +23,7 @@ export function Mask({ children }: Props) {
       <Layer srs="+init=epsg:4326" compOp="src-over" opacity={0.25}>
         <StyleName>mask</StyleName>
 
-        <Datasource>
-          <Parameter name="type">geojson</Parameter>
-          <Parameter name="inline">
-            {`
-              {
-                "type": "Polygon",
-                "coordinates": [
-                  [[-180, -90], [-180, 90], [180, 90], [180, -90], [-180, -90]]
-                ]
-              }
-          `}
-          </Parameter>
-        </Datasource>
+        <PlanetPolygonDatasource />
 
         {children}
       </Layer>
