@@ -120,8 +120,6 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
     throw new InvalidParamError("one of `bbox` or `country` must be provided");
   }
 
-  console.log(srs);
-
   const mBbox = new mapnik.Projection(srs).forward(bbox);
 
   const aspectRatio = (mBbox[2] - mBbox[0]) / (mBbox[3] - mBbox[1]);
