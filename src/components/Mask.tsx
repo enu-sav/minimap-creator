@@ -7,11 +7,11 @@ import {
   Style,
   StyleName,
 } from "jsxnik/mapnikConfig";
-import { PlanetPolygonDatasource } from "./PlanetPolygonDatasource";
+import { mangleSrs, PlanetPolygonDatasource } from "./PlanetPolygonDatasource";
 
-type Props = { children: JSX.Element };
+type Props = { srs: string; children: JSX.Element };
 
-export function Mask({ children }: Props) {
+export function Mask({ srs, children }: Props) {
   return (
     <>
       <Style name="mask">
@@ -20,10 +20,10 @@ export function Mask({ children }: Props) {
         </Rule>
       </Style>
 
-      <Layer srs="+init=epsg:4326" compOp="src-over" opacity={0.25}>
+      <Layer srs={mangleSrs(srs)} compOp="src-over" opacity={0.25}>
         <StyleName>mask</StyleName>
 
-        <PlanetPolygonDatasource />
+        <PlanetPolygonDatasource srs={srs} />
 
         {children}
       </Layer>

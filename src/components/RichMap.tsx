@@ -33,6 +33,7 @@ type Props = {
   bbox: number[];
   pxLon: number;
   landcoverTypes: LandcoverTypes[];
+  srs: string;
 };
 
 export function RichMap({
@@ -52,11 +53,12 @@ export function RichMap({
   bbox,
   pxLon,
   landcoverTypes,
+  srs,
 }: Props) {
   const coastlineBorders = features.includes("coastlineBorders");
 
   return (
-    <Map backgroundColor={colors.water}>
+    <Map backgroundColor={colors.water} srs={srs}>
       <Fonts />
 
       {/* <Datasource name="db">
@@ -93,7 +95,7 @@ export function RichMap({
 
       {coastlineBorders && (
         <>
-          <LandMask />
+          <LandMask srs={srs} />
 
           <CoastlinedCoutryBorders widthFactor={borderWidthFactor} />
         </>
@@ -101,14 +103,14 @@ export function RichMap({
 
       {watershedName ? (
         <>
-          <Mask>
+          <Mask srs={srs}>
             <WatershedMask name={watershedName} />
           </Mask>
 
           <Waterways name={watershedName} widthFactor={waterwayWidthFactor} />
         </>
       ) : country ? (
-        <Mask>
+        <Mask srs={srs}>
           <CountryMask country={country} coastlineBorders={coastlineBorders} />
         </Mask>
       ) : undefined}

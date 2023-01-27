@@ -50,7 +50,7 @@ SET
         'quarry',
         'residential',
         'retail'
-      ) THEN 'human'
+      ) THEN 'human' -- TODO rename to urban
       ELSE NULL
     END
   );
@@ -200,4 +200,5 @@ SET
     WHEN transliterate(name) = name THEN NULL
     ELSE initcap(transliterate(name))
   END;
+
 -- end transliteration support

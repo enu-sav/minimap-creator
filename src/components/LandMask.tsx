@@ -10,9 +10,11 @@ import {
 } from "jsxnik/mapnikConfig";
 import { colors } from "../colors";
 import { LandPolygonsDatasource } from "./LandPolygonsDatasource";
-import { PlanetPolygonDatasource } from "./PlanetPolygonDatasource";
+import { mangleSrs, PlanetPolygonDatasource } from "./PlanetPolygonDatasource";
 
-export function LandMask() {
+type Props = { srs: string };
+
+export function LandMask({ srs }: Props) {
   return (
     <>
       <Style name="land-mask">
@@ -22,16 +24,16 @@ export function LandMask() {
         </Rule>
       </Style>
 
-      <Layer srs="+init=epsg:3857" compOp="dst-in">
+      <Layer srs={"+init=epsg:3857"} compOp="dst-in">
         <StyleName>land-mask</StyleName>
 
         <LandPolygonsDatasource />
       </Layer>
 
-      <Layer srs="+init=epsg:4326" compOp="dst-atop">
+      <Layer srs={mangleSrs(srs)} compOp="dst-atop">
         <StyleName>land-mask</StyleName>
 
-        <PlanetPolygonDatasource />
+        <PlanetPolygonDatasource srs={srs} />
       </Layer>
     </>
   );

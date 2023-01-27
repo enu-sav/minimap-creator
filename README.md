@@ -25,6 +25,7 @@ Minimap Creator is a HTTP server for creating minimaps.
 
 Query parameters, all are optional:
 
+- `srs` - spatial reference system. Well supported are `+init=epsg:3035` (good for Europe) and `+init=epsg:3857` (global, default).
 - `lat`, `lon` - pin latitude and longitude, default no pin
 - `width` - image width, default 800, or computed from `country` and `height` if specified
 - `height` - image height, default 400, or computed from `country` and `width` if specified

@@ -22,8 +22,6 @@ mapnik.register_default_input_plugins();
 
 mapnik.registerFonts("fonts", { recurse: true });
 
-const merc = new mapnik.Projection("+init=epsg:3857");
-
 for (const [cla, methods] of [
   [mapnik.Map, ["render", "fromString", "load", "renderFile"]] as const,
   [mapnik.Image, ["save", "encode"]] as const,
@@ -102,6 +100,8 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const bboxParam = params.get("bbox");
 
+  const srs = params.get("srs") ?? "+init=epsg:3857"; // "+init=epsg:3035"
+
   let bbox: number[];
 
   if (bboxParam) {
@@ -120,7 +120,9 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
     throw new InvalidParamError("one of `bbox` or `country` must be provided");
   }
 
-  const mBbox = merc.forward(bbox);
+  console.log(srs);
+
+  const mBbox = new mapnik.Projection(srs).forward(bbox);
 
   const aspectRatio = (mBbox[2] - mBbox[0]) / (mBbox[3] - mBbox[1]);
 
@@ -130,7 +132,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const height = toNumber(params.get("height")) ?? width / aspectRatio;
 
-  const map = new mapnik.Map(width, height, "+init=epsg:3857");
+  const map = new mapnik.Map(width, height, srs);
 
   const pin = lat == undefined || lon == undefined ? undefined : { lat, lon };
 
@@ -147,6 +149,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const style = serialize(
     <RichMap
+      srs={srs}
       pin={pin}
       features={features}
       country={country?.toUpperCase()}
