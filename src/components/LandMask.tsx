@@ -1,8 +1,5 @@
 import {
-  Datasource,
   Layer,
-  LineSymbolizer,
-  Parameter,
   PolygonSymbolizer,
   Rule,
   Style,
@@ -20,7 +17,6 @@ export function LandMask({ srs }: Props) {
       <Style name="land-mask">
         <Rule>
           <PolygonSymbolizer fill={colors.water} />
-          <LineSymbolizer stroke={"red"} />
         </Rule>
       </Style>
 

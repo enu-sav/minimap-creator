@@ -1,7 +1,7 @@
 import { LineSymbolizer } from "jsxnik/mapnikConfig";
 
 type Props = {
-  width: number;
+  width: number | string;
   color: string;
 };
 

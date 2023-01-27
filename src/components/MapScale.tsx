@@ -8,7 +8,6 @@ import {
   Rule,
   Style,
   StyleName,
-  MarkersSymbolizer,
 } from "jsxnik/mapnikConfig";
 
 type Params = {

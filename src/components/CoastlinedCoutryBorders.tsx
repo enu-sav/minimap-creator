@@ -1,12 +1,7 @@
-import {
-  Layer,
-  Style,
-  Rule,
-  StyleName,
-  LineSymbolizer,
-} from "jsxnik/mapnikConfig";
+import { Layer, Style, Rule, StyleName } from "jsxnik/mapnikConfig";
 import { colors } from "../colors";
 import { LandPolygonsDatasource } from "./LandPolygonsDatasource";
+import { RichLineSymbolizer } from "./RichLineSymbolizer";
 
 type Props = { widthFactor?: number };
 
@@ -33,10 +28,9 @@ export function CoastlinedCoutryBorders({ widthFactor = 1 }: Props) {
 
       <Style name="coastline-border">
         <Rule>
-          <LineSymbolizer
-            stroke={colors.coastline}
-            strokeWidth={widthFactor * 3}
-            strokeLinejoin="round"
+          <RichLineSymbolizer
+            color={colors.coastline}
+            width={widthFactor * 3}
           />
         </Rule>
       </Style>

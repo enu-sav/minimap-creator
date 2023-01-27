@@ -9,6 +9,7 @@ import {
   Style,
   StyleName,
 } from "jsxnik/mapnikConfig";
+import { RichLineSymbolizer } from "./RichLineSymbolizer";
 
 type Props = {
   name: string;
@@ -20,9 +21,9 @@ export function Waterways({ name, widthFactor = 1 }: Props) {
     <>
       <Style name="waterways">
         <Rule>
-          <LineSymbolizer
-            stroke="[color]"
-            strokeWidth={`${widthFactor} * [strahler] / 3`}
+          <RichLineSymbolizer
+            color="[color]"
+            width={`${widthFactor} * [strahler] / 3`}
           />
         </Rule>
       </Style>
