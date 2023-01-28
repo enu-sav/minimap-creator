@@ -126,7 +126,9 @@ export function RichMap({
         />
       )}
 
-      {features.includes("scale") && <MapScale bbox={bbox} pxLon={pxLon} />}
+      {features.includes("scale") && (
+        <MapScale srs={srs} bbox={bbox} pxLon={pxLon} />
+      )}
 
       {pin && <Pin pin={pin} />}
     </Map>

@@ -1,3 +1,4 @@
+import mapnik from "mapnik";
 import { computeDestinationPoint, getDistance } from "geolib";
 import {
   Datasource,
@@ -13,24 +14,39 @@ import {
 type Params = {
   bbox: number[];
   pxLon: number;
+  srs: string;
 };
 
 const nf = Intl.NumberFormat("sk");
 
 const mult: Record<string, number> = { 1: 2, 2: 2.5, 5: 2 };
 
-export function MapScale({ bbox, pxLon }: Params) {
+export function MapScale({ bbox, pxLon, srs }: Params) {
   let pt: number[];
 
-  let d = 1;
+  let dist = 1; // start from 1 m
 
   do {
-    d *= mult[String(d).charAt(0)];
+    dist *= mult[String(dist).charAt(0)];
 
-    const ptLL = computeDestinationPoint([bbox[0], bbox[1]], d, 90);
+    const ptLL = computeDestinationPoint([bbox[0], bbox[1]], dist, 90);
 
     pt = [ptLL.longitude, ptLL.latitude];
   } while (pxLon * (pt[0] - bbox[0]) < 100);
+
+  const proj = new mapnik.Projection(srs);
+
+  const start = [bbox[0], bbox[1]];
+
+  const transStart = proj.forward(start);
+
+  let transEnd = [transStart[0] + dist, transStart[1]];
+
+  const end = proj.inverse(transEnd);
+
+  const realDist = getDistance(start as any, end);
+
+  transEnd = [transStart[0] + (dist * dist) / realDist, transStart[1]];
 
   const scale = {
     type: "FeatureCollection",
@@ -40,10 +56,7 @@ export function MapScale({ bbox, pxLon }: Params) {
         properties: {},
         geometry: {
           type: "LineString",
-          coordinates: [
-            [bbox[0], bbox[1]],
-            [pt[0], pt[1]],
-          ],
+          coordinates: [transStart, transEnd],
         },
       },
     ],
@@ -51,7 +64,7 @@ export function MapScale({ bbox, pxLon }: Params) {
 
   return (
     <>
-      <Layer srs="+init=epsg:4326" clearLabelCache opacity={0.8}>
+      <Layer srs={srs} clearLabelCache opacity={0.8}>
         <StyleName>mapScaleBg</StyleName>
 
         <Datasource>
@@ -60,7 +73,7 @@ export function MapScale({ bbox, pxLon }: Params) {
         </Datasource>
       </Layer>
 
-      <Layer srs="+init=epsg:4326" clearLabelCache>
+      <Layer srs={srs} clearLabelCache>
         <StyleName>mapScale</StyleName>
 
         <Datasource>
@@ -116,9 +129,9 @@ export function MapScale({ bbox, pxLon }: Params) {
             dy={-6}
           >
             {'"' +
-              nf.format(Math.round(d > 999 ? d / 1000 : d)) +
+              nf.format(Math.round(dist > 999 ? dist / 1000 : dist)) +
               " " +
-              (d > 999 ? "km" : "m") +
+              (dist > 999 ? "km" : "m") +
               '"'}
           </TextSymbolizer>
         </Rule>
