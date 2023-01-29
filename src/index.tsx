@@ -90,6 +90,9 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const borderWidthFactor = toNumber(params.get("border-width-factor"));
 
+  const coastlineWidthFactor =
+    toNumber(params.get("coastline-width-factor")) ?? borderWidthFactor;
+
   const waterwayWidthFactor = toNumber(params.get("waterway-width-factor"));
 
   const placeSizeFactor = toNumber(params.get("place-size-factor"));
@@ -158,6 +161,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
       landcoverTypes={landcoverTypes as LandcoverTypes[]}
       placeTypes={placeTypes}
       borderWidthFactor={borderWidthFactor}
+      coastlineWidthFactor={coastlineWidthFactor}
       waterwayWidthFactor={waterwayWidthFactor}
       placeSizeFactor={placeSizeFactor}
       hillshadingOpacity={hillshadingOpacity}

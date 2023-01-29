@@ -44,6 +44,7 @@ Query parameters, all are optional:
 - `minor-borders` - country codes and _admin levels_ to show as minor borders, format: `cc:level,cc:level,...`
 - `micro-borders` - country codes and _admin levels_ to show as micro borders, format: `cc:level,cc:level,...`
 - `border-width-factor` - scale of the borders width, default 1
+- `coastline-width-factor` - scale of the coastline borders width, default equals to `border-width-factor`
 - `waterway-width-factor` - scale of the waterway width, default 1
 - `place-size-factor` - scale of the places, default 1
 - `highlight-admin-area` - OSM ID or name (local or slovak) of the area to highlight

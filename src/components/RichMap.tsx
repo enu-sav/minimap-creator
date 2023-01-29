@@ -26,6 +26,7 @@ type Props = {
   microBorders?: Record<string, number>;
   placeTypes: string[];
   borderWidthFactor?: number;
+  coastlineWidthFactor?: number;
   waterwayWidthFactor?: number;
   placeSizeFactor?: number;
   hillshadingOpacity?: number;
@@ -46,6 +47,7 @@ export function RichMap({
   microBorders,
   placeTypes,
   borderWidthFactor,
+  coastlineWidthFactor,
   waterwayWidthFactor,
   placeSizeFactor,
   hillshadingOpacity,
@@ -97,7 +99,7 @@ export function RichMap({
         <>
           <LandMask srs={srs} />
 
-          <CoastlinedCoutryBorders widthFactor={borderWidthFactor} />
+          <CoastlinedCoutryBorders widthFactor={coastlineWidthFactor} />
         </>
       )}
 
