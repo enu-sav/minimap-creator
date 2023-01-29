@@ -8,7 +8,6 @@ import {
   Style,
   StyleName,
 } from "jsxnik/mapnikConfig";
-import { colors } from "../colors";
 import { RichLineSymbolizer } from "./RichLineSymbolizer";
 
 type Props = {
@@ -18,6 +17,8 @@ type Props = {
   micro?: Record<string, number>;
   widthFactor?: number;
   noMajor?: boolean;
+  color: string;
+  areaHighlightColor: string;
 };
 
 function Lower({
@@ -51,6 +52,8 @@ export function Borders({
   micro,
   widthFactor = 1,
   noMajor = false,
+  color,
+  areaHighlightColor,
 }: Props) {
   const condition = [
     ...new Set([
@@ -77,28 +80,20 @@ export function Borders({
             ) : (
               <Filter>[osm_id] = {-Number(highlight)}</Filter>
             )}
-            <PolygonSymbolizer fill={colors.areaHighlight} />
+            <PolygonSymbolizer fill={areaHighlightColor} />
           </Rule>
         )}
 
         {micro && (
-          <Lower
-            value={micro}
-            width={0.75 * widthFactor}
-            color={colors.border}
-          />
+          <Lower value={micro} width={0.75 * widthFactor} color={color} />
         )}
 
         {minor && (
-          <Lower
-            value={minor}
-            width={1.5 * widthFactor}
-            color={colors.border}
-          />
+          <Lower value={minor} width={1.5 * widthFactor} color={color} />
         )}
 
         {major && !noMajor && (
-          <Lower value={major} width={3 * widthFactor} color={colors.border} />
+          <Lower value={major} width={3 * widthFactor} color={color} />
         )}
       </Style>
 

@@ -10,13 +10,13 @@ import {
   Style,
   StyleName,
 } from "jsxnik/mapnikConfig";
-import { colors } from "../colors";
 
 type Props = {
   pin: { lat: number; lon: number };
+  color: string;
 };
 
-export function Pin({ pin }: Props) {
+export function Pin({ pin, color }: Props) {
   return (
     <>
       <Style name="pin">
@@ -26,7 +26,7 @@ export function Pin({ pin }: Props) {
             allowOverlap={true}
             ignorePlacement={true}
             strokeWidth={0}
-            fill={colors.pin}
+            fill={color}
           />
         </Rule>
       </Style>

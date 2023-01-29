@@ -37,6 +37,7 @@ Query parameters, all are optional:
   - `scale` - map scale
   - `limitPlacesToCountry` - show only places of specified country
   - `transliterate` - transliterate non-latin names
+- `colors` - override default colors. Syntax: `feature:color,feature:color,...` where feautre is one of `water`, `urban`, `forest`, `pin`, `border`, `coastline`, `areaHighlight`, `land` and color is HTML color.
 - `place-types` - which places to render, comma separated values of: `city`, `town`, `village`. It can also contain a single value `capital` to only display capitals.
 - `landcover-types` - what landcover to render, comma separated values of: `forest`, `water-body`, `urban`.
 - `country` - country to zoom to and to highlight
@@ -50,6 +51,7 @@ Query parameters, all are optional:
 - `highlight-admin-area` - OSM ID or name (local or slovak) of the area to highlight
 - `hillshading-opacity` - opacity of the hillshading in range from 0 (no shading, default) to 1 (full shading)
 - `watershed-name` - name of watershed to render
+- `land-color` - land color, default `#e6edd5`
 - `bbox` - explicit bounding box to render (minLon,minLat,maxLon,maxLat)
 - `margin` - map margin in pixels, default 5
 - `format` - output format, one of `png` (default), `jpeg`, `svg`, `pdf`

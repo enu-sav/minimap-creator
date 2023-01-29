@@ -1,5 +1,4 @@
 import { Datasource, Map, Parameter } from "jsxnik/mapnikConfig";
-import { colors } from "../colors";
 import { Borders } from "./Borders";
 import { Mask } from "./Mask";
 import { Fonts } from "./Fonts";
@@ -13,7 +12,7 @@ import { Waterways } from "./Waterways";
 import { CountryMask } from "./CountryMask";
 import { WatershedMask } from "./WatershedMask";
 import { MapScale } from "./MapScale";
-import { CoastlinedCoutryBorders } from "./CoastlinedCoutryBorders";
+import { Coastline } from "./Coastline";
 import { LandMask } from "./LandMask";
 
 type Props = {
@@ -35,6 +34,7 @@ type Props = {
   pxLon: number;
   landcoverTypes: LandcoverTypes[];
   srs: string;
+  colors: Record<ColorKey, string>;
 };
 
 export function RichMap({
@@ -56,6 +56,7 @@ export function RichMap({
   pxLon,
   landcoverTypes,
   srs,
+  colors,
 }: Props) {
   const coastlineBorders = features.includes("coastlineBorders");
 
@@ -76,9 +77,11 @@ export function RichMap({
         <Parameter name="file">data/map.sqlite</Parameter>
       </Datasource>
 
-      <Land />
+      <Land color={colors.land} />
 
-      {landcoverTypes.length > 0 && <Landcover types={landcoverTypes} />}
+      {landcoverTypes.length > 0 && (
+        <Landcover types={landcoverTypes} colors={colors} />
+      )}
 
       {hillshadingOpacity && <Hillshading opacity={hillshadingOpacity} />}
 
@@ -92,14 +95,19 @@ export function RichMap({
           micro={microBorders}
           widthFactor={borderWidthFactor}
           // noMajor={coastlineBorders}
+          color={colors.border}
+          areaHighlightColor={colors.areaHighlight}
         />
       )}
 
       {coastlineBorders && (
         <>
-          <LandMask srs={srs} />
+          <LandMask srs={srs} waterColor={colors.water} />
 
-          <CoastlinedCoutryBorders widthFactor={coastlineWidthFactor} />
+          <Coastline
+            color={colors.coastline}
+            widthFactor={coastlineWidthFactor}
+          />
         </>
       )}
 
@@ -132,7 +140,7 @@ export function RichMap({
         <MapScale srs={srs} bbox={bbox} pxLon={pxLon} />
       )}
 
-      {pin && <Pin pin={pin} />}
+      {pin && <Pin pin={pin} color={colors.pin} />}
     </Map>
   );
 }

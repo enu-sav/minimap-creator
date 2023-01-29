@@ -2,20 +2,21 @@ import {
   Datasource,
   Filter,
   Layer,
-  LineSymbolizer,
   Parameter,
   PolygonSymbolizer,
   Rule,
   Style,
   StyleName,
 } from "jsxnik/mapnikConfig";
-import { colors } from "../colors";
 
 export type LandcoverTypes = "forest" | "water-body" | "urban";
 
-type Props = { types: LandcoverTypes[] };
+type Props = {
+  types: LandcoverTypes[];
+  colors: Record<"forest" | "water" | "urban", string>;
+};
 
-export function Landcover({ types }: Props) {
+export function Landcover({ types, colors }: Props) {
   return (
     <>
       <Layer srs="+init=epsg:3857">

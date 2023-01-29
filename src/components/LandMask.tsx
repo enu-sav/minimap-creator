@@ -5,18 +5,17 @@ import {
   Style,
   StyleName,
 } from "jsxnik/mapnikConfig";
-import { colors } from "../colors";
 import { LandPolygonsDatasource } from "./LandPolygonsDatasource";
 import { mangleSrs, PlanetPolygonDatasource } from "./PlanetPolygonDatasource";
 
-type Props = { srs: string };
+type Props = { srs: string; waterColor: string };
 
-export function LandMask({ srs }: Props) {
+export function LandMask({ srs, waterColor }: Props) {
   return (
     <>
       <Style name="land-mask">
         <Rule>
-          <PolygonSymbolizer fill={colors.water} />
+          <PolygonSymbolizer fill={waterColor} />
         </Rule>
       </Style>
 

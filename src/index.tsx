@@ -99,6 +99,27 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const hillshadingOpacity = toNumber(params.get("hillshading-opacity"));
 
+  const colors: Record<ColorKey, string> = Object.assign(
+    {
+      water: "#c9e7f2",
+      urban: "#ccc",
+      forest: "#bea",
+      pin: "#d00",
+      border: "#b02482",
+      coastline: "#0082c1",
+      areaHighlight: "#fecc0080",
+      land: "#e6edd5",
+    } as const,
+    Object.fromEntries(
+      (params.get("colors") ?? "")
+        .split(",")
+        .filter((x) => x)
+        .map((item) => item.split(":", 2))
+    )
+  );
+
+  console.log(colors);
+
   const watershedName = params.get("watershed-name") ?? undefined;
 
   const bboxParam = params.get("bbox");
@@ -168,6 +189,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
       watershedName={watershedName}
       bbox={bbox}
       pxLon={width / (bbox[2] - bbox[0])}
+      colors={colors}
     />
   );
 
