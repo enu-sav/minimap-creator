@@ -118,8 +118,6 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
     )
   );
 
-  console.log(colors);
-
   const watershedName = params.get("watershed-name") ?? undefined;
 
   const bboxParam = params.get("bbox");
