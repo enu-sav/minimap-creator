@@ -19,7 +19,7 @@ export function CoastlinedCoutryBorders({ widthFactor = 1 }: Props) {
 
         <Datasource>
           <Parameter name="type">sqlite</Parameter>
-          <Parameter name="file">countries.sqlite</Parameter>
+          <Parameter name="file">data/countries.sqlite</Parameter>
           <Parameter name="table">
             (SELECT ogc_fid, geometry FROM countries) AS foo
           </Parameter>

@@ -1,11 +1,5 @@
 *.gpkg
 node_modules
 dist
-*.pbf
-simplified-land-polygons-complete-*
-*.sqlite
-*.qgz
-*.tif*
-*.BAK
-*.OLD
-
+work
+data

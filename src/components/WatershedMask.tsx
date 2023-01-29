@@ -18,7 +18,7 @@ export function WatershedMask({ name }: Props) {
       <Datasource>
         <Parameter name="type">sqlite</Parameter>
 
-        <Parameter name="file">watershed_{name}.sqlite</Parameter>
+        <Parameter name="file">data/watershed_{name}.sqlite</Parameter>
 
         <Parameter name="table">watershed_{name}</Parameter>
       </Datasource>

@@ -6,7 +6,7 @@ export function LandPolygonsDatasource() {
       <Parameter name="type">shape</Parameter>
 
       <Parameter name="file">
-        simplified-land-polygons-complete-3857/simplified_land_polygons.shp
+        data/simplified-land-polygons-complete-3857/simplified_land_polygons.shp
       </Parameter>
     </Datasource>
   );

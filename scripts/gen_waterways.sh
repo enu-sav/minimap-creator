@@ -28,7 +28,7 @@ ogr2ogr -sql "WITH RECURSIVE cte(objectid, object_id, shape, strahler) AS (
       WHERE
          River_Net_l.nextdownid = cte.object_id
    )
-   SELECT objectid, shape, strahler FROM cte" -dsco SPATIALITE=YES -nln waterways_${NAME} waterways_${NAME}.sqlite euhydro_${BASIN}_v013.gpkg &
+   SELECT objectid, shape, strahler FROM cte" -dsco SPATIALITE=YES -nln waterways_${NAME} data/waterways_${NAME}.sqlite euhydro_${BASIN}_v013.gpkg &
 
 ogr2ogr -sql "WITH RECURSIVE cte(objectid, object_id, shape, strahler, nextdownid) AS (
       SELECT
@@ -44,7 +44,7 @@ ogr2ogr -sql "WITH RECURSIVE cte(objectid, object_id, shape, strahler, nextdowni
       WHERE
          cte.nextdownid = River_Net_l.object_id AND River_Net_l.object_id <> (SELECT nextdownid FROM River_Net_l WHERE object_id = '$SINK_OBJECT_ID')
    )
-   SELECT objectid, shape, strahler FROM cte" -dsco SPATIALITE=YES -nln waterways_${NAME} waterways_${NAME}_main.sqlite euhydro_${BASIN}_v013.gpkg &
+   SELECT objectid, shape, strahler FROM cte" -dsco SPATIALITE=YES -nln waterways_${NAME} data/waterways_${NAME}_main.sqlite euhydro_${BASIN}_v013.gpkg &
 
 ogr2ogr -sql "WITH RECURSIVE cte(objectid, object_id, shape, strahler, nextdownid) AS (
       SELECT
@@ -60,6 +60,6 @@ ogr2ogr -sql "WITH RECURSIVE cte(objectid, object_id, shape, strahler, nextdowni
       WHERE
          cte.nextdownid = River_Net_l.object_id AND River_Net_l.object_id <> (SELECT nextdownid FROM River_Net_l WHERE object_id = '$PARENT_SINK_OBJECT_ID')
    )
-   SELECT objectid, shape, strahler FROM cte" -dsco SPATIALITE=YES -nln waterways_${NAME} waterways_${NAME}_parent.sqlite euhydro_${BASIN}_v013.gpkg &
+   SELECT objectid, shape, strahler FROM cte" -dsco SPATIALITE=YES -nln waterways_${NAME} data/waterways_${NAME}_parent.sqlite euhydro_${BASIN}_v013.gpkg &
 
 wait

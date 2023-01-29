@@ -24,7 +24,7 @@ export function Hillshading({ opacity }: Props) {
 
         <Datasource>
           <Parameter name="type">gdal</Parameter>
-          <Parameter name="file">hillshading.tif</Parameter>
+          <Parameter name="file">data/hillshading.tif</Parameter>
         </Datasource>
       </Layer>
     </>

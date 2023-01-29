@@ -71,7 +71,7 @@ export function RichMap({
 
       <Datasource name="db">
         <Parameter name="type">sqlite</Parameter>
-        <Parameter name="file">map.sqlite</Parameter>
+        <Parameter name="file">data/map.sqlite</Parameter>
       </Datasource>
 
       <Land />

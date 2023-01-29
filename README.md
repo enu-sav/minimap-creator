@@ -6,8 +6,8 @@ Minimap Creator is a HTTP server for creating minimaps.
 
 1. clone the project
 1. [download map data](https://drive.google.com/drive/folders/1nSxT4YOUBVoU_7Dt-qbiwodZmCSelP8f?usp=sharing) or prepare it on your own (see Nodes below) and put it to the project directory
-1. [download simplified land polygons](https://osmdata.openstreetmap.de/download/simplified-land-polygons-complete-3857.zip) and unpack it to project directory
-1. save hillshading data as `hillshading.tif` (and `hillshading.tif.ovr`)
+1. [download simplified land polygons](https://osmdata.openstreetmap.de/download/simplified-land-polygons-complete-3857.zip) and unpack it in `data` directory
+1. save hillshading data as `data/hillshading.tif` (and `data/hillshading.tif.ovr`)
 1. install dependencies
    ```bash
    npm i
@@ -63,17 +63,17 @@ Highlight administrative area and show a marker:
 curl 'http://localhost:8080?features=borders,landcover,roads&placeId=522422&country=sk&width=1200&scale=1&margin=20&minor-borders=hu:4,uk:4,at:4,pl:4,sk:4,cz:4&micro-borders=sk:8&place-types=city,town&highlight-admin-area=Ko%C5%A1ick%C3%BD%20kraj&hillshading-opacity=0.5&lat=48.700142&lon=20.891184' | display
 ```
 
-![Slovakia, Košický región](sample.png)
+![Slovakia, Košický región](doc/sample.png)
 
 Watershed _Hornád_:
 
 ```bash
 RIVER=hornad
 
-curl "http://localhost:8080?features=borders,landcover,scale&width=1200&scale=2&place-size-factor=0.8&margin=20&place-types=city,town&hillshading-opacity=0.5&watershed-name=$RIVER&bbox="`ogrinfo -sql "select st_transform(st_envelope(st_union(geometry)), 4326) from watershed_$RIVER" watershed_$RIVER.sqlite watershed_$RIVER | grep Extent | sed -e 's/[^0-9\.]\{1,\}/,/g' | sed -e 's/^.\|.$//g'` | display
+curl "http://localhost:8080?features=borders,landcover,scale&width=1200&scale=2&place-size-factor=0.8&margin=20&place-types=city,town&hillshading-opacity=0.5&watershed-name=$RIVER&bbox="`ogrinfo -sql "select st_transform(st_envelope(st_union(geometry)), 4326) from watershed_$RIVER" data/watershed_$RIVER.sqlite watershed_$RIVER | grep Extent | sed -e 's/[^0-9\.]\{1,\}/,/g' | sed -e 's/^.\|.$//g'` | display
 ```
 
-![Hornád watershed](sample-watershed.png)
+![Hornád watershed](doc/sample-watershed.png)
 
 ## Notes
 
@@ -82,43 +82,20 @@ curl "http://localhost:8080?features=borders,landcover,scale&width=1200&scale=2&
 1. Obtain latest [planet.osm.pbf](https://planet.openstreetmap.org/pbf/planet-latest.osm.pbf) from planet.openstreetmap.org.
 1. Import the data:
    ```bash
-   imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping mapping.yaml -read europe-latest.osm.pbf -write -overwritecache
+   imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping mapping.yaml -read planet.osm.pbf -write -overwritecache
    imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping mapping.yaml -deployproduction
    ```
 1. Process the data with GRASS GIS using the following script:
-   ```
-   v.in.ogr input="PG:host=localhost dbname=minimap user=minimap password=minimap" layer=osm_admin output=admin
-   v.generalize --overwrite input=admin output=admin_gen20 method=douglas threshold=20
-   v.generalize --overwrite input=admin_gen20 output=admin_gen100 method=douglas threshold=100
-   v.generalize --overwrite input=admin_gen100 output=admin_gen500 method=douglas threshold=500
-   v.extract input=admin_gen500 where=admin_level=2 output=adm2 dissolve_column=osm_id -d --overwrite
-   v.extract input=admin_gen500 where=admin_level=3 output=adm3 dissolve_column=osm_id -d --overwrite
-   v.extract input=admin_gen500 where=admin_level=4 output=adm4 dissolve_column=osm_id -d --overwrite
-   v.extract input=admin_gen500 where=admin_level=5 output=adm5 dissolve_column=osm_id -d --overwrite
-   v.extract input=admin_gen500 where=admin_level=6 output=adm6 dissolve_column=osm_id -d --overwrite
-   v.extract input=admin_gen500 where=admin_level=7 output=adm7 dissolve_column=osm_id -d --overwrite
-   v.extract input=admin_gen500 where=admin_level=8 output=adm8 dissolve_column=osm_id -d --overwrite
-   v.extract input=admin_gen500 where=admin_level=9 output=adm9 dissolve_column=osm_id -d --overwrite
-   v.extract input=admin_gen500 where=admin_level=10 output=adm10 dissolve_column=osm_id -d --overwrite
-   v.extract input=admin_gen500 where=admin_level=11 output=adm11 dissolve_column=osm_id -d --overwrite
-   v.out.ogr input=adm2 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL
-   v.out.ogr input=adm3 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
-   v.out.ogr input=adm4 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
-   v.out.ogr input=adm5 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
-   v.out.ogr input=adm6 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
-   v.out.ogr input=adm7 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
-   v.out.ogr input=adm8 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
-   v.out.ogr input=adm9 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
-   v.out.ogr input=adm10 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
-   v.out.ogr input=adm11 type=area output="PG:host=localhost dbname=minimap user=minimap password=minimap" output_layer=admin format=PostgreSQL -a
+   ```bash
+   grass --tmp-location EPSG:3857 --exec sh grass_batch_job.sh
    ```
 1. Process the data in PostGIS:
    ```bash
    psql -h localhost minimap minimap < process.sql
    ```
-1. Export the data from PostGIS to `map.sqlite`:
+1. Export the data from PostGIS to `data/map.sqlite`:
    ```bash
-   ogr2ogr -F SQLITE map.sqlite PG:"host=localhost port=5432 dbname=minimap user=minimap password=minimap" -dsco SPATIALITE=YES roads osm_places admin_areas landcover
+   ogr2ogr -F SQLITE data/map.sqlite PG:"host=localhost port=5432 dbname=minimap user=minimap password=minimap" -dsco SPATIALITE=YES roads osm_places admin_areas landcover
    ```
 
 ### Watershed
@@ -154,16 +131,16 @@ Make watershed polygon (QGIS):
 1. Polygonize (gdal)
 1. SmoothVectors (10)
 1. Simplify (10)
-1. export to `watershed_{name}.sqlite`
+1. export to `data/watershed_{name}.sqlite`
 
 ### Suport for `coastlineBorders`
 
-Get countries from https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/countries (1:1) and export table with 3857 projection to `countries.sqlite` (SpatiaLite).
+Get countries from https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/countries (1:1) and export table with 3857 projection to `data/countries.sqlite` (SpatiaLite).
 
 ### Krym belongs to Ukraine
 
 ```bash
-sqlite3 map.sqlite
+sqlite3 data/map.sqlite
 ```
 
 ```sql
