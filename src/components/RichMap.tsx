@@ -121,7 +121,7 @@ export function RichMap({
         </>
       ) : country ? (
         <Mask srs={srs}>
-          <CountryMask country={country} coastlineBorders={coastlineBorders} />
+          <CountryMask country={country} />
         </Mask>
       ) : undefined}
 

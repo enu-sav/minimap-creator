@@ -136,10 +136,6 @@ Make watershed polygon (QGIS):
 1. Simplify (10)
 1. export to `data/watershed_{name}.sqlite`
 
-### Suport for `coastlineBorders`
-
-Get countries from https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/countries (1:1) and export table with 3857 projection to `data/countries.sqlite` (SpatiaLite).
-
 ### Krym belongs to Ukraine
 
 ```bash
