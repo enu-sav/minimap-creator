@@ -90,8 +90,9 @@ export function Borders({
             (SELECT width, st_linemerge(st_union(geometry)) AS geometry FROM
             ((SELECT MAX(
             {width}) AS width, aaa.geometry AS geometry FROM admin_areas JOIN
-            bbb USING (osm_id) JOIN aaa USING (id) WHERE {condition} GROUP BY
-            aaa.geometry)) AS subq GROUP BY width) AS foo
+            bbb USING (osm_id) JOIN aaa USING (id) WHERE aaa.geometry && !bbox!
+            AND {condition} GROUP BY aaa.geometry)) AS subq GROUP BY width) AS
+            foo
           </Parameter>
         </Datasource>
       </Layer>
