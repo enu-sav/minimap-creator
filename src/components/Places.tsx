@@ -100,12 +100,10 @@ export function Places({
         <StyleName>places</StyleName>
 
         <Datasource base="db">
-          <Parameter name="key_field">ogc_fid</Parameter>
-
           <Parameter name="table">
             {`
               (
-                SELECT ogc_fid, coalesce(NULLIF(name_sk, ''), ${
+                SELECT coalesce(NULLIF(name_sk, ''), ${
                   transliterate ? "name_trl, " : ""
                 }name) AS name, geometry, type, capital
                 FROM osm_places
