@@ -35,6 +35,7 @@ type Props = {
   landcoverTypes: LandcoverTypes[];
   srs: string;
   colors: Record<ColorKey, string>;
+  simplify: number;
 };
 
 export function RichMap({
@@ -57,6 +58,7 @@ export function RichMap({
   landcoverTypes,
   srs,
   colors,
+  simplify,
 }: Props) {
   const coastlineBorders = features.includes("coastlineBorders");
 
@@ -67,9 +69,10 @@ export function RichMap({
       <Datasource name="db">
         <Parameter name="type">postgis</Parameter>
         <Parameter name="host">localhost</Parameter>
-        <Parameter name="dbname">minimap</Parameter>
-        <Parameter name="user">minimap</Parameter>
-        <Parameter name="password">minimap</Parameter>
+        <Parameter name="port">5455</Parameter>
+        <Parameter name="dbname">postgres</Parameter>
+        <Parameter name="user">postgres</Parameter>
+        <Parameter name="password">snakeoil</Parameter>
       </Datasource>
 
       {/* <Datasource name="db">
@@ -77,7 +80,7 @@ export function RichMap({
         <Parameter name="file">data/map.sqlite</Parameter>
       </Datasource> */}
 
-      <Land color={colors.land} />
+      <Land color={colors.land} simplify={simplify} />
 
       {landcoverTypes.length > 0 && (
         <Landcover types={landcoverTypes} colors={colors} />
@@ -85,7 +88,7 @@ export function RichMap({
 
       {hillshadingOpacity && <Hillshading opacity={hillshadingOpacity} />}
 
-      {features.includes("roads") && <Roads />}
+      {features.includes("roads") && <Roads simplify={simplify} />}
 
       {features.includes("borders") && (
         <Borders
@@ -97,6 +100,7 @@ export function RichMap({
           // noMajor={coastlineBorders}
           color={colors.border}
           areaHighlightColor={colors.areaHighlight}
+          simplify={simplify}
         />
       )}
 
@@ -107,6 +111,7 @@ export function RichMap({
           <Coastline
             color={colors.coastline}
             widthFactor={coastlineWidthFactor}
+            simplify={simplify}
           />
         </>
       )}

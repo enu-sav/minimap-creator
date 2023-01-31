@@ -3,16 +3,17 @@ import { LineSymbolizer } from "jsxnik/mapnikConfig";
 type Props = {
   width: number | string;
   color: string;
+  simplify: number;
 };
 
-export function RichLineSymbolizer({ width, color }: Props) {
+export function RichLineSymbolizer({ width, color, simplify }: Props) {
   return (
     <LineSymbolizer
       stroke={color}
       strokeWidth={width}
       strokeLinejoin="round"
       strokeLinecap="round"
-      simplify={10}
+      simplify={simplify}
       simplifyAlgorithm="visvalingam-whyatt"
     />
   );

@@ -9,21 +9,23 @@ import {
 } from "jsxnik/mapnikConfig";
 import { RichLineSymbolizer } from "./RichLineSymbolizer";
 
-export function Roads() {
+type Props = { simplify: number };
+
+export function Roads({ simplify }: Props) {
   return (
     <>
       <Style name="roads">
         <Rule>
           <Filter>[type] = 'trunk' || [type] = 'primary'</Filter>
 
-          <RichLineSymbolizer color="#f58d42" width={1.5} />
+          <RichLineSymbolizer color="#f58d42" width={1.5} simplify={simplify} />
         </Rule>
 
         <Rule>
           <Filter>[type] = 'motorway'</Filter>
 
-          <RichLineSymbolizer color="#f58d42" width={3} />
-          <RichLineSymbolizer color="#f5f242" width={1} />
+          <RichLineSymbolizer color="#f58d42" width={3} simplify={simplify} />
+          <RichLineSymbolizer color="#f5f242" width={1} simplify={simplify} />
         </Rule>
       </Style>
 

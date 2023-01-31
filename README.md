@@ -37,6 +37,7 @@ Query parameters, all are optional:
   - `scale` - map scale
   - `limitPlacesToCountry` - show only places of specified country
   - `transliterate` - transliterate non-latin names
+- `simplify` - line simplify (generalization) factor, default 2
 - `colors` - override default colors. Syntax: `feature:color,feature:color,...` where feautre is one of `water`, `urban`, `forest`, `pin`, `border`, `coastline`, `areaHighlight`, `land` and color is HTML color.
 - `place-types` - which places to render, comma separated values of: `city`, `town`, `village`. It can also contain a single value `capital` to only display capitals.
 - `landcover-types` - what landcover to render, comma separated values of: `forest`, `water-body`, `urban`.

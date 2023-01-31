@@ -99,6 +99,8 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const hillshadingOpacity = toNumber(params.get("hillshading-opacity"));
 
+  const simplify = toNumber(params.get("simplify")) || 2;
+
   const colors: Record<ColorKey, string> = Object.assign(
     {
       water: "#c9e7f2",
@@ -188,6 +190,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
       bbox={bbox}
       pxLon={width / (bbox[2] - bbox[0])}
       colors={colors}
+      simplify={simplify}
     />
   );
 

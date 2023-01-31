@@ -19,6 +19,7 @@ type Props = {
   noMajor?: boolean;
   color: string;
   areaHighlightColor: string;
+  simplify: number;
 };
 
 export function Borders({
@@ -30,6 +31,7 @@ export function Borders({
   noMajor = false,
   color,
   areaHighlightColor,
+  simplify,
 }: Props) {
   const condition = [
     ...new Set([
@@ -70,6 +72,7 @@ export function Borders({
           <RichLineSymbolizer
             width={`[width] * ${widthFactor}`}
             color={color}
+            simplify={simplify}
           />
         </Rule>
       </Style>

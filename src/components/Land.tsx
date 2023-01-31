@@ -9,16 +9,16 @@ import {
 } from "jsxnik/mapnikConfig";
 import { LandPolygonsDatasource } from "./LandPolygonsDatasource";
 
-type Props = { color: string };
+type Props = { color: string; simplify: number };
 
-export function Land({ color }: Props) {
+export function Land({ color, simplify }: Props) {
   return (
     <>
       <Style name="land">
         <Rule>
           <PolygonSymbolizer
             fill={color}
-            simplify={10}
+            simplify={simplify}
             simplifyAlgorithm="visvalingam-whyatt"
           />
         </Rule>
