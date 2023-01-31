@@ -125,6 +125,7 @@ CREATE TABLE roads AS (
 CREATE TABLE admin_areas AS
 SELECT
   osm_id,
+  cat,
   name,
   name_sk,
   admin_level,
@@ -201,4 +202,59 @@ SET
     ELSE initcap(transliterate(name))
   END;
 
--- end transliteration support
+-- end of transliteration support
+update
+  public.admin_ls
+set
+  "left" = least("left", "right"),
+  "right" = greatest("left", "right");
+
+create table public.admin_ls_merged as
+select
+  "left",
+  "right",
+  ST_LineMerge(st_union(wkb_geometry)) as wkb_geometry
+from
+  public.admin_ls
+group by
+  "left",
+  "right";
+
+---
+create temporary table am as (
+  select
+    member_id,
+    geometry,
+    array_agg(osm_id) as osm_ids
+  from
+    osm_admin_members
+  where
+    member_type = 1
+  group by
+    member_id,
+    geometry
+);
+
+create table aaa as (
+  select
+    st_linemerge(st_union(geometry)) as geometry,
+    osm_ids
+  from
+    am
+  group by
+    osm_ids
+);
+
+alter table
+  aaa
+add
+  column id serial;
+
+create table bbb as
+select
+  unnest(osm_ids) as osm_id,
+  id
+from
+  aaa;
+
+-- TODO drop aaa.osm_ids

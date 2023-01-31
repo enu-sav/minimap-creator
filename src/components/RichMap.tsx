@@ -64,18 +64,18 @@ export function RichMap({
     <Map backgroundColor={colors.water} srs={srs}>
       <Fonts />
 
-      {/* <Datasource name="db">
+      <Datasource name="db">
         <Parameter name="type">postgis</Parameter>
         <Parameter name="host">localhost</Parameter>
         <Parameter name="dbname">minimap</Parameter>
         <Parameter name="user">minimap</Parameter>
         <Parameter name="password">minimap</Parameter>
-      </Datasource> */}
+      </Datasource>
 
-      <Datasource name="db">
+      {/* <Datasource name="db">
         <Parameter name="type">sqlite</Parameter>
         <Parameter name="file">data/map.sqlite</Parameter>
-      </Datasource>
+      </Datasource> */}
 
       <Land color={colors.land} />
 

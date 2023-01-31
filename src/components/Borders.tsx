@@ -21,30 +21,6 @@ type Props = {
   areaHighlightColor: string;
 };
 
-function Lower({
-  value,
-  ...rest
-}: {
-  value: Record<string, number>;
-} & Parameters<typeof RichLineSymbolizer>[0]) {
-  return (
-    <Rule>
-      <Filter>
-        {Object.entries(value)
-          .map(
-            ([cc, level]) =>
-              `([admin_level] = ${level}` +
-              (cc ? ` and [country_code] = "${cc}"` : "") +
-              ")"
-          )
-          .join(" or ")}
-      </Filter>
-
-      <RichLineSymbolizer {...rest} />
-    </Rule>
-  );
-}
-
 export function Borders({
   highlight,
   major = { "": 2 },
@@ -64,49 +40,82 @@ export function Borders({
   ]
     .map(
       ([cc, level]) =>
-        `admin_level = ${level}` + (cc ? ` AND [country_code] = '${cc}'` : "")
+        `admin_level = ${level}` + (cc ? ` AND country_code = '${cc}'` : "")
     )
     .join(" OR ");
+
+  const width =
+    "CASE " +
+    [
+      ...new Set([
+        ...Object.entries(major ?? {}).map((a) => [a[0], a[1], 3] as const),
+        ...Object.entries(minor ?? {}).map((a) => [a[0], a[1], 1.5] as const),
+        ...Object.entries(micro ?? {}).map((a) => [a[0], a[1], 0.5] as const),
+      ]),
+    ]
+      .map(
+        ([cc, level, width], i) =>
+          `WHEN admin_level = ${level}` +
+          (cc ? ` AND country_code = '${cc}'` : "") +
+          " THEN " +
+          width
+      )
+      .join(" ") +
+    " ELSE 0 END";
 
   return (
     <>
       <Style name="borders">
-        {highlight !== undefined && (
-          <Rule>
-            {isNaN(Number(highlight)) ? (
-              <Filter>
-                [name] = "{highlight}" or [name_sk] = "{highlight}"
-              </Filter>
-            ) : (
-              <Filter>[osm_id] = {-Number(highlight)}</Filter>
-            )}
-            <PolygonSymbolizer fill={areaHighlightColor} />
-          </Rule>
-        )}
-
-        {micro && (
-          <Lower value={micro} width={0.75 * widthFactor} color={color} />
-        )}
-
-        {minor && (
-          <Lower value={minor} width={1.5 * widthFactor} color={color} />
-        )}
-
-        {major && !noMajor && (
-          <Lower value={major} width={3 * widthFactor} color={color} />
-        )}
+        <Rule>
+          <RichLineSymbolizer
+            width={`[width] * ${widthFactor}`}
+            color={color}
+          />
+        </Rule>
       </Style>
 
       <Layer srs="+init=epsg:3857">
         <StyleName>borders</StyleName>
 
         <Datasource base="db">
+          {/* <Parameter name="table">
+            (SELECT DISTINCT admin_level, country_code, wkb_geometry FROM
+            admin_ls_merged JOIN admin_areas ON ("right" = admin_areas.cat OR
+            "left" = admin_areas.cat) WHERE {condition}) AS foo
+          </Parameter> */}
           <Parameter name="table">
-            (SELECT ogc_fid, osm_id, country_code, admin_level, name, name_sk,
-            geometry FROM admin_areas WHERE {condition}) AS foo
+            (SELECT width, st_linemerge(st_union(geometry)) AS geometry FROM
+            ((SELECT MAX(
+            {width}) AS width, aaa.geometry AS geometry FROM admin_areas JOIN
+            bbb USING (osm_id) JOIN aaa USING (id) WHERE {condition} GROUP BY
+            aaa.geometry)) AS subq GROUP BY width) AS foo
           </Parameter>
         </Datasource>
       </Layer>
+
+      {highlight !== undefined && (
+        <>
+          <Style name="highlightAdminArea">
+            <Rule>
+              <PolygonSymbolizer fill={areaHighlightColor} />
+            </Rule>
+          </Style>
+
+          <Layer srs="+init=epsg:3857">
+            <StyleName>highlightAdminArea</StyleName>
+
+            <Datasource base="db">
+              <Parameter name="table">
+                (SELECT st_buildarea(st_union(aaa.geometry)) AS geometry FROM
+                admin_areas JOIN bbb USING (osm_id) JOIN aaa USING (id) WHERE
+                name = '{highlight}' OR name_sk = '{highlight}'
+                {isNaN(Number(highlight)) ? "" : ` OR -osm_id = ${highlight}`}{" "}
+                LIMIT 1) AS foo
+              </Parameter>
+            </Datasource>
+          </Layer>
+        </>
+      )}
     </>
   );
 }

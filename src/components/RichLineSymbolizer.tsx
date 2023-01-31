@@ -12,8 +12,8 @@ export function RichLineSymbolizer({ width, color }: Props) {
       strokeWidth={width}
       strokeLinejoin="round"
       strokeLinecap="round"
-      // simplify={0.5}
-      // simplifyAlgorithm="douglas-peucker"
+      simplify={10}
+      simplifyAlgorithm="visvalingam-whyatt"
     />
   );
 }

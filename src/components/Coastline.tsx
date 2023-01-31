@@ -1,4 +1,11 @@
-import { Layer, Style, Rule, StyleName } from "jsxnik/mapnikConfig";
+import {
+  Layer,
+  Style,
+  Rule,
+  StyleName,
+  Datasource,
+  Parameter,
+} from "jsxnik/mapnikConfig";
 import { LandPolygonsDatasource } from "./LandPolygonsDatasource";
 import { RichLineSymbolizer } from "./RichLineSymbolizer";
 

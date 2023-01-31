@@ -9,7 +9,10 @@ export function CountryMask({ country }: Props) {
 
       <Datasource base="db">
         <Parameter name="table">
-          {`(SELECT geometry FROM admin_areas WHERE admin_level = 2 AND country_code = '${country}') AS foo`}
+          (SELECT st_buildarea(st_union(aaa.geometry)) AS geometry FROM
+          admin_areas JOIN bbb USING (osm_id) JOIN aaa USING (id) WHERE
+          admin_level = 2 AND country_code = '{country}
+          ') AS foo
         </Parameter>
       </Datasource>
     </Layer>

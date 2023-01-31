@@ -7,6 +7,7 @@ import {
   Style,
   StyleName,
 } from "jsxnik/mapnikConfig";
+import { LandPolygonsDatasource } from "./LandPolygonsDatasource";
 
 type Props = { color: string };
 
@@ -15,20 +16,18 @@ export function Land({ color }: Props) {
     <>
       <Style name="land">
         <Rule>
-          <PolygonSymbolizer fill={color} />
+          <PolygonSymbolizer
+            fill={color}
+            simplify={10}
+            simplifyAlgorithm="visvalingam-whyatt"
+          />
         </Rule>
       </Style>
 
       <Layer srs="+init=epsg:3857">
         <StyleName>land</StyleName>
 
-        <Datasource>
-          <Parameter name="type">shape</Parameter>
-
-          <Parameter name="file">
-            data/simplified-land-polygons-complete-3857/simplified_land_polygons.shp
-          </Parameter>
-        </Datasource>
+        <LandPolygonsDatasource />
       </Layer>
     </>
   );

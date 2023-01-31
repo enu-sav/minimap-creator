@@ -16,7 +16,11 @@ export function Mask({ srs, children }: Props) {
     <>
       <Style name="mask">
         <Rule>
-          <PolygonSymbolizer fill="#000" />
+          <PolygonSymbolizer
+            fill="#000"
+            simplify={10}
+            simplifyAlgorithm="visvalingam-whyatt"
+          />
         </Rule>
       </Style>
 
