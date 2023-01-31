@@ -1,3 +1,4 @@
+import { simplify } from "@turf/turf";
 import {
   Datasource,
   ElseFilter,
@@ -14,9 +15,10 @@ import { RichLineSymbolizer } from "./RichLineSymbolizer";
 type Props = {
   name: string;
   widthFactor?: number;
+  simplify: number;
 };
 
-export function Waterways({ name, widthFactor = 1 }: Props) {
+export function Waterways({ name, widthFactor = 1, simplify }: Props) {
   return (
     <>
       <Style name="waterways">
@@ -24,6 +26,7 @@ export function Waterways({ name, widthFactor = 1 }: Props) {
           <RichLineSymbolizer
             color="[color]"
             width={`${widthFactor} * [strahler] / 3`}
+            simplify={simplify}
           />
         </Rule>
       </Style>

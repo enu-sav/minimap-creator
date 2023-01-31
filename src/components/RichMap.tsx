@@ -122,7 +122,11 @@ export function RichMap({
             <WatershedMask name={watershedName} />
           </Mask>
 
-          <Waterways name={watershedName} widthFactor={waterwayWidthFactor} />
+          <Waterways
+            name={watershedName}
+            widthFactor={waterwayWidthFactor}
+            simplify={simplify}
+          />
         </>
       ) : country ? (
         <Mask srs={srs}>
