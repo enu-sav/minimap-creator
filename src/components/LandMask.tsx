@@ -1,12 +1,7 @@
-import {
-  Layer,
-  PolygonSymbolizer,
-  Rule,
-  Style,
-  StyleName,
-} from "jsxnik/mapnikConfig";
+import { Layer, Rule, Style, StyleName } from "jsxnik/mapnikConfig";
 import { LandPolygonsDatasource } from "./LandPolygonsDatasource";
 import { mangleSrs, PlanetPolygonDatasource } from "./PlanetPolygonDatasource";
+import { RichPolygonSymbolizer } from "./RichPolygonSymbolizer";
 
 type Props = { srs: string; waterColor: string };
 
@@ -15,11 +10,11 @@ export function LandMask({ srs, waterColor }: Props) {
     <>
       <Style name="land-mask">
         <Rule>
-          <PolygonSymbolizer fill={waterColor} />
+          <RichPolygonSymbolizer color={waterColor} />
         </Rule>
       </Style>
 
-      <Layer srs={"+init=epsg:3857"} compOp="dst-in">
+      <Layer srs="+init=epsg:3857" compOp="dst-in">
         <StyleName>land-mask</StyleName>
 
         <LandPolygonsDatasource />

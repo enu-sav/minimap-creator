@@ -1,9 +1,7 @@
 import {
   Datasource,
-  Filter,
   Layer,
   Parameter,
-  PolygonSymbolizer,
   Rule,
   Style,
   StyleName,
@@ -11,26 +9,20 @@ import {
 import { RichLineSymbolizer } from "./RichLineSymbolizer";
 
 type Props = {
-  highlight?: string | number;
   major?: Record<string, number>;
   minor?: Record<string, number>;
   micro?: Record<string, number>;
   widthFactor?: number;
-  noMajor?: boolean;
   color: string;
-  areaHighlightColor: string;
   simplify: number;
 };
 
 export function Borders({
-  highlight,
   major = { "": 2 },
   minor,
   micro,
   widthFactor = 1,
-  noMajor = false,
   color,
-  areaHighlightColor,
   simplify,
 }: Props) {
   const condition = [
@@ -86,40 +78,35 @@ export function Borders({
             admin_ls_merged JOIN admin_areas ON ("right" = admin_areas.cat OR
             "left" = admin_areas.cat) WHERE {condition}) AS foo
           </Parameter> */}
+          {/* prettier-ignore */}
           <Parameter name="table">
-            (SELECT width, st_linemerge(st_union(geometry)) AS geometry FROM
-            ((SELECT MAX(
-            {width}) AS width, aaa.geometry AS geometry FROM admin_areas JOIN
-            bbb USING (osm_id) JOIN aaa USING (id) WHERE aaa.geometry && !bbox!
-            AND {condition} GROUP BY aaa.geometry)) AS subq GROUP BY width) AS
-            foo
+            (
+              SELECT
+                width,
+                ST_LineMerge(ST_Union(geometry)) AS geometry
+              FROM
+                (
+                  (
+                    SELECT
+                      MAX({width}) AS width,
+                      aaa1.geometry AS geometry
+                    FROM
+                      admin_areas
+                      JOIN bbb USING (osm_id)
+                      JOIN aaa1 USING (id)
+                    WHERE
+                      aaa1.geometry && !bbox!
+                      AND {condition}{" "}
+                    GROUP BY
+                      aaa1.geometry
+                  )
+                ) AS subq
+              GROUP BY
+                width
+            ) AS foo
           </Parameter>
         </Datasource>
       </Layer>
-
-      {highlight !== undefined && (
-        <>
-          <Style name="highlightAdminArea">
-            <Rule>
-              <PolygonSymbolizer fill={areaHighlightColor} />
-            </Rule>
-          </Style>
-
-          <Layer srs="+init=epsg:3857">
-            <StyleName>highlightAdminArea</StyleName>
-
-            <Datasource base="db">
-              <Parameter name="table">
-                (SELECT st_buildarea(st_union(aaa.geometry)) AS geometry FROM
-                admin_areas JOIN bbb USING (osm_id) JOIN aaa USING (id) WHERE
-                name = '{highlight}' OR name_sk = '{highlight}'
-                {isNaN(Number(highlight)) ? "" : ` OR -osm_id = ${highlight}`}{" "}
-                LIMIT 1) AS foo
-              </Parameter>
-            </Datasource>
-          </Layer>
-        </>
-      )}
     </>
   );
 }

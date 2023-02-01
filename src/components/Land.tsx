@@ -1,13 +1,6 @@
-import {
-  Datasource,
-  Layer,
-  Parameter,
-  PolygonSymbolizer,
-  Rule,
-  Style,
-  StyleName,
-} from "jsxnik/mapnikConfig";
+import { Layer, Rule, Style, StyleName } from "jsxnik/mapnikConfig";
 import { LandPolygonsDatasource } from "./LandPolygonsDatasource";
+import { RichPolygonSymbolizer } from "./RichPolygonSymbolizer";
 
 type Props = { color: string; simplify: number };
 
@@ -16,11 +9,7 @@ export function Land({ color, simplify }: Props) {
     <>
       <Style name="land">
         <Rule>
-          <PolygonSymbolizer
-            fill={color}
-            simplify={simplify}
-            simplifyAlgorithm="visvalingam-whyatt"
-          />
+          <RichPolygonSymbolizer color={color} simplify={simplify} />
         </Rule>
       </Style>
 

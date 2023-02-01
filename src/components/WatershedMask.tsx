@@ -1,12 +1,4 @@
-import {
-  Datasource,
-  Layer,
-  Parameter,
-  PolygonSymbolizer,
-  Rule,
-  Style,
-  StyleName,
-} from "jsxnik/mapnikConfig";
+import { Datasource, Layer, Parameter, StyleName } from "jsxnik/mapnikConfig";
 
 type Props = { name: string };
 

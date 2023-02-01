@@ -3,11 +3,11 @@ import {
   Filter,
   Layer,
   Parameter,
-  PolygonSymbolizer,
   Rule,
   Style,
   StyleName,
 } from "jsxnik/mapnikConfig";
+import { RichPolygonSymbolizer } from "./RichPolygonSymbolizer";
 
 export type LandcoverTypes = "forest" | "water-body" | "urban";
 
@@ -32,21 +32,21 @@ export function Landcover({ types, colors }: Props) {
         {types.includes("forest") && (
           <Rule>
             <Filter>[type] = 'forest'</Filter>
-            <PolygonSymbolizer fill={colors.forest} />
+            <RichPolygonSymbolizer color={colors.forest} />
           </Rule>
         )}
 
         {types.includes("water-body") && (
           <Rule>
             <Filter>[type] = 'water'</Filter>
-            <PolygonSymbolizer fill={colors.water} />
+            <RichPolygonSymbolizer color={colors.water} />
           </Rule>
         )}
 
         {types.includes("urban") && (
           <Rule>
             <Filter>[type] = 'human'</Filter> {/* TODO rename to urban */}
-            <PolygonSymbolizer fill={colors.urban} />
+            <RichPolygonSymbolizer color={colors.urban} />
           </Rule>
         )}
       </Style>

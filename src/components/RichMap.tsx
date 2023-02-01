@@ -14,6 +14,7 @@ import { WatershedMask } from "./WatershedMask";
 import { MapScale } from "./MapScale";
 import { Coastline } from "./Coastline";
 import { LandMask } from "./LandMask";
+import { HighlightAdminArea } from "./HighlightAdminArea";
 
 type Props = {
   features: string[];
@@ -69,15 +70,18 @@ export function RichMap({
       <Datasource name="db">
         <Parameter name="type">postgis</Parameter>
         <Parameter name="host">localhost</Parameter>
+        <Parameter name="dbname">minimap</Parameter>
+        <Parameter name="user">minimap</Parameter>
+        <Parameter name="password">minimap</Parameter>
+      </Datasource>
+
+      {/* <Datasource name="db">
+        <Parameter name="type">postgis</Parameter>
+        <Parameter name="host">localhost</Parameter>
         <Parameter name="port">5455</Parameter>
         <Parameter name="dbname">postgres</Parameter>
         <Parameter name="user">postgres</Parameter>
         <Parameter name="password">snakeoil</Parameter>
-      </Datasource>
-
-      {/* <Datasource name="db">
-        <Parameter name="type">sqlite</Parameter>
-        <Parameter name="file">data/map.sqlite</Parameter>
       </Datasource> */}
 
       <Land color={colors.land} simplify={simplify} />
@@ -92,14 +96,19 @@ export function RichMap({
 
       {features.includes("borders") && (
         <Borders
-          highlight={highlightAdminArea}
           major={majorBorders}
           minor={minorBorders}
           micro={microBorders}
           widthFactor={borderWidthFactor}
-          // noMajor={coastlineBorders}
           color={colors.border}
-          areaHighlightColor={colors.areaHighlight}
+          simplify={simplify}
+        />
+      )}
+
+      {highlightAdminArea && (
+        <HighlightAdminArea
+          area={highlightAdminArea}
+          color={colors.areaHighlight}
           simplify={simplify}
         />
       )}
@@ -118,7 +127,7 @@ export function RichMap({
 
       {watershedName ? (
         <>
-          <Mask srs={srs}>
+          <Mask srs={srs} simplify={simplify}>
             <WatershedMask name={watershedName} />
           </Mask>
 
@@ -129,7 +138,7 @@ export function RichMap({
           />
         </>
       ) : country ? (
-        <Mask srs={srs}>
+        <Mask srs={srs} simplify={simplify}>
           <CountryMask country={country} />
         </Mask>
       ) : undefined}

@@ -37,7 +37,9 @@ export function Waterways({ name, widthFactor = 1, simplify }: Props) {
         <Datasource>
           <Parameter name="type">sqlite</Parameter>
           <Parameter name="file">data/waterways_{name}_parent.sqlite</Parameter>
-          <Parameter name="table">{`(SELECT *, '#6060a0' AS color FROM waterways_${name}) AS foo`}</Parameter>
+          <Parameter name="table">
+            (SELECT *, '#6060a0' AS color FROM waterways_{name}) AS foo
+          </Parameter>
           <Parameter name="geometry_field">shape</Parameter>
         </Datasource>
       </Layer>
@@ -48,7 +50,9 @@ export function Waterways({ name, widthFactor = 1, simplify }: Props) {
         <Datasource>
           <Parameter name="type">sqlite</Parameter>
           <Parameter name="file">data/waterways_{name}.sqlite</Parameter>
-          <Parameter name="table">{`(SELECT *, '#8080ff' AS color FROM waterways_${name}) AS foo`}</Parameter>
+          <Parameter name="table">
+            (SELECT *, '#8080ff' AS color FROM waterways_{name}) AS foo
+          </Parameter>
           <Parameter name="geometry_field">shape</Parameter>
         </Datasource>
       </Layer>
@@ -59,7 +63,9 @@ export function Waterways({ name, widthFactor = 1, simplify }: Props) {
         <Datasource>
           <Parameter name="type">sqlite</Parameter>
           <Parameter name="file">data/waterways_{name}_main.sqlite</Parameter>
-          <Parameter name="table">{`(SELECT *, '#0000ff' AS color FROM waterways_${name}) AS foo`}</Parameter>
+          <Parameter name="table">
+            (SELECT *, '#0000ff' AS color FROM waterways_{name}) AS foo
+          </Parameter>
           <Parameter name="geometry_field">shape</Parameter>
         </Datasource>
       </Layer>
