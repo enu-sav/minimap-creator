@@ -3,8 +3,6 @@ import { Datasource, Layer, Parameter, StyleName } from "jsxnik/mapnikConfig";
 type Props = { country: string; sourceSimplifyFactor: number };
 
 export function CountryMask({ country, sourceSimplifyFactor }: Props) {
-  // TODO make buffer size dynamic
-
   return (
     <Layer srs="+init=epsg:3857" compOp="dst-out">
       <StyleName>mask</StyleName>
