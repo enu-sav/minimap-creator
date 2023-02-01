@@ -1,8 +1,8 @@
 import { Datasource, Layer, Parameter, StyleName } from "jsxnik/mapnikConfig";
 
-type Props = { country: string };
+type Props = { country: string; sourceSimplifyFactor: number };
 
-export function CountryMask({ country }: Props) {
+export function CountryMask({ country, sourceSimplifyFactor }: Props) {
   // TODO make buffer size dynamic
 
   return (
@@ -14,29 +14,26 @@ export function CountryMask({ country }: Props) {
         <Parameter name="table">
           (
             SELECT
-              ST_Buffer(
-                ST_Intersection(
-                  (
-                    SELECT
-                      ST_Union(wkb_geometry)
-                    FROM
-                      simplified_land_polygons
-                    WHERE
-                      wkb_geometry && !bbox!
-                  ),
-                  (
-                    SELECT
-                      ST_BuildArea(ST_Union(aaa1.geometry)) AS geometry
-                    FROM
-                      admin_areas
-                      JOIN bbb USING (osm_id)
-                      JOIN aaa1 USING (id)
-                    WHERE
-                      admin_level = 2
-                      AND country_code = '{country}'
-                  )
+              ST_Intersection(
+                (
+                  SELECT
+                    ST_Union(ST_SimplifyPreserveTopology(wkb_geometry, {sourceSimplifyFactor}))
+                  FROM
+                    simplified_land_polygons
+                  WHERE
+                    wkb_geometry && !bbox!
                 ),
-                1000
+                (
+                  SELECT
+                    ST_BuildArea(ST_Union(ST_SimplifyPreserveTopology(aaa1.geometry, {sourceSimplifyFactor})))
+                  FROM
+                    admin_areas
+                    JOIN bbb USING (osm_id)
+                    JOIN aaa1 USING (id)
+                  WHERE
+                    admin_level = 2
+                    AND country_code = '{country}'
+                )
               ) AS geometry
           ) AS foo
         </Parameter>

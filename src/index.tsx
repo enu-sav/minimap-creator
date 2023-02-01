@@ -1,3 +1,4 @@
+import { getDistance } from "geolib";
 import temp from "temp";
 import process from "process";
 import http, { IncomingMessage, ServerResponse } from "http";
@@ -169,6 +170,12 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
       .map((item) => item.split(":"))
   );
 
+  const sourceSimplifyFactor =
+    getDistance([bbox[0], bbox[1]], [bbox[2], bbox[3]]) /
+    Math.hypot(width, height);
+
+  console.log({ sourceSimplifyFactor });
+
   const style = serialize(
     <RichMap
       srs={srs}
@@ -191,6 +198,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
       pxLon={width / (bbox[2] - bbox[0])}
       colors={colors}
       simplify={simplify}
+      sourceSimplifyFactor={sourceSimplifyFactor}
     />
   );
 

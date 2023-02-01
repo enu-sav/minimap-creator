@@ -37,6 +37,7 @@ type Props = {
   srs: string;
   colors: Record<ColorKey, string>;
   simplify: number;
+  sourceSimplifyFactor: number;
 };
 
 export function RichMap({
@@ -60,6 +61,7 @@ export function RichMap({
   srs,
   colors,
   simplify,
+  sourceSimplifyFactor,
 }: Props) {
   const coastlineBorders = features.includes("coastlineBorders");
 
@@ -94,6 +96,14 @@ export function RichMap({
 
       {features.includes("roads") && <Roads simplify={simplify} />}
 
+      {highlightAdminArea && (
+        <HighlightAdminArea
+          area={highlightAdminArea}
+          color={colors.areaHighlight}
+          simplify={simplify}
+        />
+      )}
+
       {features.includes("borders") && (
         <Borders
           major={majorBorders}
@@ -101,14 +111,6 @@ export function RichMap({
           micro={microBorders}
           widthFactor={borderWidthFactor}
           color={colors.border}
-          simplify={simplify}
-        />
-      )}
-
-      {highlightAdminArea && (
-        <HighlightAdminArea
-          area={highlightAdminArea}
-          color={colors.areaHighlight}
           simplify={simplify}
         />
       )}
@@ -139,7 +141,10 @@ export function RichMap({
         </>
       ) : country ? (
         <Mask srs={srs} simplify={simplify}>
-          <CountryMask country={country} />
+          <CountryMask
+            country={country}
+            sourceSimplifyFactor={sourceSimplifyFactor}
+          />
         </Mask>
       ) : undefined}
 
