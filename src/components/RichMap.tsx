@@ -101,6 +101,7 @@ export function RichMap({
           area={highlightAdminArea}
           color={colors.areaHighlight}
           simplify={simplify}
+          sourceSimplifyFactor={sourceSimplifyFactor}
         />
       )}
 

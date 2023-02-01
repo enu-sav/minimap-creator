@@ -12,9 +12,15 @@ type Props = {
   area: string | number;
   color: string;
   simplify: number;
+  sourceSimplifyFactor: number;
 };
 
-export function HighlightAdminArea({ area, color, simplify }: Props) {
+export function HighlightAdminArea({
+  area,
+  color,
+  simplify,
+  sourceSimplifyFactor,
+}: Props) {
   return (
     <>
       <Style name="highlightAdminArea">
@@ -31,7 +37,7 @@ export function HighlightAdminArea({ area, color, simplify }: Props) {
           <Parameter name="table">
             (
               SELECT
-                ST_BuildArea(ST_Union(aaa1.geometry)) AS geometry
+                ST_BuildArea(ST_Union(ST_SimplifyPreserveTopology(aaa1.geometry, {sourceSimplifyFactor}))) AS geometry
               FROM
                 admin_areas
                 JOIN bbb USING (osm_id)
