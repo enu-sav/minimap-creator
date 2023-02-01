@@ -73,11 +73,6 @@ export function Borders({
         <StyleName>borders</StyleName>
 
         <Datasource base="db">
-          {/* <Parameter name="table">
-            (SELECT DISTINCT admin_level, country_code, wkb_geometry FROM
-            admin_ls_merged JOIN admin_areas ON ("right" = admin_areas.cat OR
-            "left" = admin_areas.cat) WHERE {condition}) AS foo
-          </Parameter> */}
           {/* prettier-ignore */}
           <Parameter name="table">
             (

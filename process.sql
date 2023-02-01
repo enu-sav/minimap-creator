@@ -203,24 +203,6 @@ SET
   END;
 
 -- end of transliteration support
-update
-  public.admin_ls
-set
-  "left" = least("left", "right"),
-  "right" = greatest("left", "right");
-
-create table public.admin_ls_merged as
-select
-  "left",
-  "right",
-  ST_LineMerge(st_union(wkb_geometry)) as wkb_geometry
-from
-  public.admin_ls
-group by
-  "left",
-  "right";
-
----
 create temporary table am as (
   select
     member_id,
@@ -258,3 +240,21 @@ from
   aaa;
 
 -- TODO drop aaa.osm_ids
+create index admin_areas_osm_id_idx on admin_areas(osm_id);
+
+create index aaa_id_idx on aaa(id);
+
+create index aaa_geom_idx on aaa using gist(geometry);
+
+create index bbb_osm_id_idx on bbb(osm_id);
+
+create table aaa1 as
+select
+  id,
+  ST_SimplifyPreserveTopology(geometry, 100) as geometry
+from
+  aaa;
+
+create index aaa1_id_idx on aaa1(id);
+
+create index aaa1_geom_idx on aaa1 using gist(geometry);

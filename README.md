@@ -97,11 +97,18 @@ curl "http://localhost:8080?features=borders,landcover,scale&width=1200&scale=2&
    ```bash
    psql -h localhost minimap minimap < process.sql
    ```
-1. Export the data from PostGIS to `data/map.sqlite`:
+1. Dump the data:
    ```bash
-   ogr2ogr -F SQLITE data/map.sqlite PG:"host=localhost port=5432 dbname=minimap user=minimap password=minimap" -dsco SPATIALITE=YES roads osm_places admin_areas landcover
+   pg_dump -h localhost -U minimap -t simplified_land_polygons -t admin_areas -t aaa1 -t bbb -t osm_places -t roads -t landcover minimap | pigz > dump.sql.gz
    ```
-
+1. Run dockerized PostGIS:
+   ```bash
+   docker run --name minimap-postgis -p 5455:5432 -e POSTGRES_PASSWORD=snakeoil -e POSTGRES_HOST_AUTH_METHOD=trust --shm-size=1g -d postgis/postgis
+   ```
+1. Load data to dockerized PostGIS:
+   ```bash
+   pigz -cd dump.sql | psql -h localhost -p 5455 -U postgres
+   ```
 ### Watershed
 
 Download geopackage(s) from https://land.copernicus.eu/imagery-in-situ/eu-hydro/eu-hydro-river-network-database?tab=download (for example _EU-Hydro-Danube-GeoPackage_)
