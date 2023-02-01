@@ -118,6 +118,8 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
         .split(",")
         .filter((x) => x)
         .map((item) => item.split(":", 2))
+        .map(([cc, level]) => [cc, Number(level)] as const)
+        .filter(([cc, level]) => (!cc || countryData[cc]) && !isNaN(level))
     )
   );
 
@@ -173,8 +175,6 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
   const sourceSimplifyFactor =
     getDistance([bbox[0], bbox[1]], [bbox[2], bbox[3]]) /
     Math.hypot(width, height);
-
-  console.log({ sourceSimplifyFactor });
 
   const style = serialize(
     <RichMap

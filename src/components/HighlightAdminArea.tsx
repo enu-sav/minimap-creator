@@ -21,6 +21,10 @@ export function HighlightAdminArea({
   simplify,
   sourceSimplifyFactor,
 }: Props) {
+  if (typeof area === "string") {
+    area = area.replaceAll("$quot$", "!");
+  }
+
   return (
     <>
       <Style name="highlightAdminArea">
@@ -43,9 +47,7 @@ export function HighlightAdminArea({
                 JOIN bbb USING (osm_id)
                 JOIN aaa1 USING (id)
               WHERE
-                name = '{area}'
-                OR name_sk = '{area}'
-                {isNaN(Number(area)) ? "": `OR -osm_id = ${area}`}
+                {isNaN(Number(area)) ? ` name = $quot$${area}$quot$ OR name_sk = $quot$${area}$quot$`: ` -osm_id = ${area}`}
               LIMIT
                 1
             ) AS foo
