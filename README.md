@@ -5,8 +5,13 @@ Minimap Creator is a HTTP server for creating minimaps.
 ## Preparation
 
 1. clone the project
-1. [download map data](https://drive.google.com/drive/folders/1nSxT4YOUBVoU_7Dt-qbiwodZmCSelP8f?usp=sharing) or prepare it on your own (see Nodes below) and put it to the project directory
-1. [download simplified land polygons](https://osmdata.openstreetmap.de/download/simplified-land-polygons-complete-3857.zip) and unpack it in `data` directory
+1. Run PsotGIS:
+   ```bash
+   docker run --name minimap-postgis -p 5455:5432 -e POSTGRES_PASSWORD=snakeoil -e POSTGRES_HOST_AUTH_METHOD=trust --shm-size=1g -d postgis/postgis
+   ```
+1. [download map data sql](https://drive.google.com/file/d/1tYwlDJyoi-KHX4szMKMEAAz08iUGuDBk/view?usp=share_link) and import it to PostGIS:
+   ```bash
+   pigz -cd dump.sql.gz | psql -h localhost -p 5455 -U postgres
 1. save hillshading data as `data/hillshading.tif` (and `data/hillshading.tif.ovr`)
 1. install dependencies
    ```bash
@@ -89,17 +94,18 @@ curl "http://localhost:8080?features=borders,landcover,scale&width=1200&scale=2&
    imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping mapping.yaml -read planet.osm.pbf -write -overwritecache
    imposm import -connection postgis://minimap:minimap@localhost/minimap -mapping mapping.yaml -deployproduction
    ```
-1. Process the data with GRASS GIS using the following script:
-   ```bash
-   grass --tmp-location EPSG:3857 --exec sh grass_batch_job.sh
-   ```
 1. Process the data in PostGIS:
    ```bash
    psql -h localhost minimap minimap < process.sql
    ```
+1. [download simplified land polygons](https://osmdata.openstreetmap.de/download/simplified-land-polygons-complete-3857.zip) and convert it to PosgGIS SQL.
+1. Import `simplified_land_polygons.sql` to PosgGIS:
+   ```bash
+   psql -h localhost minimap minimap < simplified_land_polygons.sql
+   ```
 1. Dump the data:
    ```bash
-   pg_dump -h localhost -U minimap -t simplified_land_polygons -t admin_areas -t aaa1 -t bbb -t osm_places -t roads -t landcover minimap | pigz > dump.sql.gz
+   pg_dump -h localhost -U minimap -t simplified_land_polygons -t osm_admin_rels -t border_lines -t admin_borders -t osm_places -t roads -t landcover minimap | pigz > dump.sql.gz
    ```
 1. Run dockerized PostGIS:
    ```bash
@@ -143,12 +149,6 @@ Make watershed polygon (QGIS):
 1. SmoothVectors (10)
 1. Simplify (10)
 1. export to `data/watershed_{name}.sqlite`
-
-### Krym belongs to Ukraine
-
-```bash
-sqlite3 data/map.sqlite
-```
 
 ```sql
 SELECT load_extension('mod_spatialite');

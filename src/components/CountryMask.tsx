@@ -8,6 +8,7 @@ export function CountryMask({ country, sourceSimplifyFactor }: Props) {
       <StyleName>mask</StyleName>
 
       <Datasource base="db">
+        <Parameter name="geometry_table">border_lines</Parameter>
         {/* prettier-ignore */}
         <Parameter name="table">
           (
@@ -23,11 +24,11 @@ export function CountryMask({ country, sourceSimplifyFactor }: Props) {
                 ),
                 (
                   SELECT
-                    ST_BuildArea(ST_Union(ST_SimplifyPreserveTopology(aaa1.geometry, {sourceSimplifyFactor})))
+                    ST_BuildArea(ST_Union(ST_SimplifyPreserveTopology(border_lines.geometry, {sourceSimplifyFactor})))
                   FROM
-                    admin_areas
-                    JOIN bbb USING (osm_id)
-                    JOIN aaa1 USING (id)
+                    osm_admin_rels
+                    JOIN admin_borders USING (osm_id)
+                    JOIN border_lines USING (id)
                   WHERE
                     admin_level = 2
                     AND country_code = '{country}'

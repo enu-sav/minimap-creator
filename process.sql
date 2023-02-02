@@ -23,13 +23,13 @@ FROM
       y.id
     FROM
       osm_admin x
-      JOIN osm_admin y ON ST_intersects(x.geometry, y.geometry)
+      JOIN osm_admin y ON ST_Intersects(x.geometry, y.geometry)
       AND x.admin_level = 2
       AND x.country_code <> ''
       AND y.admin_level > 2
     ORDER BY
       y.id,
-      st_area(st_intersection(x.geometry, y.geometry)) DESC
+      ST_Area(ST_Intersection(x.geometry, y.geometry)) DESC
   ) a
 WHERE
   admin_level > 2
@@ -50,7 +50,7 @@ SET
         'quarry',
         'residential',
         'retail'
-      ) THEN 'human' -- TODO rename to urban
+      ) THEN 'urban'
       ELSE NULL
     END
   );
@@ -107,7 +107,7 @@ ALTER column
 CREATE TABLE roads AS (
   SELECT
     type,
-    st_simplify(st_linemerge(st_collect(geometry)), 100) AS geometry
+    ST_Simplify(ST_Linemerge(ST_Collect(geometry)), 100) AS geometry
   FROM
     (
       SELECT
@@ -122,20 +122,6 @@ CREATE TABLE roads AS (
     cid
 );
 
-CREATE TABLE admin_areas AS
-SELECT
-  osm_id,
-  cat,
-  name,
-  name_sk,
-  admin_level,
-  country_code,
-  wkb_geometry AS geometry
-FROM
-  admin;
-
-CREATE INDEX admin_areas_geom ON admin_areas USING gist(geometry);
-
 CREATE INDEX roads_geom ON roads USING gist(geometry);
 
 ALTER TABLE
@@ -149,17 +135,17 @@ ADD
   COLUMN ogc_fid SERIAL PRIMARY KEY;
 
 ALTER TABLE
-  admin_areas
+  osm_admin
 ADD
   COLUMN ogc_fid SERIAL PRIMARY KEY;
 
 CREATE temporary TABLE cc AS
 SELECT
   osm_places.osm_id,
-  admin_areas.country_code
+  osm_admin.country_code
 FROM
   osm_places
-  LEFT JOIN admin_areas ON ST_Contains(admin_areas.geometry, osm_places.geometry)
+  LEFT JOIN osm_admin ON ST_Contains(osm_admin.geometry, osm_places.geometry)
 WHERE
   admin_level = 2;
 
@@ -203,58 +189,74 @@ SET
   END;
 
 -- end of transliteration support
-create temporary table am as (
-  select
-    member_id,
+CREATE temporary table tmp_admin_members as (
+  SELECT
     geometry,
-    array_agg(osm_id) as osm_ids
-  from
+    array_agg(
+      osm_id
+      ORDER BY
+        osm_id
+    ) AS osm_ids
+  FROM
     osm_admin_members
-  where
+  WHERE
     member_type = 1
-  group by
+  GROUP BY
     member_id,
     geometry
 );
 
-create table aaa as (
-  select
-    st_linemerge(st_union(geometry)) as geometry,
+CREATE TABLE border_lines AS (
+  SELECT
+    ST_SimplifyPreserveTopology(ST_LineMerge(ST_Union(geometry)), 100) AS geometry,
     osm_ids
-  from
-    am
-  group by
+  FROM
+    tmp_admin_members
+  GROUP BY
     osm_ids
 );
 
-alter table
-  aaa
-add
-  column id serial;
+ALTER TABLE
+  border_lines
+ADD
+  COLUMN id SERIAL;
 
-create table bbb as
-select
-  unnest(osm_ids) as osm_id,
+CREATE TABLE admin_borders AS
+SELECT
+  unnest(osm_ids) AS osm_id,
   id
-from
-  aaa;
+FROM
+  border_lines;
 
--- TODO drop aaa.osm_ids
-create index admin_areas_osm_id_idx on admin_areas(osm_id);
+ALTER TABLE
+  border_lines DROP COLUMN osm_ids;
 
-create index aaa_id_idx on aaa(id);
+CREATE INDEX border_lines_id_idx ON border_lines(id);
 
-create index aaa_geom_idx on aaa using gist(geometry);
+CREATE INDEX border_lines_geom_idx ON border_lines USING gist(geometry);
 
-create index bbb_osm_id_idx on bbb(osm_id);
+CREATE INDEX admin_borders_osm_id_idx ON admin_borders(osm_id);
 
-create table aaa1 as
-select
-  id,
-  ST_SimplifyPreserveTopology(geometry, 100) as geometry
-from
-  aaa;
+CREATE INDEX admin_borders_id_idx ON admin_borders(id);
 
-create index aaa1_id_idx on aaa1(id);
+CREATE TABLE osm_admin_rels AS
+SELECT
+  osm_id,
+  name,
+  name_sk,
+  admin_level,
+  country_code
+FROM
+  osm_admin;
 
-create index aaa1_geom_idx on aaa1 using gist(geometry);
+CREATE INDEX admin_borders_id_idx ON admin_borders(id);
+
+CREATE INDEX osm_admin_rels_osm_id_idx ON osm_admin_rels(osm_id);
+
+CREATE INDEX osm_admin_rels_name_idx ON osm_admin_rels(name);
+
+CREATE INDEX osm_admin_rels_name_sk_idx ON osm_admin_rels(name_sk);
+
+CREATE INDEX osm_admin_rels_admin_level_idx ON osm_admin_rels(admin_level);
+
+CREATE INDEX osm_admin_rels_country_code_idx ON osm_admin_rels(country_code);

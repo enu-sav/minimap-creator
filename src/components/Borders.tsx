@@ -73,6 +73,7 @@ export function Borders({
         <StyleName>borders</StyleName>
 
         <Datasource base="db">
+          <Parameter name="geometry_table">border_lines</Parameter>
           {/* prettier-ignore */}
           <Parameter name="table">
             (
@@ -84,16 +85,16 @@ export function Borders({
                   (
                     SELECT
                       MAX({width}) AS width,
-                      aaa1.geometry AS geometry
+                      border_lines.geometry AS geometry
                     FROM
-                      admin_areas
-                      JOIN bbb USING (osm_id)
-                      JOIN aaa1 USING (id)
+                      osm_admin_rels
+                      JOIN admin_borders USING (osm_id)
+                      JOIN border_lines USING (id)
                     WHERE
-                      aaa1.geometry && !bbox!
+                      border_lines.geometry && !bbox!
                       AND {condition}{" "}
                     GROUP BY
-                      aaa1.geometry
+                      border_lines.geometry
                   )
                 ) AS subq
               GROUP BY

@@ -45,7 +45,7 @@ export function Landcover({ types, colors }: Props) {
 
         {types.includes("urban") && (
           <Rule>
-            <Filter>[type] = 'human'</Filter> {/* TODO rename to urban */}
+            <Filter>[type] = 'urban'</Filter>
             <RichPolygonSymbolizer color={colors.urban} />
           </Rule>
         )}

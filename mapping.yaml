@@ -25,29 +25,6 @@ tables:
       boundary:
         - administrative
 
-  # admin_rels:
-  #   type: relation
-  #   columns:
-  #     - name: osm_id
-  #       type: id
-  #     - name: name
-  #       type: string
-  #       key: name
-  #     - name: name_sk
-  #       type: string
-  #       key: name:sk
-  #     - name: admin_level
-  #       type: integer
-  #       key: admin_level
-  #     - name: country_code
-  #       type: string
-  #       key: ISO3166-1:alpha2
-  #   relation_types:
-  #     - boundary
-  #   mapping:
-  #     boundary:
-  #       - administrative
-
   places:
     columns:
       - name: osm_id

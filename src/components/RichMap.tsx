@@ -69,21 +69,21 @@ export function RichMap({
     <Map backgroundColor={colors.water} srs={srs}>
       <Fonts />
 
-      {/* <Datasource name="db">
+      <Datasource name="db">
         <Parameter name="type">postgis</Parameter>
         <Parameter name="host">localhost</Parameter>
         <Parameter name="dbname">minimap</Parameter>
         <Parameter name="user">minimap</Parameter>
         <Parameter name="password">minimap</Parameter>
-      </Datasource> */}
-
-      <Datasource name="db">
-        <Parameter name="type">postgis</Parameter>
-        <Parameter name="host">localhost</Parameter>
-        <Parameter name="port">5455</Parameter>
+        {/* <Parameter name="port">5455</Parameter>
         <Parameter name="dbname">postgres</Parameter>
         <Parameter name="user">postgres</Parameter>
-        <Parameter name="password">snakeoil</Parameter>
+        <Parameter name="password">snakeoil</Parameter> */}
+        <Parameter name="geometry_field">geometry</Parameter>
+        <Parameter name="srid">3857</Parameter>
+        <Parameter name="extent">
+          -20037508.34 -20048966.1 20037508.34 20048966.1
+        </Parameter>
       </Datasource>
 
       <Land color={colors.land} simplify={simplify} />
