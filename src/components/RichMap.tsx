@@ -72,13 +72,13 @@ export function RichMap({
       <Datasource name="db">
         <Parameter name="type">postgis</Parameter>
         <Parameter name="host">localhost</Parameter>
-        <Parameter name="dbname">minimap</Parameter>
+        {/* <Parameter name="dbname">minimap</Parameter>
         <Parameter name="user">minimap</Parameter>
-        <Parameter name="password">minimap</Parameter>
-        {/* <Parameter name="port">5455</Parameter>
+        <Parameter name="password">minimap</Parameter> */}
+        <Parameter name="port">5455</Parameter>
         <Parameter name="dbname">postgres</Parameter>
         <Parameter name="user">postgres</Parameter>
-        <Parameter name="password">snakeoil</Parameter> */}
+        <Parameter name="password">snakeoil</Parameter>
         <Parameter name="geometry_field">geometry</Parameter>
         <Parameter name="srid">3857</Parameter>
         <Parameter name="extent">
