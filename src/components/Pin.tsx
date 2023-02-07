@@ -27,6 +27,7 @@ export function Pin({ pin, color }: Props) {
             ignorePlacement={true}
             strokeWidth={0}
             fill={color}
+            transform="translate(0, -11)"
           />
         </Rule>
       </Style>

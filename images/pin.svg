@@ -1,12 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
-<svg width="16" height="16" viewBox="0 0 16 16.000001" version="1.1" id="svg5" inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)" sodipodi:docname="pin.svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
-  <sodipodi:namedview id="namedview7" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageshadow="2" inkscape:pageopacity="0.0" inkscape:pagecheckerboard="true" inkscape:document-units="px" showgrid="true" units="px" width="16px" inkscape:zoom="21.237935" inkscape:cx="7.8397453" inkscape:cy="10.429451" inkscape:window-width="1883" inkscape:window-height="1062" inkscape:window-x="0" inkscape:window-y="0" inkscape:window-maximized="1" inkscape:current-layer="layer1">
-    <inkscape:grid type="xygrid" id="grid824" />
-  </sodipodi:namedview>
-  <defs id="defs2" />
-  <g inkscape:label="Layer 1" inkscape:groupmode="layer" id="layer1">
-    <path id="circle2596" style="fill-opacity:0.996972;stroke-width:1.49998;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke markers fill" d="M 12.969146,2.3013038 C 16.03755,5.3697089 14.774754,10.286807 12.969146,13.412982 C 11.16354,16.539157 7.4133075,22 7.4133075,22 C 7.4133075,22 3.6630752,16.539157 1.8574685,13.412982 C 0.05186174,10.286807 -1.2109367,5.3697089 1.8574685,2.3013038 C 4.9258735,-0.76710123 9.9007413,-0.76710123 12.969146,2.3013038 Z" sodipodi:nodetypes="szczss" />
-  </g>
+<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
+  <path
+    style="stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke markers fill"
+    d="M12.97 2.301c3.068 3.069 1.805 7.986 0 11.112C11.163 16.539 7.412 22 7.412 22s-3.75-5.46-5.556-8.587c-1.805-3.126-3.068-8.043 0-11.112a7.857 7.857 0 0 1 11.112 0Z" />
 </svg>
