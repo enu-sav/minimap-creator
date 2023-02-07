@@ -57,7 +57,6 @@ Query parameters, all are optional:
 - `highlight-admin-area` - OSM ID or name (local or slovak) of the area to highlight
 - `hillshading-opacity` - opacity of the hillshading in range from 0 (no shading, default) to 1 (full shading)
 - `watershed-name` - name of watershed to render
-- `land-color` - land color, default `#e6edd5`
 - `bbox` - explicit bounding box to render (minLon,minLat,maxLon,maxLat)
 - `margin` - map margin in pixels, default 5
 - `format` - output format, one of `png` (default), `jpeg`, `svg`, `pdf`

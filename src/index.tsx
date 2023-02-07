@@ -118,8 +118,6 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
         .split(",")
         .filter((x) => x)
         .map((item) => item.split(":", 2))
-        .map(([cc, level]) => [cc, Number(level)] as const)
-        .filter(([cc, level]) => (!cc || countryData[cc]) && !isNaN(level))
     )
   );
 
