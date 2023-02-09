@@ -83,6 +83,8 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const placeTypes = params.get("place-types")?.split(",") ?? [];
 
+  const places = params.get("places")?.split(",") ?? [];
+
   const landcoverTypes = params.get("landcover-types")?.split(",") ?? [];
 
   const country = params.get("country") ?? undefined;
@@ -186,6 +188,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
       microBorders={microBorders && Object.fromEntries(microBorders)}
       landcoverTypes={landcoverTypes as LandcoverTypes[]}
       placeTypes={placeTypes}
+      places={places}
       borderWidthFactor={borderWidthFactor}
       coastlineWidthFactor={coastlineWidthFactor}
       waterwayWidthFactor={waterwayWidthFactor}

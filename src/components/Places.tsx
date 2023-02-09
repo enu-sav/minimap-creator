@@ -10,14 +10,16 @@ import {
 } from "jsxnik/mapnikConfig";
 
 type Props = {
-  placeTypes?: string[];
+  places: string[];
+  placeTypes: string[];
   sizeFactor?: number;
   countryCode?: string;
   transliterate?: boolean;
 };
 
 export function Places({
-  placeTypes = ["city", "town"],
+  places,
+  placeTypes,
   sizeFactor = 1,
   countryCode,
   transliterate,
@@ -108,9 +110,20 @@ export function Places({
                 }name) AS name, geometry, type, capital
                 FROM osm_places
                 WHERE
+                  ${
+                    places
+                      ? places.map((place) =>
+                          isNaN(Number(place))
+                            ? ` name = $quot$${place}$quot$ OR name_sk = $quot$${place}$quot$ OR `
+                            : ` osm_id = ${place} OR `
+                        )
+                      : ""
+                  }
                   ${countryCode ? `country_code = '${countryCode}' AND ` : ""}
                   ${
-                    placeTypes.includes("capital")
+                    placeTypes.length === 0
+                      ? "false"
+                      : placeTypes.includes("capital")
                       ? "capital = 'yes'"
                       : `type IN (${placeTypes
                           .map((p) => `'${p}'`)

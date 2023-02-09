@@ -45,6 +45,7 @@ Query parameters, all are optional:
 - `simplify` - line simplify (generalization) factor, default 2
 - `colors` - override default colors. Syntax: `feature:color,feature:color,...` where feautre is one of `water`, `urban`, `forest`, `pin`, `border`, `coastline`, `areaHighlight`, `land` and color is HTML color.
 - `place-types` - which places to render, comma separated values of: `city`, `town`, `village`. It can also contain a single value `capital` to only display capitals.
+- `places` - which places to render, by OSM ID or by name
 - `landcover-types` - what landcover to render, comma separated values of: `forest`, `water-body`, `urban`.
 - `country` - country to zoom to and to highlight
 - `major-borders` - country codes and _admin levels_ to show as major borders, format: `cc:level,cc:level,...`; default `:2` (`admin_level=2` for every country)
