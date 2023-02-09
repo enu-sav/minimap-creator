@@ -112,11 +112,13 @@ export function Places({
                 WHERE
                   ${
                     places
-                      ? places.map((place) =>
-                          isNaN(Number(place))
-                            ? ` name = $quot$${place}$quot$ OR name_sk = $quot$${place}$quot$ OR `
-                            : ` osm_id = ${place} OR `
-                        )
+                      ? places
+                          .map((place) =>
+                            isNaN(Number(place))
+                              ? ` name = $quot$${place}$quot$ OR name_sk = $quot$${place}$quot$ OR `
+                              : ` osm_id = ${place} OR `
+                          )
+                          .join("")
                       : ""
                   }
                   ${countryCode ? `country_code = '${countryCode}' AND ` : ""}
