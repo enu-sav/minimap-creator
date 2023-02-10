@@ -26,6 +26,7 @@ type Props = {
   microBorders?: Record<string, number>;
   placeTypes: string[];
   places: string[];
+  placeLabelPlacements?: string;
   borderWidthFactor?: number;
   coastlineWidthFactor?: number;
   waterwayWidthFactor?: number;
@@ -51,6 +52,7 @@ export function RichMap({
   microBorders,
   placeTypes,
   places,
+  placeLabelPlacements,
   borderWidthFactor,
   coastlineWidthFactor,
   waterwayWidthFactor,
@@ -155,6 +157,7 @@ export function RichMap({
         <Places
           places={places}
           placeTypes={placeTypes}
+          placements={placeLabelPlacements}
           sizeFactor={placeSizeFactor}
           countryCode={
             features.includes("limitPlacesToCountry") ? country : undefined

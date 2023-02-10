@@ -15,7 +15,7 @@
   "dependencies": {
     "@turf/turf": "^6.5.0",
     "geolib": "^3.3.3",
-    "jsxnik": "0.0.12",
+    "jsxnik": "0.0.14",
     "mapnik": "^4.5.9",
     "temp": "^0.9.4"
   },

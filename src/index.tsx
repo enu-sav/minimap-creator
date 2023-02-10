@@ -85,6 +85,9 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const places = params.get("places")?.split(",") ?? [];
 
+  const placeLabelPlacements =
+    params.get("place-label-placements") ?? undefined;
+
   const landcoverTypes = params.get("landcover-types")?.split(",") ?? [];
 
   const country = params.get("country") ?? undefined;
@@ -189,6 +192,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
       landcoverTypes={landcoverTypes as LandcoverTypes[]}
       placeTypes={placeTypes}
       places={places}
+      placeLabelPlacements={placeLabelPlacements}
       borderWidthFactor={borderWidthFactor}
       coastlineWidthFactor={coastlineWidthFactor}
       waterwayWidthFactor={waterwayWidthFactor}
