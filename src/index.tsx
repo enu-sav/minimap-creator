@@ -79,16 +79,32 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const margin = toNumber(params.get("margin")) ?? 5;
 
-  const features = params.get("features")?.split(",") ?? [];
+  const features =
+    params
+      .get("features")
+      ?.split(",")
+      .filter((a) => a) ?? [];
 
-  const placeTypes = params.get("place-types")?.split(",") ?? [];
+  const placeTypes =
+    params
+      .get("place-types")
+      ?.split(",")
+      .filter((a) => a) ?? [];
 
-  const places = params.get("places")?.split(",") ?? [];
+  const places =
+    params
+      .get("places")
+      ?.split(",")
+      .filter((a) => a) ?? [];
 
   const placeLabelPlacements =
     params.get("place-label-placements") ?? undefined;
 
-  const landcoverTypes = params.get("landcover-types")?.split(",") ?? [];
+  const landcoverTypes =
+    params
+      .get("landcover-types")
+      ?.split(",")
+      .filter((a) => a) ?? [];
 
   const country = params.get("country") ?? undefined;
 
