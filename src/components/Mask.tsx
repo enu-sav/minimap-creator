@@ -1,5 +1,5 @@
 import { Layer, Rule, Style, StyleName } from "jsxnik/mapnikConfig";
-import { mangleSrs, PlanetPolygonDatasource } from "./PlanetPolygonDatasource";
+import { PlanetPolygonDatasource } from "./PlanetPolygonDatasource";
 import { RichPolygonSymbolizer } from "./RichPolygonSymbolizer";
 
 type Props = { srs: string; simplify: number; children: JSX.Element };
@@ -13,10 +13,10 @@ export function Mask({ srs, children, simplify }: Props) {
         </Rule>
       </Style>
 
-      <Layer srs={mangleSrs(srs)} compOp="src-over" opacity={0.25}>
+      <Layer srs={srs} compOp="src-over" opacity={0.25}>
         <StyleName>mask</StyleName>
 
-        <PlanetPolygonDatasource srs={srs} />
+        <PlanetPolygonDatasource />
 
         {children}
       </Layer>
