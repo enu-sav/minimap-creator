@@ -59,7 +59,7 @@ function Place({ dy, size, icon, sizeFactor, placements = "U" }: PlaceProps) {
   return (
     <ShieldSymbolizer
       fontsetName="regular"
-      margin={20}
+      margin={0}
       haloFill="white"
       haloRadius={2 * sizeFactor}
       haloOpacity={0.75}
