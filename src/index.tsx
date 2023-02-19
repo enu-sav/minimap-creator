@@ -101,6 +101,8 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
   const placeLabelPlacements =
     params.get("place-label-placements") ?? undefined;
 
+  const placeLabelMargin = toNumber(params.get("place-label-margin"));
+
   const landcoverTypes =
     params
       .get("landcover-types")
@@ -218,6 +220,7 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
         placeTypes,
         places,
         placeLabelPlacements,
+        placeLabelMargin,
         borderWidthFactor,
         coastlineWidthFactor,
         waterwayWidthFactor,

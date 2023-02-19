@@ -17,6 +17,7 @@ type Props = {
   sizeFactor?: number;
   countryCode?: string;
   transliterate?: boolean;
+  labelMargin?: number;
 };
 
 type PlaceProps = {
@@ -25,9 +26,17 @@ type PlaceProps = {
   sizeFactor: number;
   size: number;
   dy: number;
+  labelMargin?: number;
 };
 
-function Place({ dy, size, icon, sizeFactor, placements = "U" }: PlaceProps) {
+function Place({
+  dy,
+  size,
+  icon,
+  sizeFactor,
+  labelMargin = 20,
+  placements = "U",
+}: PlaceProps) {
   const placementParams: Record<
     string,
     { dy: number; children: string; horizontalAlignment: string }
@@ -59,7 +68,7 @@ function Place({ dy, size, icon, sizeFactor, placements = "U" }: PlaceProps) {
   return (
     <ShieldSymbolizer
       fontsetName="regular"
-      margin={0}
+      margin={labelMargin}
       haloFill="white"
       haloRadius={2 * sizeFactor}
       haloOpacity={0.75}
@@ -90,6 +99,7 @@ export function Places({
   sizeFactor = 1,
   countryCode,
   transliterate,
+  labelMargin,
 }: Props) {
   if (placeTypes.some((p) => /[^a-z]/.test(p))) {
     throw new Error("invalid place type");
@@ -107,6 +117,7 @@ export function Places({
             size={20}
             dy={12}
             placements={placements}
+            labelMargin={labelMargin}
           />
         </Rule>
 
@@ -119,6 +130,7 @@ export function Places({
             size={20}
             dy={10}
             placements={placements}
+            labelMargin={labelMargin}
           />
         </Rule>
 
@@ -131,6 +143,7 @@ export function Places({
             size={16}
             dy={8}
             placements={placements}
+            labelMargin={labelMargin}
           />
         </Rule>
 
@@ -143,6 +156,7 @@ export function Places({
             size={14}
             dy={7}
             placements={placements}
+            labelMargin={labelMargin}
           />
         </Rule>
       </Style>

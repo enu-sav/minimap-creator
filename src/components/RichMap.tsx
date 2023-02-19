@@ -27,6 +27,7 @@ type Props = {
   placeTypes: string[];
   places: string[];
   placeLabelPlacements?: string;
+  placeLabelMargin?: number;
   borderWidthFactor?: number;
   coastlineWidthFactor?: number;
   waterwayWidthFactor?: number;
@@ -55,6 +56,7 @@ export function RichMap({
   placeTypes,
   places,
   placeLabelPlacements,
+  placeLabelMargin,
   borderWidthFactor,
   coastlineWidthFactor,
   waterwayWidthFactor,
@@ -173,6 +175,7 @@ export function RichMap({
             features.includes("limitPlacesToCountry") ? country : undefined
           }
           transliterate={features.includes("transliterate")}
+          labelMargin={placeLabelMargin}
         />
       )}
 

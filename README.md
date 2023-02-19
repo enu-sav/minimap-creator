@@ -12,7 +12,7 @@ Minimap Creator is a HTTP server for creating minimaps.
 1. [download map data sql](https://drive.google.com/file/d/1tYwlDJyoi-KHX4szMKMEAAz08iUGuDBk/view?usp=share_link) and import it to PostGIS:
    ```bash
    pigz -cd dump.sql.gz | psql -h localhost -p 5455 -U postgres
-1. save hillshading data as `data/hillshading.tif` (and `data/hillshading.tif.ovr`)
+1. save hillshading data as `data/hillshading-world.tif`
 1. install dependencies
    ```bash
    npm i
@@ -47,6 +47,7 @@ Query parameters, all are optional:
 - `place-types` - which places to render, comma separated values of: `city`, `town`, `village`. It can also contain a single value `capital` to only display capitals.
 - `places` - which places to render, by OSM ID or by name
 - `place-label-placement` - label placements to try. Values: `U` for up, `D` for down, `L` for left, `R` for right. May be combination like `UDRL`. Default is `U`.
+- `place-label-margin` - place labels margin, default `20`.
 - `landcover-types` - what landcover to render, comma separated values of: `forest`, `water-body`, `urban`.
 - `country` - country to zoom to and to highlight
 - `major-borders` - country codes and _admin levels_ to show as major borders, format: `cc:level,cc:level,...`; default `:2` (`admin_level=2` for every country)
@@ -58,6 +59,7 @@ Query parameters, all are optional:
 - `place-size-factor` - scale of the places, default 1
 - `highlight-admin-area` - OSM ID or name (local or slovak) of the area to highlight
 - `hillshading-opacity` - opacity of the hillshading in range from 0 (no shading, default) to 1 (full shading)
+- `hillshading-variant` - variant of the hillshading, default `world`
 - `watershed-name` - name of watershed to render
 - `bbox` - explicit bounding box to render (minLon,minLat,maxLon,maxLat)
 - `margin` - map margin in pixels, default 5
