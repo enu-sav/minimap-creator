@@ -12,6 +12,7 @@ import { RichMap } from "./components//RichMap";
 import { countryData } from "./countryData";
 import { serialize } from "jsxnik/serialize";
 import { LandcoverTypes } from "./components/Landcover";
+import gdal from "gdal-async";
 
 class InvalidParamError extends Error {}
 
@@ -119,6 +120,8 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const placeSizeFactor = toNumber(params.get("place-size-factor"));
 
+  const hillshadingVariant = params.get("hillshading-variant") ?? "world";
+
   const hillshadingOpacity = toNumber(params.get("hillshading-opacity"));
 
   const simplify = toNumber(params.get("simplify")) || 2;
@@ -195,31 +198,39 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
     getDistance([bbox[0], bbox[1]], [bbox[2], bbox[3]]) /
     Math.hypot(width, height);
 
+  const ds = await gdal.openAsync(`data/hillshading-${hillshadingVariant}.tif`);
+  const hillshadingSrs = (await ds.srsAsync)?.toProj4();
+  ds.close();
+
   const style = serialize(
     <RichMap
-      srs={srs}
-      pin={pin}
-      features={features}
       country={country?.toUpperCase()}
-      highlightAdminArea={highlightAdminArea}
       majorBorders={majorBorders && Object.fromEntries(majorBorders)}
       minorBorders={minorBorders && Object.fromEntries(minorBorders)}
       microBorders={microBorders && Object.fromEntries(microBorders)}
       landcoverTypes={landcoverTypes as LandcoverTypes[]}
-      placeTypes={placeTypes}
-      places={places}
-      placeLabelPlacements={placeLabelPlacements}
-      borderWidthFactor={borderWidthFactor}
-      coastlineWidthFactor={coastlineWidthFactor}
-      waterwayWidthFactor={waterwayWidthFactor}
-      placeSizeFactor={placeSizeFactor}
-      hillshadingOpacity={hillshadingOpacity}
-      watershedName={watershedName}
-      bbox={bbox}
       pxLon={width / (bbox[2] - bbox[0])}
-      colors={colors}
-      simplify={simplify}
-      sourceSimplifyFactor={sourceSimplifyFactor}
+      {...{
+        srs,
+        pin,
+        features,
+        highlightAdminArea,
+        placeTypes,
+        places,
+        placeLabelPlacements,
+        borderWidthFactor,
+        coastlineWidthFactor,
+        waterwayWidthFactor,
+        placeSizeFactor,
+        hillshadingOpacity,
+        hillshadingSrs,
+        hillshadingVariant,
+        watershedName,
+        bbox,
+        colors,
+        simplify,
+        sourceSimplifyFactor,
+      }}
     />
   );
 

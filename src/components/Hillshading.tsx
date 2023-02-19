@@ -8,9 +8,9 @@ import {
   StyleName,
 } from "jsxnik/mapnikConfig";
 
-type Props = { opacity: number };
+type Props = { opacity: number; srs: string; variant: string };
 
-export function Hillshading({ opacity }: Props) {
+export function Hillshading({ opacity, srs, variant }: Props) {
   return (
     <>
       <Style name="hillshading">
@@ -19,12 +19,12 @@ export function Hillshading({ opacity }: Props) {
         </Rule>
       </Style>
 
-      <Layer srs="+init=epsg:3035">
+      <Layer srs={srs}>
         <StyleName>hillshading</StyleName>
 
         <Datasource>
           <Parameter name="type">gdal</Parameter>
-          <Parameter name="file">data/hillshading.tif</Parameter>
+          <Parameter name="file">{`data/hillshading-${variant}.tif`}</Parameter>
         </Datasource>
       </Layer>
     </>

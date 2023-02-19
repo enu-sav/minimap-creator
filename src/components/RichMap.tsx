@@ -32,6 +32,8 @@ type Props = {
   waterwayWidthFactor?: number;
   placeSizeFactor?: number;
   hillshadingOpacity?: number;
+  hillshadingSrs?: string;
+  hillshadingVariant?: string;
   watershedName?: string;
   bbox: number[];
   pxLon: number;
@@ -58,6 +60,8 @@ export function RichMap({
   waterwayWidthFactor,
   placeSizeFactor,
   hillshadingOpacity,
+  hillshadingSrs,
+  hillshadingVariant,
   watershedName,
   bbox,
   pxLon,
@@ -96,7 +100,13 @@ export function RichMap({
         <Landcover types={landcoverTypes} colors={colors} />
       )}
 
-      {hillshadingOpacity && <Hillshading opacity={hillshadingOpacity} />}
+      {hillshadingOpacity && hillshadingSrs && hillshadingVariant && (
+        <Hillshading
+          opacity={hillshadingOpacity}
+          srs={hillshadingSrs}
+          variant={hillshadingVariant}
+        />
+      )}
 
       {features.includes("roads") && <Roads simplify={simplify} />}
 
