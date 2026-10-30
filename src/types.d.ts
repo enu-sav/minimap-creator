@@ -1,4 +1,4 @@
-declare module "mapnik";
+declare module "@mapnik/mapnik";
 
 type ColorKey =
   | "water"

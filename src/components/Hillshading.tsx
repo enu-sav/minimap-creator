@@ -8,9 +8,9 @@ import {
   StyleName,
 } from "jsxnik/mapnikConfig";
 
-type Props = { opacity: number; srs: string; variant: string };
+type Props = { opacity: number; file: string; srs: string };
 
-export function Hillshading({ opacity, srs, variant }: Props) {
+export function Hillshading({ opacity, file, srs }: Props) {
   return (
     <>
       <Style name="hillshading">
@@ -24,7 +24,7 @@ export function Hillshading({ opacity, srs, variant }: Props) {
 
         <Datasource>
           <Parameter name="type">gdal</Parameter>
-          <Parameter name="file">{`data/hillshading-${variant}.tif`}</Parameter>
+          <Parameter name="file">{file}</Parameter>
         </Datasource>
       </Layer>
     </>

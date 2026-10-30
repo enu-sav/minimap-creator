@@ -1,5 +1,5 @@
 import * as turf from "@turf/turf";
-import { FeatureCollection } from "@turf/turf";
+import type { FeatureCollection } from "geojson";
 import { readFileSync } from "fs";
 import {
   Datasource,
@@ -32,7 +32,7 @@ export function Pin({ pin, color }: Props) {
         </Rule>
       </Style>
 
-      <Layer srs="+init=epsg:4326">
+      <Layer srs="epsg:4326">
         <StyleName>pin</StyleName>
 
         <Datasource>

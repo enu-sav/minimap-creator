@@ -4,7 +4,7 @@ type Props = { name: string };
 
 export function WatershedMask({ name }: Props) {
   return (
-    <Layer srs="+init=epsg:3857" compOp="dst-out">
+    <Layer srs="epsg:3857" compOp="dst-out">
       <StyleName>mask</StyleName>
 
       <Datasource>

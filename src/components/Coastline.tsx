@@ -24,7 +24,7 @@ export function Coastline({ widthFactor = 1, color, simplify }: Props) {
         </Rule>
       </Style>
 
-      <Layer srs="+init=epsg:3857">
+      <Layer srs="epsg:3857">
         <StyleName>coastline-border</StyleName>
 
         <LandPolygonsDatasource />

@@ -69,7 +69,7 @@ export function Borders({
         </Rule>
       </Style>
 
-      <Layer srs="+init=epsg:3857">
+      <Layer srs="epsg:3857">
         <StyleName>borders</StyleName>
 
         <Datasource base="db">

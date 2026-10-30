@@ -1,4 +1,4 @@
-import mapnik from "mapnik";
+import mapnik from "@mapnik/mapnik";
 import { computeDestinationPoint, getDistance } from "geolib";
 import {
   Datasource,
@@ -34,7 +34,10 @@ export function MapScale({ bbox, pxLon, srs }: Params) {
     pt = [ptLL.longitude, ptLL.latitude];
   } while (pxLon * (pt[0] - bbox[0]) < 100);
 
-  const proj = new mapnik.Projection(srs);
+  const proj = new mapnik.ProjTransform(
+    new mapnik.Projection("epsg:4326"),
+    new mapnik.Projection(srs)
+  );
 
   const start = [bbox[0], bbox[1]];
 
@@ -42,7 +45,7 @@ export function MapScale({ bbox, pxLon, srs }: Params) {
 
   let transEnd = [transStart[0] + dist, transStart[1]];
 
-  const end = proj.inverse(transEnd);
+  const end = proj.backward(transEnd);
 
   const realDist = getDistance(start as any, end);
 

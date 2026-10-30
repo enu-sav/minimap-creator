@@ -5,14 +5,13 @@ import http, { IncomingMessage, ServerResponse } from "http";
 import util from "util";
 import fs from "fs";
 import fsp from "fs/promises";
-import mapnik from "mapnik";
+import mapnik from "@mapnik/mapnik";
 import { URLSearchParams } from "url";
 import stream from "stream";
 import { RichMap } from "./components//RichMap";
 import { countryData } from "./countryData";
 import { serialize } from "jsxnik/serialize";
 import { LandcoverTypes } from "./components/Landcover";
-import gdal from "gdal-async";
 
 class InvalidParamError extends Error {}
 
@@ -38,6 +37,18 @@ for (const [cla, methods] of [
 const server = http.createServer(requestListener);
 
 const port = Number(process.env.PORT || 8080);
+
+// mapnik's gdal plugin does not read the raster's SRS, so it must be configured
+const hillshadingVariants: Record<string, { file: string; srs: string }> =
+  JSON.parse(process.env.HILLSHADING_VARIANTS || "{}");
+
+for (const [name, variant] of Object.entries(hillshadingVariants)) {
+  if (typeof variant?.file !== "string" || typeof variant?.srs !== "string") {
+    throw new Error(
+      `HILLSHADING_VARIANTS: variant "${name}" must have "file" and "srs" strings`
+    );
+  }
+}
 
 server.listen(port, () => {
   console.log(`Listening on port ${port}.`);
@@ -151,7 +162,8 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
 
   const bboxParam = params.get("bbox");
 
-  const srs = params.get("srs") ?? "+init=epsg:3857"; // "+init=epsg:3035"
+  // PROJ 6+ rejects the legacy "+init=" prefix; keep accepting it from old clients
+  const srs = (params.get("srs") ?? "epsg:3857").replace(/^\+init=/, "");
 
   let bbox: number[];
 
@@ -171,7 +183,10 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
     throw new InvalidParamError("one of `bbox` or `country` must be provided");
   }
 
-  const mBbox = new mapnik.Projection(srs).forward(bbox);
+  const mBbox = new mapnik.ProjTransform(
+    new mapnik.Projection("epsg:4326"),
+    new mapnik.Projection(srs)
+  ).forward(bbox);
 
   const aspectRatio = (mBbox[2] - mBbox[0]) / (mBbox[3] - mBbox[1]);
 
@@ -200,9 +215,14 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
     getDistance([bbox[0], bbox[1]], [bbox[2], bbox[3]]) /
     Math.hypot(width, height);
 
-  const ds = await gdal.openAsync(`data/hillshading-${hillshadingVariant}.tif`);
-  const hillshadingSrs = (await ds.srsAsync)?.toProj4();
-  ds.close();
+  const hillshading =
+    hillshadingOpacity && Object.hasOwn(hillshadingVariants, hillshadingVariant)
+      ? hillshadingVariants[hillshadingVariant]
+      : undefined;
+
+  if (hillshadingOpacity && !hillshading) {
+    throw new InvalidParamError("no such hillshading variant");
+  }
 
   const style = serialize(
     <RichMap
@@ -226,8 +246,8 @@ async function generate(req: IncomingMessage, res: ServerResponse) {
         waterwayWidthFactor,
         placeSizeFactor,
         hillshadingOpacity,
-        hillshadingSrs,
-        hillshadingVariant,
+        hillshadingFile: hillshading?.file,
+        hillshadingSrs: hillshading?.srs,
         watershedName,
         bbox,
         colors,

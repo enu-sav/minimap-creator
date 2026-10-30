@@ -29,7 +29,7 @@ export function Roads({ simplify }: Props) {
         </Rule>
       </Style>
 
-      <Layer srs="+init=epsg:3857">
+      <Layer srs="epsg:3857">
         <StyleName>roads</StyleName>
 
         <Datasource base="db">

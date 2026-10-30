@@ -4,7 +4,7 @@ type Props = { country: string; sourceSimplifyFactor: number };
 
 export function CountryMask({ country, sourceSimplifyFactor }: Props) {
   return (
-    <Layer srs="+init=epsg:3857" compOp="dst-out">
+    <Layer srs="epsg:3857" compOp="dst-out">
       <StyleName>mask</StyleName>
 
       <Datasource base="db">

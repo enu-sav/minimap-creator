@@ -31,7 +31,7 @@ export function Waterways({ name, widthFactor = 1, simplify }: Props) {
         </Rule>
       </Style>
 
-      <Layer srs="+init=epsg:3035">
+      <Layer srs="epsg:3035">
         <StyleName>waterways</StyleName>
 
         <Datasource>
@@ -44,7 +44,7 @@ export function Waterways({ name, widthFactor = 1, simplify }: Props) {
         </Datasource>
       </Layer>
 
-      <Layer srs="+init=epsg:3035">
+      <Layer srs="epsg:3035">
         <StyleName>waterways</StyleName>
 
         <Datasource>
@@ -57,7 +57,7 @@ export function Waterways({ name, widthFactor = 1, simplify }: Props) {
         </Datasource>
       </Layer>
 
-      <Layer srs="+init=epsg:3035">
+      <Layer srs="epsg:3035">
         <StyleName>waterways</StyleName>
 
         <Datasource>

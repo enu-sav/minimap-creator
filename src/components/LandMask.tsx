@@ -14,7 +14,7 @@ export function LandMask({ srs, waterColor }: Props) {
         </Rule>
       </Style>
 
-      <Layer srs="+init=epsg:3857" compOp="dst-in">
+      <Layer srs="epsg:3857" compOp="dst-in">
         <StyleName>land-mask</StyleName>
 
         <LandPolygonsDatasource />

@@ -19,7 +19,7 @@ type Props = {
 export function Landcover({ types, colors }: Props) {
   return (
     <>
-      <Layer srs="+init=epsg:3857">
+      <Layer srs="epsg:3857">
         <StyleName>landcover</StyleName>
 
         <Datasource base="db">

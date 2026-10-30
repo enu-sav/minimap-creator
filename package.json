@@ -13,18 +13,21 @@
   "author": "Martin Ždila",
   "license": "ISC",
   "dependencies": {
-    "@turf/turf": "^6.5.0",
-    "gdal-async": "^3.6.2",
-    "geolib": "^3.3.3",
-    "jsxnik": "0.0.14",
-    "mapnik": "^4.5.9",
+    "@mapnik/mapnik": "^4.8.2",
+    "@turf/turf": "^7.4.0",
+    "geolib": "^4.0.1",
+    "jsxnik": "^0.0.14",
     "temp": "^0.9.4"
   },
   "devDependencies": {
-    "@types/node": "^18.11.18",
-    "@types/temp": "^0.9.1",
-    "concurrently": "^7.6.0",
-    "nodemon": "^2.0.20",
-    "typescript": "^4.9.4"
+    "@types/geojson": "^7946.0.16",
+    "@types/node": "^24.19.2",
+    "@types/temp": "^0.9.4",
+    "concurrently": "^10.0.6",
+    "nodemon": "^3.1.14",
+    "typescript": "^7.0.2"
+  },
+  "engines": {
+    "node": ">=24"
   }
 }

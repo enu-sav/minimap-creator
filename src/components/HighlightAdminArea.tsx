@@ -33,7 +33,7 @@ export function HighlightAdminArea({
         </Rule>
       </Style>
 
-      <Layer srs="+init=epsg:3857">
+      <Layer srs="epsg:3857">
         <StyleName>highlightAdminArea</StyleName>
 
         <Datasource base="db">

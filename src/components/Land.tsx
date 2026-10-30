@@ -13,7 +13,7 @@ export function Land({ color, simplify }: Props) {
         </Rule>
       </Style>
 
-      <Layer srs="+init=epsg:3857">
+      <Layer srs="epsg:3857">
         <StyleName>land</StyleName>
 
         <LandPolygonsDatasource />

@@ -4,6 +4,7 @@ Minimap Creator is a HTTP server for creating minimaps.
 
 ## Preparation
 
+1. install Node.js 24 or newer
 1. clone the project
 1. Run PsotGIS:
    ```bash
@@ -12,7 +13,7 @@ Minimap Creator is a HTTP server for creating minimaps.
 1. [download map data sql](https://drive.google.com/file/d/1tYwlDJyoi-KHX4szMKMEAAz08iUGuDBk/view?usp=share_link) and import it to PostGIS:
    ```bash
    pigz -cd dump.sql.gz | psql -h localhost -p 5455 -U postgres
-1. save hillshading data as `data/hillshading-world.tif`
+1. save hillshading rasters, for example to `data/hillshading-world.tif` and `data/hillshading-europe.tif`
 1. install dependencies
    ```bash
    npm i
@@ -26,11 +27,24 @@ Minimap Creator is a HTTP server for creating minimaps.
    PORT=8080 npm start
    ```
 
+### Configuration
+
+Environment variables:
+
+- `PORT` - HTTP port, default 8080
+- `HILLSHADING_VARIANTS` - JSON object mapping hillshading variant names to a raster file and its SRS. Without it hillshading is unavailable. Example:
+  ```json
+  {
+    "world": { "file": "data/hillshading-world.tif", "srs": "epsg:3857" },
+    "europe": { "file": "data/hillshading-europe.tif", "srs": "epsg:3035" }
+  }
+  ```
+
 ## Map generation
 
 Query parameters, all are optional:
 
-- `srs` - spatial reference system. Well supported are `+init=epsg:3035` (good for Europe) and `+init=epsg:3857` (global, default).
+- `srs` - spatial reference system. Well supported are `epsg:3035` (good for Europe) and `epsg:3857` (global, default).
 - `lat`, `lon` - pin latitude and longitude, default no pin
 - `width` - image width, default 800, or computed from `country` and `height` if specified
 - `height` - image height, default 400, or computed from `country` and `width` if specified
@@ -59,7 +73,7 @@ Query parameters, all are optional:
 - `place-size-factor` - scale of the places, default 1
 - `highlight-admin-area` - OSM ID or name (local or slovak) of the area to highlight
 - `hillshading-opacity` - opacity of the hillshading in range from 0 (no shading, default) to 1 (full shading)
-- `hillshading-variant` - variant of the hillshading, default `world`
+- `hillshading-variant` - variant of the hillshading as configured in `HILLSHADING_VARIANTS`, default `world`
 - `watershed-name` - name of watershed to render
 - `bbox` - explicit bounding box to render (minLon,minLat,maxLon,maxLat)
 - `margin` - map margin in pixels, default 5

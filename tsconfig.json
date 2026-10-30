@@ -1,18 +1,18 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Node 18",
+  "display": "Node 24",
   "compilerOptions": {
     "lib": ["es2022"],
-    "module": "commonjs",
+    "module": "node16",
     "target": "es2022",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
+    "moduleResolution": "node16",
     "sourceMap": true,
+    "rootDir": "src",
     "outDir": "dist",
-    "baseUrl": ".",
     "jsx": "react-jsx",
     "jsxImportSource": "jsxnik"
   },
